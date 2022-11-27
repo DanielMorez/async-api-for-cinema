@@ -2,7 +2,7 @@ from datetime import date
 from typing import Optional
 from uuid import UUID
 
-from models.baseModelConf import PyBaseModel
+from models.base_model import PyBaseModel
 
 
 class Person(PyBaseModel):

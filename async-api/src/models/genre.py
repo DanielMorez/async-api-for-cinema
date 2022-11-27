@@ -1,4 +1,4 @@
-from models.baseModelConf import PyBaseModel
+from models.base_model import PyBaseModel
 
 
 class Genre(PyBaseModel):

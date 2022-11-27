@@ -1,6 +1,6 @@
 from datetime import date
 
-from models.baseModelConf import PyBaseModel
+from models.base_model import PyBaseModel
 from models.constants import FilmWorkType
 
 
