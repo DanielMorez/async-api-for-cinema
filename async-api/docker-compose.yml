@@ -1,0 +1,47 @@
+version: '3'
+networks:
+  fast_api_network:
+    name: fast_api_network
+    external: false
+    
+services:
+  async-api:
+    build: .
+    container_name: async_fast_api
+    command: bash -c "python ./src/main.py"
+    env_file: 
+      - .env
+    ports:
+      - "8000:8000" 
+    networks:
+      - fast_api_network
+    restart: always
+    depends_on:
+      - elasticsearch
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.5.2
+    container_name: elasticsearch_fast_api
+    environment:
+      - xpack.security.enabled=false
+      - discovery.type=single-node
+    ports:
+      - "${ES_PORT}:${ES_PORT}"
+    networks:
+      - fast_api_network
+    restart: always
+
+  cache:
+    image: redis:6.2.7
+    container_name: redis_fast_api
+    restart: always
+    ports:
+      - "${REDIS_PORT}:${REDIS_PORT}"
+    networks:
+      - fast_api_network
+    volumes: 
+      - cache:/data
+      
+volumes:
+  cache:
+    driver: local
