@@ -5,3 +5,4 @@ orjson==3.8.2
 pydantic==1.10.2
 uvicorn==0.20.0
 uvloop==0.17.0
+python-dotenv==0.21.0
