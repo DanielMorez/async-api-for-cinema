@@ -1,20 +1,20 @@
-import orjson
+from datetime import date
 
-# Используем pydantic для упрощения работы при перегонке данных из json в объекты
-from pydantic import BaseModel
-
-
-def orjson_dumps(v, *, default):
-    # orjson.dumps возвращает bytes, а pydantic требует unicode, поэтому декодируем
-    return orjson.dumps(v, default=default).decode()
+from models.baseModelConf import PyBaseModel
+from models.constants import FilmWorkType
 
 
-class Film(BaseModel):
-    id: str
+class Film(PyBaseModel):
+    """Описание модели кинопроизведения."""
     title: str
     description: str
-
-    class Config:
-        # Заменяем стандартную работу с json на более быструю
-        json_loads = orjson.loads
-        json_dumps = orjson_dumps
+    type: FilmWorkType = FilmWorkType.movie
+    creation_date: date
+    rating: float = 0.0
+    age_classification: int = 0
+    by_subscription: bool = False
+    genres: list[str] = []
+    directors: list[str] = []
+    actors: list[str] = []
+    writers: list[str] = []
+    producers: list[str] = []
