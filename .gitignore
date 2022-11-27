@@ -2,3 +2,4 @@
 
 # ignore sub venv
 venv/
+async-api/.env
