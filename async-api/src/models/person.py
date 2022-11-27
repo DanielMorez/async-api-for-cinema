@@ -9,5 +9,5 @@ class Person(PyBaseModel):
     """Описание модели персон."""
     first_name: str
     last_name: str
-    film_ids: list[Film]
+    films: list[Film]
     role: Optional[list[str]]
