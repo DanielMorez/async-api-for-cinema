@@ -3,14 +3,11 @@ from typing import Optional
 from uuid import UUID
 
 from models.base_model import PyBaseModel
-
+from models.film import Film
 
 class Person(PyBaseModel):
     """Описание модели персон."""
     first_name: str
     last_name: str
-    birth_date: Optional[date] = None
-    actor: list[UUID] = []
-    director: list[UUID] = []
-    writer: list[UUID] = []
-    producer: list[UUID] = []
+    film_ids: list[Film]
+    role: Optional[list[str]]

@@ -1,20 +1,19 @@
 from datetime import date
+from typing import Optional
 
 from models.base_model import PyBaseModel
 from models.constants import FilmWorkType
-
+from models.genre import Genre
+from models.person import Person
 
 class Film(PyBaseModel):
     """Описание модели кинопроизведения."""
     title: str
-    description: str
-    type: FilmWorkType = FilmWorkType.movie
+    description: Optional[str]
+    type: FilmWorkType = FilmWorkType.MOVIE
     creation_date: date
-    rating: float = 0.0
-    age_classification: int = 0
-    by_subscription: bool = False
-    genres: list[str] = []
-    directors: list[str] = []
-    actors: list[str] = []
-    writers: list[str] = []
-    producers: list[str] = []
+    imdb_rating: float = 0.0
+    genres: list[Genre] = []
+    directors: list[Person] = []
+    actors: list[Person] = []
+    writers: list[Person] = []
