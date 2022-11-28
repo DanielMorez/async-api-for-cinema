@@ -3,7 +3,7 @@ version: '3'
 services:
   async_api:
     build:
-      context: async_api
+      context: async-api
       dockerfile: Dockerfile
     container_name: async_api
     ports:
