@@ -20,5 +20,9 @@
 В итоге, у вас дожно появится такое сообщение:
 
 ```commandline
+async_api                | 2022-11-28 20:40:48,652 - uvicorn.error - INFO - Started server process [1]
+async_api                | 2022-11-28 20:40:48,652 - uvicorn.error - INFO - Waiting for application startup.
+async_api                | 2022-11-28 20:40:48,653 - uvicorn.error - INFO - Application startup complete.
+async_api                | 2022-11-28 20:40:48,655 - uvicorn.error - INFO - Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
 
 ```
