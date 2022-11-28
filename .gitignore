@@ -3,7 +3,7 @@
 # ignore sub venv
 venv/
 
-/.env.dist
+/.env
 
 # postgres
 /init_db/
