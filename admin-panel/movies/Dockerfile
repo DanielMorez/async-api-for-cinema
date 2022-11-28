@@ -6,7 +6,6 @@ ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 ENV DJANGO_SETTINGS_MODULE 'app.settings'
 
-COPY .env .env
 COPY requirements.txt requirements.txt
 
 RUN  mkdir -p /var/www/static/ \

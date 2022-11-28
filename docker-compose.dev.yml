@@ -6,6 +6,8 @@ services:
       context: async-api
       dockerfile: Dockerfile
     container_name: async_api
+    volumes:
+      - ./.env:/opt/app/src/.env
     ports:
       - "${ASYNC_API_PORT}:${ASYNC_API_PORT}"
     networks:
@@ -81,6 +83,7 @@ services:
       - "8080:8080"
     restart: always
     volumes:
+      - ./.env:/opt/app/.env
       - ./admin-panel/movies/static:/opt/app/static
     depends_on:
       - postgres

@@ -46,10 +46,11 @@ def movie_etl(settings: Settings, state_key: str) -> None:
             docs = convert_movies_for_es(   # Трансформация в документ индекса
                 movies, settings.es_index
             )
-            state_value = movies[-1].modified.strftime(
-                settings.time_format        # Дата изменение, которое было записано в ES
-            )
-            loader.load(docs, state_value)  # Загрузка в ES
+            if movies:
+                state_value = movies[-1].modified.strftime(
+                    settings.time_format        # Дата изменение, которое было записано в ES
+                )
+                loader.load(docs, state_value)  # Загрузка в ES
             time.sleep(settings.etl_timeout)
 
 
