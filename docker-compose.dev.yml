@@ -1,0 +1,93 @@
+version: '3'
+    
+services:
+  async_api:
+    build:
+      context: async_api
+      dockerfile: Dockerfile
+    container_name: async_api
+    ports:
+      - "${ASYNC_API_PORT}:${ASYNC_API_PORT}"
+    networks:
+      - development_network
+    restart: always
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+
+  elasticsearch:
+    image: elasticsearch:8.5.1
+    container_name: elasticsearch_async_api
+    healthcheck:
+      test: curl -s http://127.0.0.1:${ES_PORT} >/dev/null || exit 1
+      interval: 30s
+      timeout: 10s
+      retries: 50
+    environment:
+      - xpack.security.enabled=false
+      - ES_JAVA_OPTS=-Xms1g -Xmx1g
+      - discovery.type=single-node
+    ports:
+      - "${ES_PORT}:${ES_PORT}"
+    networks:
+      - development_network
+    restart: always
+
+  redis:
+    image: redis:7.0.5
+    container_name: etl_async_api
+    restart: always
+    ports:
+      - "${REDIS_PORT}:${REDIS_PORT}"
+    networks:
+      - development_network
+
+  postgres:
+    image: postgres:15.1
+    container_name: postgres_async_api
+    ports:
+      - "${PG_PORT}:${PG_PORT}"
+    environment:
+      POSTGRES_USER: ${PG_USER}
+      POSTGRES_PASSWORD: ${PG_PASSWORD}
+      POSTGRES_DB: ${PG_DB_NAME}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - .:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - development_network
+
+  etl:
+    container_name: etl_async_api
+    build:
+      context: etl/postgres_to_es
+      dockerfile: Dockerfile
+    volumes:
+    - ./.env:/opt/app/.env
+    restart: always
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+    networks:
+      - development_network
+
+  admin_panel:
+    container_name: admin_panel_async_api
+    build:
+      context: admin-panel/movies
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    restart: always
+    volumes:
+      - ./admin-panel/movies/static:/opt/app/static
+    depends_on:
+      - postgres
+    networks:
+      - development_network
+
+networks:
+  development_network:
+    name: development_network
+    external: false
