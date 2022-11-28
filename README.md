@@ -26,3 +26,6 @@ async_api                | 2022-11-28 20:40:48,653 - uvicorn.error - INFO - Appl
 async_api                | 2022-11-28 20:40:48,655 - uvicorn.error - INFO - Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
 
 ```
+
+
+P.S. Не забудьте накатить миграции, для этого в корне проекта выполните команду: `make init migrations`
