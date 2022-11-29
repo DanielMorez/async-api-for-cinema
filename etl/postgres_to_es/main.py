@@ -1,10 +1,11 @@
+import os
 import json
-import time
+import asyncio
 import logging
 
 from contextlib import closing
 
-from etl.etl import movie_etl
+from etl.etl import etl
 from storage_clients.elasticsearch_client import ElasticsearchClient
 
 from settings import Settings
@@ -16,13 +17,23 @@ def main():
     settings = Settings()
 
     with closing(ElasticsearchClient(settings.es_dsn)) as es_conn:
-        if not es_conn.index_exists(settings.es_index):
-            with open(f'indexes/{settings.es_index}.json') as file:
-                index = json.loads(file.read())
-                es_conn.index_create(settings.es_index, index)
-            logger.warning(f'Index `{settings.es_index}` created.')
+        for es_index in settings.es_indexes:
+            if not es_conn.index_exists(es_index):
+                if os.path.exists(f'indexes/{es_index}.json'):
+                    with open(f'indexes/{es_index}.json') as file:
+                        index = json.loads(file.read())
+                        es_conn.index_create(es_index, index)
+                    logger.warning(f'Index `{es_index}` created.')
+                else:
+                    logger.warning(f'Index `{es_index}` does not exist.')
+                    raise Exception(
+                        f'Index `{es_index}` does not exist. '
+                        f'Add `{es_index}`.json with settings of index in dir: indexes/'
+                    )
 
-    movie_etl(settings, 'last_modified')
+    for index in settings.es_indexes:
+        logger.warning(f'Start ETL process for index `{es_index}`.')
+        asyncio.run(etl(settings, index))
 
 
 if __name__ == '__main__':
