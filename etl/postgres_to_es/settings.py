@@ -6,7 +6,7 @@ class Settings(BaseSettings):
     redis_dsn: RedisDsn
     es_dsn: str
     etl_timeout: int
-    es_index: str
+    es_indexes: list[str]
     time_format: str = '%Y-%m-%d %H:%M:%S.%f'
     load_chunk: int
 
