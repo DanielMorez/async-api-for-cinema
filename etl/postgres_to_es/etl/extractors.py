@@ -1,7 +1,7 @@
 import logging
 
 from helpers.state import State
-from models import Movie
+from models.movie import Movie
 from storage_clients.postgres_client import PostgresClient
 from etl.queries.movies import QUERY_TO_GET_LAST_MODIFIED
 
