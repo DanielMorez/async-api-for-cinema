@@ -2,4 +2,9 @@
 
 # ignore sub venv
 venv/
-async-api/.env
+
+/.env
+
+# postgres
+/init_db/
+/pgdata/

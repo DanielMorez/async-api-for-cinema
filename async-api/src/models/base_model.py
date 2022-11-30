@@ -14,7 +14,7 @@ def orjson_dumps(v, *, default) -> str:
 
 class PyBaseModel(PydanticBaseModel):
     """Базовая модель для всех моделей."""
-    id: UUID = Field(default_factory=uuid4)
+    id: str
 
     class Config:
         arbitrary_types_allowed = True
