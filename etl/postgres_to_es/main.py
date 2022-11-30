@@ -13,7 +13,7 @@ from settings import Settings
 logger = logging.getLogger(__name__)
 
 
-def main():
+async def main():
     settings = Settings()
 
     with closing(ElasticsearchClient(settings.es_dsn)) as es_conn:
@@ -32,9 +32,9 @@ def main():
                     )
 
     for index in settings.es_indexes:
-        logger.warning(f'Start ETL process for index `{es_index}`.')
-        asyncio.run(etl(settings, index))
+        logger.warning(f'Start ETL process for index `{index}`.')
+        asyncio.create_task(etl(settings, index))
 
 
 if __name__ == '__main__':
-    main()
+    asyncio.run(main())

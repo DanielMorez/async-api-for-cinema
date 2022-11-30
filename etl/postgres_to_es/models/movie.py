@@ -7,7 +7,6 @@ from pydantic import BaseModel, validator
 class NameObject(BaseModel):
     id: uuid.UUID
     name: str
-    modified: datetime
 
 
 class Movie(BaseModel):
@@ -17,6 +16,7 @@ class Movie(BaseModel):
     rating: float | None
     type: str | None
     created: datetime
+    modified: datetime
     actors: list[NameObject]
     writers: list[NameObject]
     directors: list[NameObject]

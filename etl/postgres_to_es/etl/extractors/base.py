@@ -21,7 +21,8 @@ class BaseExtractor:
         self.state_key = state_key
         self.extract_chunk = extract_chunk
 
-    def get_content(self) -> list[dict] | None:
+    def get_content(self) -> list[dict]:
+        data = []
         with self.pg_conn.cursor() as cursor:
             cursor.execute(
                 self.query.format(
@@ -30,7 +31,8 @@ class BaseExtractor:
                 )
             )
             while results := cursor.fetchmany(self.extract_chunk):
-                yield results
+                data += results
+        return data
 
     @property
     def last_modified(self):
