@@ -6,7 +6,7 @@ from storage_clients.elasticsearch_client import ElasticsearchClient
 logger = logging.getLogger(__name__)
 
 
-class FilmworkLoader:
+class ESLoader:
     def __init__(
             self,
             es_conn: ElasticsearchClient,

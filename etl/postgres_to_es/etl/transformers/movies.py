@@ -1,4 +1,4 @@
-from models import Movie
+from models.movie import Movie
 
 
 def convert_movies_for_es(movies: list[Movie], index: str) -> list[dict]:
