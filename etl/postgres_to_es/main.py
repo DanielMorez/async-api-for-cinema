@@ -31,9 +31,10 @@ async def main():
                         f'Add `{es_index}`.json with settings of index in dir: indexes/'
                     )
 
-    for index in settings.es_indexes:
-        logger.warning(f'Start ETL process for index `{index}`.')
-        asyncio.create_task(etl(settings, index))
+    logger.warning(f'Start ETL process for indexes {settings.es_indexes}.')
+    await asyncio.gather(
+        *(etl(settings, index) for index in settings.es_indexes)
+    )
 
 
 if __name__ == '__main__':
