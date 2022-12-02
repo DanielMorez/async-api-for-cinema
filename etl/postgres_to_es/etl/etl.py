@@ -11,6 +11,7 @@ from etl.transformers import TRANSFORMERS
 from helpers.state import State, RedisStorage
 from models.movie import Movie
 from models.person import Person
+from models.genre import Genre
 from settings import Settings
 
 from storage_clients.postgres_client import PostgresClient
@@ -48,7 +49,7 @@ async def etl(settings: Settings, index: str) -> None:
         convert = TRANSFORMERS[index]
 
         while True:
-            data: list[Movie | Person] = extractor.extract()  # Выгрузка из postgres
+            data: list[Movie | Person | Genre] = extractor.extract()  # Выгрузка из postgres
             if data:
                 docs = convert(data, index)     # Трансформация в документ индекса
                 state_value = data[-1].modified.strftime(

@@ -1,11 +1,15 @@
-from typing import Optional
-
-from models.base_model import PyBaseModel
+from models.base_model import BaseModel
 
 
-class Person(PyBaseModel):
+class Film(BaseModel):
+    title: str
+
+
+class Person(BaseModel):
     """Описание модели персон."""
     name: str
-    gender: Optional[str]
+    gender: str | None
     roles_names: list[str]
-    films_names: list[str]
+    films: list[Film]
+
+

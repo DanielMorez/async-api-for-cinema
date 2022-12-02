@@ -1,85 +1,28 @@
 from http import HTTPStatus
 
-from fastapi import APIRouter, Depends, HTTPException, Query
-from pydantic import BaseModel
+from fastapi import APIRouter, Depends, HTTPException
+from fastapi_utils.cbv import cbv
 
-from models.genre import Genre
-from models.person import Person
-from models.base_model import PyBaseModel
+from api.v1.queries_params.films import FilmListParams
+from models import Film
 from services.film import FilmService, get_film_service
 
 router = APIRouter()
 
 
-class FilmListAPI(PyBaseModel, BaseModel):
-    title: str
-    imdb_rating: float
-    genre: list[Genre]
+@cbv(router)
+class FilmCBV:
+    service: FilmService = Depends(get_film_service)
+    response_model = Film
 
+    @router.get('/list')
+    async def film_list(self, params: FilmListParams = Depends()) -> list[Film]:
+        films = await self.service.get_list(params)
+        return films
 
-class FilmAPI(PyBaseModel, BaseModel):
-    title: str
-    imdb_rating: float
-    description: str
-    genre: list[Genre]
-    actors: list[Person]
-    writers: list[Person]
-    directors: list[Person]
-
-
-@router.get('/',
-            response_model=list[FilmListAPI],
-            response_description='List of films')
-async def film_list(
-    page_size: int = Query(10, description='Number of films on page'),
-    page: int = Query(1, description='Page number'),
-    sort: str = Query('', description='Sorting fields (A comma-separated list '
-                                      'of "field":"direction(=asc|desc)" '
-                                      'pairs. Example: imdb_rating:desc)'),
-    genre: str = Query(None, description='Filter by genre uuid'),
-    film_service: FilmService = Depends(get_film_service),
-) -> list[FilmListAPI]:
-    """
-    Returns list of films by the parameters specified in the query.
-    Each element of the list is a dict of the FilmListAPI structure.
-    """
-    films = await film_service.all(page_size=page_size, page=page, sort=sort, genre=genre)
-    return [FilmListAPI.parse_obj(film.dict(by_alias=True)) for film in films]
-
-
-@router.get('/search',
-            response_model=list[FilmListAPI],
-            response_description='List of films')
-async def film_search(
-    page_size: int = Query(10, description='Number of films on page'),
-    page: int = Query(1, description='Page number'),
-    sort: str = Query('', description='Sorting fields (A comma-separated list '
-                                      'of "field":"direction(=asc|desc)" '
-                                      'pairs. Example: imdb_rating:desc)'),
-    query: str = Query(None, description='Part of the movie title (Example: dark sta )'),
-    film_service: FilmService = Depends(get_film_service)
-) -> list[FilmListAPI]:
-    """
-    Returns list of films by the parameters specified in the query.
-    Each element of the list is a dict of the FilmListAPI structure.
-
-    Unlike the /films/ endpoint, it contains the "query" parameter.
-
-    Parameter **query**: part of film title.
-    """
-    films = await film_service.all(page_size=page_size, page=page, sort=sort, query=query)
-    return [FilmListAPI.parse_obj(film.dict(by_alias=True)) for film in films]
-
-
-@router.get('/{film_id}',
-            response_model=FilmAPI,
-            response_description='Dict with all information about the film')
-async def film_details(film_id: str, film_service: FilmService = Depends(get_film_service)) -> FilmAPI:
-    """
-    Returns the dict with all information about the film by ID.
-    """
-    film = await film_service.get_by_id(film_id)
-    if not film:
-        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail='film not found')
-
-    return FilmAPI(**film.dict(by_alias=True))
+    @router.get('/{film_id}')
+    async def film_details(self, film_id: str) -> Film:
+        film = await self.service.get_by_id(film_id)
+        if not film:
+            raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail='film not found')
+        return film
