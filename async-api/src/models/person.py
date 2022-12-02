@@ -6,5 +6,6 @@ class Person(BaseModel):
     name: str
     gender: str
     roles_names: list[str]
+    films_names: list[str]
 
 
