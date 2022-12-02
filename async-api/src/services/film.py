@@ -1,17 +1,17 @@
-import json
+import logging
 from functools import lru_cache
 from typing import Optional
 
-import orjson
 from aioredis import Redis
 from elasticsearch import AsyncElasticsearch, NotFoundError
 from fastapi import Depends
-from loguru import logger
 
-from services.utils import get_key_by_args
+from api.v1.queries_params.films import FilmListParams
 from db.elastic import get_elastic
 from db.redis import get_redis
 from models.film import Film
+
+logger = logging.getLogger(__name__)
 
 FILM_CACHE_EXPIRE_IN_SECONDS = 60 * 5  # 5 минут
 
@@ -21,31 +21,12 @@ class FilmService:
         self.redis = redis
         self.elastic = elastic
 
-    async def all(self, **kwargs) -> list[Optional[Film]]:
-        films = await self._films_from_cache(**kwargs)
-        if not films:
-            films = await self._get_films_from_elastic(**kwargs)
-            if not films:
-                return []
-            await self._put_films_to_cache(films, **kwargs)
+    async def get_list(self, params: FilmListParams) -> list[Optional[Film]]:
+        films = await self._get_films_from_elastic(params)
         return films
 
     async def get_by_id(self, film_id: str) -> Optional[Film]:
-        film = await self._film_from_cache(film_id)
-        if not film:
-            film = await self._get_film_from_elastic(film_id)
-            if not film:
-                return None
-            await self._put_film_to_cache(film)
-
-        return film
-
-    @staticmethod
-    async def _make_film_from_es_doc(doc: dict) -> Film:
-        genre = doc['_source'].get('genre')
-        if genre and isinstance(genre, str):
-            doc['_source']['genre'] = [{'id': item, 'name': item} for item in genre.split(' ')]
-        film = Film(id=doc['_id'], **doc['_source'])
+        film = await self._get_film_from_elastic(film_id)
         return film
 
     async def _get_film_from_elastic(self, film_id: str) -> Optional[Film]:
@@ -59,66 +40,41 @@ class FilmService:
             doc['_source']['genre'] = [{'id': item, 'name': item} for item in genre.split(' ')]
         return Film(id=doc['_id'], **doc['_source'])
 
-    async def _get_films_from_elastic(self, **kwargs) -> Optional[list[Film]]:
-        page_size = kwargs.get('page_size', 10)
-        page = kwargs.get('page', 1)
-        sort = kwargs.get('sort', '')
-        genre = kwargs.get('genre', None)
-        query = kwargs.get('query', None)
-        body = None
-        if genre:
-            body = {
-                'query': {
-                    'query_string': {
-                        'default_field': 'genre',
-                        'query': genre
-                    }
-                }
-            }
-        if query:
-            body = {
-                'query': {
-                    'match': {
-                        'title': {
-                            'query': query,
-                            'fuzziness': 1,
-                            'operator': 'and'
+    async def _get_films_from_elastic(self, params: FilmListParams) -> Optional[list[Film]]:
+        try:
+            body = {"query": {"bool": {"must": []}}}
+            use_body = False
+
+            for param_name in params.string_query_params:
+                param_value = getattr(params, param_name)
+                if param_value:
+                    body["query"]["bool"]["must"].append(
+                        {"query_string": {"query": f"{param_name}_names:({param_value})"}}
+                    )
+                    use_body = True
+
+            if params.contains_rating_filter:
+                body["query"]["bool"]["must"].append({
+                    "range": {
+                        "imdb_rating": {
+                            "gte": params.imdb_rating_gt, "lte": params.imdb_rating_lt
                         }
                     }
-                }
-            }
-        try:
-            docs = await self.elastic.search(index='movies', body=body,
-                                             params={'size': page_size, 'from': page - 1, 'sort': sort,})
+                })
+
+            docs = await self.elastic.search(
+                index='movies',
+                from_=params.page_size * params.page_number,
+                size=params.page_size,
+                sort=params.sort,
+                body=body if use_body else None
+            )
         except NotFoundError:
             logger.debug('An error occurred while trying to get films in ES)')
             return None
-        return [await FilmService._make_film_from_es_doc(doc) for doc in docs['hits']['hits']]
-
-    async def _film_from_cache(self, film_id: str) -> Optional[Film]:
-        data = await self.redis.get(film_id)
-        if not data:
-            logger.debug(f'The film was not found in the cache (id: {film_id})')
-            return None
-        film = Film.parse_raw(data)
-        return film
-
-    async def _films_from_cache(self, **kwargs) -> Optional[list[Film]]:
-        key = await get_key_by_args(**kwargs)
-        data = await self.redis.get(key)
-        if not data:
-            logger.debug('Films was not found in the cache')
-            return None
-        return [Film.parse_raw(item) for item in orjson.loads(data)]
-
-    async def _put_film_to_cache(self, film: Film):
-        await self.redis.set(film.id, film.json(), ex=FILM_CACHE_EXPIRE_IN_SECONDS)
-
-    async def _put_films_to_cache(self, films: list[Film], **search_params):
-        key = await get_key_by_args(**search_params)
-        await self.redis.set(key,
-                             orjson.dumps([film.json() for film in films]),
-                             ex=FILM_CACHE_EXPIRE_IN_SECONDS)
+        return [
+            Film(id=doc['_id'], **doc['_source']) for doc in docs['hits']['hits']
+        ]
 
 
 @lru_cache()

@@ -1,6 +1,6 @@
-from models.base_model import PyBaseModel
+from models.base_model import BaseModel
 
 
-class Genre(PyBaseModel):
+class Genre(BaseModel):
     """Описание модели жанров кинопроизведений."""
     name: str
