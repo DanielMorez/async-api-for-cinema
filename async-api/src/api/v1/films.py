@@ -1,6 +1,6 @@
 from http import HTTPStatus
 
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException
 from fastapi_utils.cbv import cbv
 
 from api.v1.queries_params.films import FilmListParams

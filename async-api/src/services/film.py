@@ -10,17 +10,14 @@ from api.v1.queries_params.films import FilmListParams
 from db.elastic import get_elastic
 from db.redis import get_redis
 from models.film import Film
+from services.base_service import BaseService
 
 logger = logging.getLogger(__name__)
 
 FILM_CACHE_EXPIRE_IN_SECONDS = 60 * 5  # 5 минут
 
 
-class FilmService:
-    def __init__(self, redis: Redis, elastic: AsyncElasticsearch):
-        self.redis = redis
-        self.elastic = elastic
-
+class FilmService(BaseService):
     async def get_list(self, params: FilmListParams) -> list[Optional[Film]]:
         films = await self._get_films_from_elastic(params)
         return films
@@ -35,9 +32,9 @@ class FilmService:
         except NotFoundError:
             logger.debug(f'An error occurred while trying to find film in ES (id: {film_id})')
             return None
-        genre = doc['_source'].get('genre')
-        if genre and isinstance(genre, str):
-            doc['_source']['genre'] = [{'id': item, 'name': item} for item in genre.split(' ')]
+        genres = doc['_source'].get('genres')
+        if genres and isinstance(genres, str):
+            doc['_source']['genre'] = [{'id': item, 'name': item} for item in genres.split(' ')]
         return Film(id=doc['_id'], **doc['_source'])
 
     async def _get_films_from_elastic(self, params: FilmListParams) -> Optional[list[Film]]:
