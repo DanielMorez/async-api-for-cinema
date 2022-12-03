@@ -12,7 +12,7 @@ services:
     ports:
       - "${ASYNC_API_PORT}"
     networks:
-      - development_network
+      - production_network
     restart: always
     depends_on:
       elasticsearch:
@@ -33,7 +33,7 @@ services:
     ports:
       - "${ES_PORT}"
     networks:
-      - development_network
+      - production_network
     restart: always
 
   redis:
@@ -43,7 +43,7 @@ services:
     ports:
       - "${REDIS_PORT}"
     networks:
-      - development_network
+      - production_network
 
   postgres:
     image: postgres:15.1
@@ -59,7 +59,7 @@ services:
       - .:/var/lib/postgresql/data
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
-      - development_network
+      - production_network
 
   etl:
     container_name: etl_async_api
@@ -73,7 +73,7 @@ services:
       elasticsearch:
         condition: service_healthy
     networks:
-      - development_network
+      - production_network
 
   admin_panel:
     container_name: admin_panel_async_api
@@ -81,7 +81,7 @@ services:
       context: admin-panel/movies
       dockerfile: Dockerfile
     ports:
-      - "${ADM_PANEL}"
+      - "${ADM_PANEL_PORT}"
     restart: always
     volumes:
       - ./.env:/opt/app/.env
@@ -89,9 +89,24 @@ services:
     depends_on:
       - postgres
     networks:
-      - development_network
+      - production_network
+
+  nginx:
+    image: nginx:1.23.2
+    container_name: nginx_async_api
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./configs:/etc/nginx/conf.d:ro
+      - ./admin-panel/movies/static:/static
+    depends_on:
+      - admin_panel
+      - async_api
+    ports:
+      - "80:80"
+    networks:
+      - production_network
 
 networks:
-  development_network:
-    name: development_network
+  production_network:
+    name: production_network
     external: false

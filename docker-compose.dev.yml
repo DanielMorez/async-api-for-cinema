@@ -78,7 +78,7 @@ services:
     container_name: admin_panel_async_api
     build:
       context: admin-panel/movies
-      dockerfile: Dockerfile
+      dockerfile: dev.Dockerfile
     ports:
       - "8080:8080"
     restart: always
