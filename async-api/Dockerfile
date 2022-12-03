@@ -13,5 +13,3 @@ RUN  pip install --upgrade pip \
 COPY . .
 
 WORKDIR /opt/app/src
-
-ENTRYPOINT ["python", "main.py"]
