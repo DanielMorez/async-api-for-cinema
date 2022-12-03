@@ -1,0 +1,11 @@
+/.idea
+
+# ignore sub venv
+venv/
+
+/.env
+
+# postgres
+/init_db/
+/pgdata/
+/admin-panel/movies/static/

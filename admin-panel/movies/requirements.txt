@@ -1,0 +1,7 @@
+Django==4.0.4
+django-cors-headers==3.13.0
+djangorestframework==3.14.0
+psycopg2==2.9.4
+python-dotenv==0.21.0
+django-split-settings==1.1.0
+uwsgi==2.0.21
