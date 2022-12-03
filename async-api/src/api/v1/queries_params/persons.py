@@ -18,6 +18,7 @@ class PersonSortTypes(str, Enum):
 class PersonListParams(QueryListBaseModel):
     roles: str = Query(None)
     films: str = Query(None)
+    name: str = Query(None)
     gender: str = Query(
         None, regex=f'(None|{"|".join(GenderTypes)})'
     )
