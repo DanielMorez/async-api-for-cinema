@@ -14,8 +14,6 @@ from services.base_service import BaseService
 
 logger = logging.getLogger(__name__)
 
-FILM_CACHE_EXPIRE_IN_SECONDS = 60 * 5  # 5 минут
-
 
 class FilmService(BaseService):
     async def get_list(self, params: FilmListParams) -> list[Optional[Film]]:
