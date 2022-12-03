@@ -5,6 +5,7 @@ from typing import Optional
 from aioredis import Redis
 from elasticsearch import AsyncElasticsearch, NotFoundError
 from fastapi import Depends
+from orjson import orjson
 
 from api.v1.queries_params.films import FilmListParams
 from db.elastic import get_elastic
@@ -14,8 +15,6 @@ from services.base_service import BaseService
 
 logger = logging.getLogger(__name__)
 
-FILM_CACHE_EXPIRE_IN_SECONDS = 60 * 5  # 5 минут
-
 
 class FilmService(BaseService):
     async def get_list(self, params: FilmListParams) -> list[Optional[Film]]:
@@ -24,7 +23,7 @@ class FilmService(BaseService):
 
     async def get_by_id(self, film_id: str) -> Optional[Film]:
         film = await self._get_film_from_elastic(film_id)
-        return film
+        return orjson.loads(film.json())
 
     async def _get_film_from_elastic(self, film_id: str) -> Optional[Film]:
         try:

@@ -3,8 +3,10 @@ import logging
 import aioredis
 import uvicorn as uvicorn
 from elasticsearch import AsyncElasticsearch
-from fastapi import FastAPI
 from fastapi.responses import ORJSONResponse
+from fastapi_cache import FastAPICache
+from fastapi_cache.backends.redis import RedisBackend
+from fastapi import FastAPI
 
 from api.v1 import films, persons, genres
 from core.config import Settings
@@ -24,9 +26,8 @@ app = FastAPI(
 
 @app.on_event('startup')
 async def startup():
-    redis.redis = await aioredis.from_url(
-        settings.redis_dsn, encoding='utf-8'
-    )
+    redis = aioredis.from_url(settings.redis_dsn, encoding="utf8", decode_responses=True)
+    FastAPICache.init(RedisBackend(redis), prefix="fastapi-cache")
     elastic.es = AsyncElasticsearch(hosts=[settings.es_dsn])
 
 
@@ -35,10 +36,10 @@ async def shutdown():
     await redis.redis.close()
     await elastic.es.close()
 
+
 app.include_router(films.router, prefix='/api/v1/films', tags=['films'])
 app.include_router(persons.router, prefix='/api/v1/persons', tags=['persons'])
 app.include_router(genres.router, prefix='/api/v1/genres', tags=['genres'])
-
 
 if __name__ == '__main__':
     uvicorn.run(
