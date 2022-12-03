@@ -5,7 +5,6 @@ from typing import Optional
 from aioredis import Redis
 from elasticsearch import AsyncElasticsearch, NotFoundError
 from fastapi import Depends
-from orjson import orjson
 
 from api.v1.queries_params.films import FilmListParams
 from db.elastic import get_elastic
