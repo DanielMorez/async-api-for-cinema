@@ -23,7 +23,7 @@ class FilmService(BaseService):
 
     async def get_by_id(self, film_id: str) -> Optional[Film]:
         film = await self._get_film_from_elastic(film_id)
-        return orjson.loads(film.json())
+        return film
 
     async def _get_film_from_elastic(self, film_id: str) -> Optional[Film]:
         try:
