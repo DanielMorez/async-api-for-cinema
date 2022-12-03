@@ -5,13 +5,14 @@ services:
     build:
       context: async-api
       dockerfile: Dockerfile
+    command: bash -c "uvicorn main:app --host 0.0.0.0 --port ${ASYNC_API_PORT}"
     container_name: async_api
     volumes:
       - ./.env:/opt/app/src/.env
     ports:
-      - "${ASYNC_API_PORT}:${ASYNC_API_PORT}"
+      - "${ASYNC_API_PORT}"
     networks:
-      - development_network
+      - production_network
     restart: always
     depends_on:
       elasticsearch:
@@ -30,9 +31,9 @@ services:
       - ES_JAVA_OPTS=-Xms1g -Xmx1g
       - discovery.type=single-node
     ports:
-      - "${ES_PORT}:${ES_PORT}"
+      - "${ES_PORT}"
     networks:
-      - development_network
+      - production_network
     restart: always
 
   redis:
@@ -40,15 +41,15 @@ services:
     container_name: redis_async_api
     restart: always
     ports:
-      - "${REDIS_PORT}:${REDIS_PORT}"
+      - "${REDIS_PORT}"
     networks:
-      - development_network
+      - production_network
 
   postgres:
     image: postgres:15.1
     container_name: postgres_async_api
     ports:
-      - "${PG_PORT}:${PG_PORT}"
+      - "${PG_PORT}"
     environment:
       POSTGRES_USER: ${PG_USER}
       POSTGRES_PASSWORD: ${PG_PASSWORD}
@@ -58,7 +59,7 @@ services:
       - .:/var/lib/postgresql/data
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
-      - development_network
+      - production_network
 
   etl:
     container_name: etl_async_api
@@ -72,15 +73,15 @@ services:
       elasticsearch:
         condition: service_healthy
     networks:
-      - development_network
+      - production_network
 
   admin_panel:
     container_name: admin_panel_async_api
     build:
       context: admin-panel/movies
-      dockerfile: dev.Dockerfile
+      dockerfile: Dockerfile
     ports:
-      - "8080:8080"
+      - "${ADM_PANEL_PORT}"
     restart: always
     volumes:
       - ./.env:/opt/app/.env
@@ -88,9 +89,24 @@ services:
     depends_on:
       - postgres
     networks:
-      - development_network
+      - production_network
+
+  nginx:
+    image: nginx:1.23.2
+    container_name: nginx_async_api
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./configs:/etc/nginx/conf.d:ro
+      - ./admin-panel/movies/static:/static
+    depends_on:
+      - admin_panel
+      - async_api
+    ports:
+      - "80:80"
+    networks:
+      - production_network
 
 networks:
-  development_network:
-    name: development_network
+  production_network:
+    name: production_network
     external: false
