@@ -27,7 +27,7 @@ app = FastAPI(
 @app.on_event('startup')
 async def startup():
     redis.redis = await aioredis.from_url(settings.redis_dsn, encoding="utf8", decode_responses=True)
-    FastAPICache.init(RedisBackend(redis), prefix="fastapi-cache")
+    FastAPICache.init(RedisBackend(redis.redis), prefix="fastapi-cache")
     elastic.es = AsyncElasticsearch(hosts=[settings.es_dsn])
 
 
