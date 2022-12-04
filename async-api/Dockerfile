@@ -14,4 +14,6 @@ COPY . .
 
 WORKDIR /opt/app/src
 
-ENTRYPOINT ["uvicorn", "main:app", "-b", "0.0.0.0:8000"]
+EXPOSE 8000
+
+ENTRYPOINT ["gunicorn", "--bind", "0.0.0.0:8000", "-k", "uvicorn.workers.UvicornWorker", "main:app"]
