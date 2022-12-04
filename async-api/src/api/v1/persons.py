@@ -22,12 +22,18 @@ class PersonCBV:
     @router.get("/search")
     @cache(expire=CACHE_EXPIRE_IN_SECONDS, coder=JsonCoder, key_builder=key_builder)
     async def person_list(self, params: PersonSearchParams = Depends()) -> list[Person]:
+        """
+        Returns list of persons filtered by specified params (gender, name).
+        """
         persons = await self.service.get_list(params)
         return persons
 
     @router.get("/{person_id}")
     @cache(expire=CACHE_EXPIRE_IN_SECONDS, coder=JsonCoder, key_builder=key_builder)
     async def person_details(self, person_id: str) -> Person:
+        """
+        Returns the dict with all information about the person by ID.
+        """
         person = await self.service.get_by_id(person_id)
         if not person:
             raise HTTPException(
@@ -38,5 +44,8 @@ class PersonCBV:
     @router.get("/{person_id}/film")
     @cache(expire=CACHE_EXPIRE_IN_SECONDS, coder=JsonCoder, key_builder=key_builder)
     async def person_films(self, person_id: str) -> list[Film]:
+        """
+        Returns list of films by specified person_id.
+        """
         films = await self.service.get_person_films(person_id)
         return films
