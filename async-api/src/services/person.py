@@ -50,6 +50,12 @@ class PersonService(BaseService):
                 )
                 use_body = True
 
+            if params.name:
+                body["query"]["bool"]["must"].append(
+                    {"match": {"name": {"query": params.name, "fuzziness": "AUTO"}}}
+                )
+                use_body = True
+
             docs = await self.elastic.search(
                 index='persons',
                 from_=params.page_size * params.page_number,

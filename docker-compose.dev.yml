@@ -6,6 +6,7 @@ services:
       context: async-api
       dockerfile: Dockerfile
     container_name: async_api
+    entrypoint: "python main.py"
     volumes:
       - ./.env:/opt/app/src/.env
     ports:
