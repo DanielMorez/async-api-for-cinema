@@ -8,6 +8,7 @@ from pydantic.tools import lru_cache
 from api.v1.queries_params.genres import GenreListParams
 from db.elastic import get_elastic
 from db.redis import get_redis
+from helpers.utils import errorWarning
 from models.genre import Genre
 from services.base_service import BaseService
 
@@ -23,7 +24,7 @@ class GenreService(BaseService):
         try:
             doc = await self.elastic.get(index='genres', id=genre_id)
         except NotFoundError:
-            logger.debug(f'An error occurred while trying to find genre in ES (id: {genre_id})')
+            logger.debug(errorWarning('genre', 'notInES', genre_id))
             return None
         return Genre(id=doc['_id'], **doc['_source'])
 
@@ -50,7 +51,7 @@ class GenreService(BaseService):
                 body=body if use_body else None
             )
         except NotFoundError:
-            logger.debug('An error occurred while trying to get genres in ES)')
+            logger.debug(errorWarning('genres', 'notInES'))
             return None
         return [
             Genre(id=doc['_id'], **doc['_source']) for doc in docs['hits']['hits']

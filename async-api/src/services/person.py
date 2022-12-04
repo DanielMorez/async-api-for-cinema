@@ -8,6 +8,7 @@ from pydantic.tools import lru_cache
 from api.v1.queries_params.persons import PersonListParams
 from db.elastic import get_elastic
 from db.redis import get_redis
+from helpers.utils import errorWarning
 from models.person import Person
 from services.base_service import BaseService
 
@@ -23,7 +24,7 @@ class PersonService(BaseService):
         try:
             doc = await self.elastic.get(index='persons', id=person_id)
         except NotFoundError:
-            logger.debug(f'An error occurred while trying to find person in ES (id: {person_id})')
+            logger.debug(errorWarning('person', 'notInES', person_id))
             return None
         return Person(id=doc['_id'], **doc['_source'])
 
@@ -64,7 +65,7 @@ class PersonService(BaseService):
                 body=body if use_body else None
             )
         except NotFoundError:
-            logger.debug('An error occurred while trying to get persons in ES)')
+            logger.debug(errorWarning('persons', 'notInES'))
             return None
         return [
             Person(id=doc['_id'], **doc['_source']) for doc in docs['hits']['hits']

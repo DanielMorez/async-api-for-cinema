@@ -11,6 +11,7 @@ from db.elastic import get_elastic
 from db.redis import get_redis
 from models.film import Film
 from services.base_service import BaseService
+from helpers.utils import errorWarning
 
 logger = logging.getLogger(__name__)
 
@@ -28,7 +29,7 @@ class FilmService(BaseService):
         try:
             doc = await self.elastic.get(index='movies', id=film_id)
         except NotFoundError:
-            logger.debug(f'An error occurred while trying to find film in ES (id: {film_id})')
+            logger.debug(errorWarning('film', 'notInES', film_id))
             return None
         genres = doc['_source'].get('genres')
         if genres and isinstance(genres, str):
@@ -65,7 +66,7 @@ class FilmService(BaseService):
                 body=body if use_body else None
             )
         except NotFoundError:
-            logger.debug('An error occurred while trying to get films in ES)')
+            logger.debug(errorWarning('films', 'notInES'))
             return None
         return [
             Film(id=doc['_id'], **doc['_source']) for doc in docs['hits']['hits']

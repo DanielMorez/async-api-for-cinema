@@ -9,6 +9,7 @@ from api.v1.queries_params.films import FilmListParams
 from helpers.cache_key_builder import CACHE_EXPIRE_IN_SECONDS, key_builder
 from models import Film
 from services.film import FilmService, get_film_service
+from helpers.utils import errorWarning
 
 router = APIRouter()
 
@@ -29,5 +30,5 @@ class FilmCBV:
     async def film_details(self, film_id: str) -> Film:
         film = await self.service.get_by_id(film_id)
         if not film:
-            raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail='film not found')
+            raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail=errorWarning('film', 'nf'))
         return film

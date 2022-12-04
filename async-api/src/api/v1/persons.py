@@ -9,6 +9,7 @@ from api.v1.queries_params.persons import PersonListParams
 from helpers.cache_key_builder import CACHE_EXPIRE_IN_SECONDS, key_builder
 from models import Person
 from services.person import PersonService, get_person_service
+from helpers.utils import errorWarning
 
 router = APIRouter()
 
@@ -29,5 +30,5 @@ class PersonCBV:
     async def film_details(self, person_id: str) -> Person:
         person = await self.service.get_by_id(person_id)
         if not person:
-            raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail='person not found')
+            raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail=errorWarning('person', 'nf'))
         return person
