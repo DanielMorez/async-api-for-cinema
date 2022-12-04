@@ -9,6 +9,7 @@ from api.v1.queries_params.genres import GenreListParams
 from helpers.cache_key_builder import CACHE_EXPIRE_IN_SECONDS, key_builder
 from models import Genre
 from services.genre import GenreService, get_genre_service
+from helpers.utils import errorWarning
 
 router = APIRouter()
 
@@ -29,5 +30,5 @@ class GenreCBV:
     async def film_details(self, genre_id: str) -> Genre:
         genre = await self.service.get_by_id(genre_id)
         if not genre:
-            raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail='genre not found')
+            raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail=errorWarning('genre', 'nf'))
         return genre
