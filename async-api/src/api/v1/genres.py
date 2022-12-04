@@ -18,16 +18,18 @@ class GenreCBV:
     service: GenreService = Depends(get_genre_service)
     response_model = Genre
 
-    @router.get('/list')
+    @router.get("/")
     @cache(expire=CACHE_EXPIRE_IN_SECONDS, coder=JsonCoder, key_builder=key_builder)
     async def genre_list(self, params: GenreListParams = Depends()) -> list[Genre]:
         genres = await self.service.get_list(params)
         return genres
 
-    @router.get('/{genre_id}')
+    @router.get("/{genre_id}")
     @cache(expire=CACHE_EXPIRE_IN_SECONDS, coder=JsonCoder, key_builder=key_builder)
-    async def film_details(self, genre_id: str) -> Genre:
+    async def genre_details(self, genre_id: str) -> Genre:
         genre = await self.service.get_by_id(genre_id)
         if not genre:
-            raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail='genre not found')
+            raise HTTPException(
+                status_code=HTTPStatus.NOT_FOUND, detail="genre not found"
+            )
         return genre

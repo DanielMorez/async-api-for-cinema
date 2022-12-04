@@ -1,32 +1,38 @@
 from enum import Enum
 
 from fastapi import Query
+from pydantic import validator, Field
 
 from .base import QueryListBaseModel
 
 
 class FilmSortTypes(str, Enum):
-    RATING_ASC = 'imdb_rating'
-    RATING_DESC = 'imdb_rating:desc'
+    RATING_ASC = "imdb_rating"  # imdb_rating:asc
+    RATING_DESC = "-imdb_rating"  # imdb_rating:desc
 
 
-class FilmListParams(QueryListBaseModel):
-    title: str = Query(None)
-    genres: str = Query(None)
-    actors: str = Query(None)
-    writers: str = Query(None)
-    directors: str = Query(None)
-    sort: str = Query(
-        FilmSortTypes.RATING_DESC,
-        regex=f'({"|".join(FilmSortTypes)})'
+class FilmMixin(QueryListBaseModel):
+    sort: str = Field(
+        Query(
+            "-imdb_rating",
+            regex=f'(None|{"|".join(FilmSortTypes)})',
+            description="Sorting by IMDB_rating",
+        ),
     )
-    imdb_rating_gt: float = Query(None, gte=0, le=10)
-    imdb_rating_lt: float = Query(None, gte=0, le=10)
 
-    @property
-    def string_query_params(self):
-        return ["title", "actors", "writers", "directors", "genres"]
+    @validator("sort", pre=True, always=True)
+    def set_sort(cls, sort):
+        if sort == FilmSortTypes.RATING_ASC:
+            return sort
+        elif sort == FilmSortTypes.RATING_DESC:
+            return "imdb_rating:desc"
 
-    @property
-    def contains_rating_filter(self) -> bool:
-        return self.imdb_rating_gt or self.imdb_rating_lt
+
+class FilmListParams(FilmMixin):
+    genre_id: str | None = Field(
+        Query(None, alias="filter[genre]", description="Filter by genre UUID")
+    )
+
+
+class FilmQueryParams(FilmMixin):
+    query: str | None = Field(Query(None, description="Film searching"))

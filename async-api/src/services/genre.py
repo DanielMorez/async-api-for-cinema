@@ -21,17 +21,21 @@ class GenreService(BaseService):
 
     async def _get_genre_from_elastic(self, genre_id: str) -> Genre | None:
         try:
-            doc = await self.elastic.get(index='genres', id=genre_id)
+            doc = await self.elastic.get(index="genres", id=genre_id)
         except NotFoundError:
-            logger.debug(f'An error occurred while trying to find genre in ES (id: {genre_id})')
+            logger.debug(
+                f"An error occurred while trying to find genre in ES (id: {genre_id})"
+            )
             return None
-        return Genre(id=doc['_id'], **doc['_source'])
+        return Genre(id=doc["_id"], **doc["_source"])
 
     async def get_list(self, params: GenreListParams) -> list[Genre] | None:
         persons = await self._get_genres_from_elastic(params)
         return persons
 
-    async def _get_genres_from_elastic(self, params: GenreListParams) -> list[Genre] | None:
+    async def _get_genres_from_elastic(
+        self, params: GenreListParams
+    ) -> list[Genre] | None:
         try:
             body = {"query": {"bool": {"must": []}}}
             use_body = False
@@ -43,23 +47,21 @@ class GenreService(BaseService):
                 use_body = True
 
             docs = await self.elastic.search(
-                index='genres',
+                index="genres",
                 from_=params.page_size * params.page_number,
                 size=params.page_size,
                 sort=params.sort,
-                body=body if use_body else None
+                body=body if use_body else None,
             )
         except NotFoundError:
-            logger.debug('An error occurred while trying to get genres in ES)')
+            logger.debug("An error occurred while trying to get genres in ES)")
             return None
-        return [
-            Genre(id=doc['_id'], **doc['_source']) for doc in docs['hits']['hits']
-        ]
+        return [Genre(id=doc["_id"], **doc["_source"]) for doc in docs["hits"]["hits"]]
 
 
 @lru_cache()
 def get_genre_service(
-        redis: Redis = Depends(get_redis),
-        elastic: AsyncElasticsearch = Depends(get_elastic),
+    redis: Redis = Depends(get_redis),
+    elastic: AsyncElasticsearch = Depends(get_elastic),
 ) -> GenreService:
     return GenreService(redis, elastic)
