@@ -1,12 +1,13 @@
 from http import HTTPStatus
 
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException
 from fastapi_cache import JsonCoder
 from fastapi_cache.decorator import cache
 from fastapi_utils.cbv import cbv
 
 from api.v1.queries_params.persons import PersonSearchParams
 from helpers.cache_key_builder import CACHE_EXPIRE_IN_SECONDS, key_builder
+from helpers.detail_messages import DETAILS
 from models import Person, Film
 from services.person import PersonService, get_person_service
 
@@ -30,7 +31,7 @@ class PersonCBV:
         person = await self.service.get_by_id(person_id)
         if not person:
             raise HTTPException(
-                status_code=HTTPStatus.NOT_FOUND, detail="person not found"
+                status_code=HTTPStatus.NOT_FOUND, detail=DETAILS["not_found"]
             )
         return person
 
