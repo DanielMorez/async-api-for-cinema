@@ -1,7 +1,6 @@
-from typing import Optional
 from elasticsearch import AsyncElasticsearch
 
-es: Optional[AsyncElasticsearch] = None
+es: AsyncElasticsearch | None = None
 
 
 # Функция понадобится при внедрении зависимостей

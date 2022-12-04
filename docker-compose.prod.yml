@@ -5,11 +5,10 @@ services:
     build:
       context: async-api
       dockerfile: Dockerfile
-    command: bash -c "uvicorn main:app --host 0.0.0.0 --port ${ASYNC_API_PORT}"
     container_name: async_api
     volumes:
       - ./.env:/opt/app/src/.env
-    ports:
+    expose:
       - "${ASYNC_API_PORT}"
     networks:
       - production_network
@@ -80,7 +79,7 @@ services:
     build:
       context: admin-panel/movies
       dockerfile: Dockerfile
-    ports:
+    expose:
       - "${ADM_PANEL_PORT}"
     restart: always
     volumes:

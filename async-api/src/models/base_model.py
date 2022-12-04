@@ -8,6 +8,7 @@ def orjson_dumps(v, *, default) -> str:
 
 class BaseModel(PydanticBaseModel):
     """Базовая модель для всех моделей."""
+
     id: str
 
     class Config:

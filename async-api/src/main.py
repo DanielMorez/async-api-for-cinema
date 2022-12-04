@@ -18,32 +18,35 @@ settings = Settings()
 
 app = FastAPI(
     title=settings.project_name,
-    docs_url='/api/openapi',
-    openapi_url='/api/openapi.json',
+    docs_url="/api/openapi",
+    openapi_url="/api/openapi.json",
     default_response_class=ORJSONResponse,
 )
 
 
-@app.on_event('startup')
+@app.on_event("startup")
 async def startup():
-    redis.redis = await aioredis.from_url(settings.redis_dsn, encoding="utf8", decode_responses=True)
+    redis.redis = await aioredis.from_url(
+        settings.redis_dsn, encoding="utf8", decode_responses=True
+    )
     FastAPICache.init(RedisBackend(redis.redis), prefix="fastapi-cache")
     elastic.es = AsyncElasticsearch(hosts=[settings.es_dsn])
 
 
-@app.on_event('shutdown')
+@app.on_event("shutdown")
 async def shutdown():
     await redis.redis.close()
     await elastic.es.close()
 
-app.include_router(films.router, prefix='/api/v1/films', tags=['films'])
-app.include_router(persons.router, prefix='/api/v1/persons', tags=['persons'])
-app.include_router(genres.router, prefix='/api/v1/genres', tags=['genres'])
 
-if __name__ == '__main__':
+app.include_router(films.router, prefix="/api/v1/films", tags=["films"])
+app.include_router(persons.router, prefix="/api/v1/persons", tags=["persons"])
+app.include_router(genres.router, prefix="/api/v1/genres", tags=["genres"])
+
+if __name__ == "__main__":
     uvicorn.run(
-        'main:app',
-        host='0.0.0.0',
+        "main:app",
+        host="0.0.0.0",
         port=8000,
         log_config=LOGGING,
         log_level=logging.DEBUG,
