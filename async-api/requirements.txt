@@ -10,5 +10,4 @@ fastapi-utils==0.2.1
 fastapi-cache2==0.1.9
 redis==4.3.4
 black==22.10.0
-pydantic-jsonapi==0.11.0
 gunicorn==20.1.0
