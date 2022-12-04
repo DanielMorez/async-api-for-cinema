@@ -7,9 +7,8 @@ class Film(BaseModel):
 
 class Person(BaseModel):
     """Описание модели персон."""
+
     name: str
     gender: str | None
     roles_names: list[str]
     films: list[Film]
-
-
