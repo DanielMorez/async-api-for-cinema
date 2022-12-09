@@ -1,13 +1,58 @@
 version: '3'
 
 services:
+  elasticsearch:
+    image: elasticsearch:8.5.1
+    container_name: elasticsearch_tests
+    healthcheck:
+      test: curl -s http://127.0.0.1:${ES_PORT} >/dev/null || exit 1
+      interval: 30s
+      timeout: 10s
+      retries: 50
+    environment:
+      - xpack.security.enabled=false
+      - ES_JAVA_OPTS=-Xms1g -Xmx1g
+      - discovery.type=single-node
+    ports:
+      - "${ES_PORT}:${ES_PORT}"
+    networks:
+      - test_network
+    restart: always
+
+  redis:
+    image: redis:7.0.5
+    container_name: redis_tests
+    restart: always
+    ports:
+      - "${REDIS_PORT}:${REDIS_PORT}"
+    networks:
+      - test_network
+
   async-api:
     build: ../../.
     image: async-api
+    container_name: async_api_tests
+    volumes:
+      - ./.env:/opt/app/src/.env
+    ports:
+      - "${ASYNC_API_PORT}:${ASYNC_API_PORT}"
+    networks:
+      - test_network
+    restart: always
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
 
-  tests:
-    entrypoint: >
-      sh -c "pip install -r /tests/functional/requirements.txt
-      && python3 /tests/functional/utils/wait_for_es.py
-      && python3 /tests/functional/utils/wait_for_redis.py
-      && pytest /tests/functional/src"
+#  tests:
+#    build: .
+#    container_name: tests
+#    volumes:
+#      - ./.env:/opt/app/src/.env
+#    depends_on:
+#      elasticsearch:
+#        condition: service_healthy
+
+networks:
+  test_network:
+    name: test_network
+    external: false
