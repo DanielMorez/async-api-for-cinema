@@ -1,21 +1,21 @@
-import datetime
 import uuid
 import json
-
+import datetime
+import logging
 import aiohttp
 import pytest
 
 from elasticsearch import AsyncElasticsearch
 
-from ..settings import test_settings
+from settings import test_settings
 
 
-#  Название теста должно начинаться со слова `test_`
-#  Любой тест с асинхронными вызовами нужно оборачивать декоратором `pytest.mark.asyncio`, который следит за запуском и работой цикла событий. 
+logger = logging.getLogger(__name__)
+
 
 @pytest.mark.asyncio
 async def test_search():
-    # 1. Генерируем данные для ES
+    logger.debug("#1 Generating content")
 
     es_data = [{
         'imdb_rating': 8.5,
@@ -47,7 +47,7 @@ async def test_search():
 
     str_query = '\n'.join(bulk_query) + '\n'
 
-    # 2. Загружаем данные в ES
+    logger.debug("#2 Load content to ES")
 
     es_client = AsyncElasticsearch(hosts=[test_settings.es_dsn])
     response = await es_client.bulk(operations=str_query, refresh=True)
@@ -55,7 +55,7 @@ async def test_search():
     if response['errors']:
         raise Exception('Ошибка записи данных в Elasticsearch')
 
-    # 3. Запрашиваем данные из ES по API
+    logger.debug("#3 Requesting data from ES via API")
 
     session = aiohttp.ClientSession()
     url = test_settings.service_url + '/api/v1/films/search'
@@ -66,7 +66,7 @@ async def test_search():
         status = response.status
     await session.close()
 
-    # 4. Проверяем ответ 
+    logger.debug("#4 Checking the answer")
 
     assert status == 200
     assert len(body) == 50

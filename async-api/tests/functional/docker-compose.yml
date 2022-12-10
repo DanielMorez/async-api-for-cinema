@@ -43,14 +43,16 @@ services:
       elasticsearch:
         condition: service_healthy
 
-#  tests:
-#    build: .
-#    container_name: tests
-#    volumes:
-#      - ./.env:/opt/app/src/.env
-#    depends_on:
-#      elasticsearch:
-#        condition: service_healthy
+  tests:
+    build: .
+    container_name: tests
+    volumes:
+      - ./.env:/opt/app/src/.env
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+    networks:
+      - test_network
 
 networks:
   test_network:

@@ -12,4 +12,4 @@ RUN pip install --upgrade pip \
 
 COPY . .
 
-ENTRYPOINT ["pytest", "src"]
+ENTRYPOINT ["python", "main.py"]
