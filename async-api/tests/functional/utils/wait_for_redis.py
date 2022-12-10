@@ -12,7 +12,7 @@ def health_check_redis(redis_dsn: RedisDsn):
         host=redis_dsn.host
     )
     while True:
-        logger.warning(f"Trying connect to Redis ({redis_dsn})")
+        logger.info(f"Trying connect to Redis ({redis_dsn})")
         if redis_client.ping():
             break
         time.sleep(1)
