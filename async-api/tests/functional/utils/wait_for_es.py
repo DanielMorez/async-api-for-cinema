@@ -1,10 +1,16 @@
 import time
+import logging
 
 from elasticsearch import Elasticsearch
+from pydantic import AnyUrl
 
-if __name__ == '__main__':
-    es_client = Elasticsearch(hosts='http://localhost:9200', validate_cert=False, use_ssl=False)
+logger = logging.getLogger(__name__)
+
+
+def health_check_es(es_dsn: AnyUrl):
+    es_client = Elasticsearch(hosts=[es_dsn])
     while True:
+        logger.warning(f"Trying connect to ES ({es_dsn})")
         if es_client.ping():
             break
         time.sleep(1)

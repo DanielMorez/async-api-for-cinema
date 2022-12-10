@@ -58,8 +58,9 @@ class FilmService(BaseService):
                 )
                 return body
         elif isinstance(params, FilmQueryParams):
-            body = {"query": {"query_string": {"query": params.query}}}
-            return body
+            if params.query:
+                body = {"query": {"query_string": {"query": params.query}}}
+                return body
 
     async def _get_films_from_elastic(
         self, params: FilmListParams | FilmQueryParams
