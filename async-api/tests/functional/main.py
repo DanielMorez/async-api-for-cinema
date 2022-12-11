@@ -8,7 +8,7 @@ from settings import test_settings
 
 
 if __name__ == "__main__":
-    logging.basicConfig(filename='core.logger', level=logging.DEBUG)
+    logging.basicConfig(level=logging.INFO)
     health_check_es(test_settings.es_dsn)
     health_check_redis(test_settings.redis_dsn)
 
