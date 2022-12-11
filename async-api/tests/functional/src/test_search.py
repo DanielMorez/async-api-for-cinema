@@ -1,23 +1,20 @@
-import uuid
-import json
 import datetime
 import logging
-import aiohttp
+import uuid
 import pytest
 
-from elasticsearch import AsyncElasticsearch
-
 from settings import test_settings
+from testdata.parametrize.films_search import params
 
 
-logger = logging.getLogger(__name__)
-
-
-@pytest.mark.asyncio
-async def test_search():
-    logger.debug("#1 Generating content")
+@pytest.mark.parametrize(
+    'query_data, expected_answer', params
+)
+async def test_search(es_write_data, make_get_request, query_data, expected_answer):
+    logging.info("#1 Generating content")
 
     es_data = [{
+        'id': str(uuid.uuid4()),
         'imdb_rating': 8.5,
         'genre': ['Action', 'Sci-Fi'],
         'title': 'The Star',
@@ -38,35 +35,13 @@ async def test_search():
         'film_work_type': 'movie'
     } for _ in range(60)]
 
-    bulk_query = []
-    for row in es_data:
-        bulk_query.extend([
-            json.dumps({'index': {'_index': test_settings.es_index, '_id': str(uuid.uuid4())}}),
-            json.dumps(row)
-        ])
+    await es_write_data(es_data, "movies", "id")
 
-    str_query = '\n'.join(bulk_query) + '\n'
+    logging.info("#3 Requesting data from ES via API")
 
-    logger.debug("#2 Load content to ES")
+    response = await make_get_request(test_settings.service_url, "/api/v1/films/search", query_data)
 
-    es_client = AsyncElasticsearch(hosts=[test_settings.es_dsn])
-    response = await es_client.bulk(operations=str_query, refresh=True)
-    await es_client.close()
-    if response['errors']:
-        raise Exception('Ошибка записи данных в Elasticsearch')
+    logging.info("#4 Checking the answer")
 
-    logger.debug("#3 Requesting data from ES via API")
-
-    session = aiohttp.ClientSession()
-    url = test_settings.service_url + '/api/v1/films/search'
-    query_data = {'query': 'The Star'}
-    async with session.get(url, params=query_data) as response:
-        body = await response.json()
-        headers = response.headers
-        status = response.status
-    await session.close()
-
-    logger.debug("#4 Checking the answer")
-
-    assert status == 200
-    assert len(body) == 50
+    assert response["status"] == expected_answer["status"]
+    assert len(response["body"]) == expected_answer["length"]
