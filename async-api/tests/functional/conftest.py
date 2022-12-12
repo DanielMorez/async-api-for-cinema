@@ -45,7 +45,7 @@ def make_get_request():
     async def inner(service_url: AnyUrl, endpoint: str, query_data: dict):
         session = aiohttp.ClientSession()
         url = service_url + endpoint
-        async with session.get(url, params=query_data) as response:
+        async with session.get(url, params=query_data if query_data else '') as response:
             body = await response.json()
             response = {
                 "headers": response.headers,
