@@ -42,10 +42,10 @@ def es_write_data(es_client: AsyncElasticsearch):
 
 @pytest.fixture
 def make_get_request():
-    async def inner(service_url: AnyUrl, endpoint: str, query_data: dict):
+    async def inner(service_url: AnyUrl, endpoint: str, query_data: dict | None = None):
         session = aiohttp.ClientSession()
         url = service_url + endpoint
-        async with session.get(url, params=query_data if query_data else '') as response:
+        async with session.get(url, params=query_data) as response:
             body = await response.json()
             response = {
                 "headers": response.headers,
