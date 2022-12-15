@@ -5,3 +5,4 @@ elasticsearch==8.5.1
 pydantic==1.10.2
 python-dotenv==0.21.0
 redis==4.3.4
+aioredis==2.0.1
