@@ -1,5 +1,4 @@
 import asyncio
-
 import aiohttp
 import aioredis
 import pytest
