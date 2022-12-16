@@ -14,18 +14,6 @@ class Person(BaseModel):
 
 class Film(BaseModel):
     id: str
-    title: str
-    description: str | None
-    type: str
-    imdb_rating: float | None
-    genres: list[Genre] = []
-    directors: list[Person] = []
-    actors: list[Person] = []
-    writers: list[Person] = []
-
-
-class SearchFilm(BaseModel):
-    id: str
     imdb_rating: float | None
     title: str
     description: str | None
