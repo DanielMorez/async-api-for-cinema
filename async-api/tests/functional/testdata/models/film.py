@@ -24,7 +24,7 @@ class Film(BaseModel):
     writers: list[Person] = []
 
 
-class Search_film(BaseModel):
+class SearchFilm(BaseModel):
     id: str
     imdb_rating: float | None
     title: str
@@ -34,3 +34,11 @@ class Search_film(BaseModel):
     actors: list[Person] = []
     writers: list[Person] = []
     type: str
+
+
+class SearchPerson(BaseModel):
+    id: str
+    name: str
+    gender: str | None
+    roles_names: list = []
+    films: list = []
