@@ -1,10 +1,9 @@
 import asyncio
-
 import aiohttp
+import aioredis
 import pytest
 import logging
 
-import pytest_asyncio
 from elasticsearch import AsyncElasticsearch
 from pydantic import AnyUrl
 
@@ -22,6 +21,17 @@ def event_loop():
 @pytest.fixture(scope="session")
 async def es_client(event_loop):
     client = AsyncElasticsearch(hosts=test_settings.es_dsn)
+    logging.info("Created elasticsearch client.")
+    yield client
+    logging.info("Closed elasticsearch client.")
+    await client.close()
+
+
+@pytest.fixture(scope="session")
+async def redis_client(event_loop):
+    client = aioredis.from_url(
+        test_settings.redis_dsn, encoding="utf8", decode_responses=True
+    )
     logging.info("Created elasticsearch client.")
     yield client
     logging.info("Closed elasticsearch client.")
