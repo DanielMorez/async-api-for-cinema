@@ -1,24 +1,15 @@
-params = [
-    (
-        {"query": "Rafael Ferrer"},
-        {"status": 200, "length": 1}
-    ),
-    (
-        {"query": "Mashed potato"},
-        {"status": 200, "length": 0}
-    )
+person_list_params = [
+    (None, {"status": 200, "length": 50}),
+    ({"page[size]": 10}, {"status": 200, "length": 10}),
+    ({"page[size]": 60}, {"status": 200, "length": 60}),
 ]
-not_found_id = [
+
+cache_person_list_params = [
     (
-        {"name": "Rafael Ferrer"},
-        {"status": 200, "length": 1}
+        None,
+        {
+            "status": 200,
+            "key": "fastapi-cache:api.v1.persons:person_list:('',):{'request': None, 'response': None, 'args': (), 'kwargs': \"{'self': <>, 'params': PersonSearchParams(page_size=50, page_number=0, query=None)}\"}"
+        },
     ),
-    (
-        {"query": "Mashed potato"},
-        {"status": 200, "length": 0}
-    ),
-    (
-        {"id": "www-www-www"},
-        {"status": 404, "length": 0}
-    )
 ]
