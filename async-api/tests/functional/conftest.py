@@ -23,8 +23,8 @@ async def es_client(event_loop):
     client = AsyncElasticsearch(hosts=test_settings.es_dsn)
     logging.info("Created elasticsearch client.")
     yield client
-    logging.info("Closed elasticsearch client.")
     await client.close()
+    logging.info("Closed elasticsearch client.")
 
 
 @pytest.fixture(scope="session")
@@ -47,14 +47,18 @@ def es_write_data(es_client: AsyncElasticsearch):
         if response["errors"]:
             raise Exception("Ошибка записи данных в Elasticsearch")
         logging.info(f"Loaded data to elasticsearch for index `{index}`")
+
     return inner
 
 
 @pytest.fixture
 def get_index_es(es_client: AsyncElasticsearch):
     async def inner(index: str, sort: str | None = None):
-        response = await es_client.search(index=index, query={"match_all": {}}, size=50, sort=sort)
+        response = await es_client.search(
+            index=index, query={"match_all": {}}, size=50, sort=sort
+        )
         return response
+
     return inner
 
 
@@ -68,9 +72,10 @@ def make_get_request():
             response = {
                 "headers": response.headers,
                 "status": response.status,
-                "body": body
+                "body": body,
             }
         await session.close()
         logging.info(f"Got response with code {response['status']}")
         return response
+
     return inner
