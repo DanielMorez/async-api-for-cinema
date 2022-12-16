@@ -2,14 +2,14 @@ import logging
 import pytest
 
 from settings import test_settings
-from testdata.generate_data.persons import generate_person, generate_persons
+from testdata.data.person_data import generate_persons_list
 from testdata.parametrize.person_params import person_list_params, cache_person_list_params
 from testdata.models.person import Person
 
 
 async def test_person_by_id(es_write_data, make_get_request):
     logging.info("#1 Generating content")
-    person_es = generate_person()
+    person_es = generate_persons_list()[0]
     path = f"/api/v1/persons/{person_es['id']}"
     await es_write_data([person_es], "persons", "id")
     logging.info("#2 Requesting data from ES via API")
@@ -20,7 +20,7 @@ async def test_person_by_id(es_write_data, make_get_request):
 
 async def test_person_validation(es_write_data, make_get_request):
     logging.info("#1 Generating content")
-    person_es = generate_person()
+    person_es = generate_persons_list()[0]
     person_model = Person(**person_es)
     path = f"/api/v1/persons/{person_es['id']}"
     await es_write_data([person_es], "persons", "id")
@@ -36,7 +36,7 @@ async def test_person_validation(es_write_data, make_get_request):
 )
 async def test_get_list_person(es_write_data, make_get_request, query_data, expected_answer):
     logging.info("#1 Generating content")
-    person_es = generate_persons(100)
+    person_es = generate_persons_list()
     await es_write_data(person_es, "persons", "id")
     path = "/api/v1/persons/search"
     logging.info("#2 Requesting data from ES via API")
@@ -48,7 +48,7 @@ async def test_get_list_person(es_write_data, make_get_request, query_data, expe
 
 async def test_get_person_film(es_write_data, make_get_request):
     logging.info("#1 Generating content")
-    person_es = generate_person()
+    person_es = generate_persons_list()[0]
     path = f"/api/v1/persons/{person_es['id']}/film"
     await es_write_data([person_es], "persons", "id")
     logging.info("#2 Requesting data from ES via API")
@@ -62,7 +62,7 @@ async def test_get_person_film(es_write_data, make_get_request):
 )
 async def test_persons_cache(redis_client, es_write_data, make_get_request, query_data, expected_answer):
     logging.info("#1 Generating content")
-    person_es = generate_persons()
+    person_es = generate_persons_list()
     await es_write_data(person_es, "persons", "id")
     logging.info("#2 Requesting data from ES via API")
     response = await make_get_request(test_settings.service_url, "/api/v1/persons/search", query_data)
@@ -71,4 +71,4 @@ async def test_persons_cache(redis_client, es_write_data, make_get_request, quer
     cache_data = eval(cache_data.replace('null', 'None'))
     logging.info("#4 Checking the answers")
     assert response["status"] == expected_answer["status"]
-    assert response["body"][0] == cache_data[0]
+    assert response["body"] == cache_data
