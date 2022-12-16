@@ -40,9 +40,7 @@ async def test_films_search_validation(es_write_data, make_get_request, get_inde
     response = await make_get_request(test_settings.service_url, path)
 
     logging.info("#5 Checking the answer")
-    print(00000000)
     pprint(response["body"])
-    print(9999999)
     pprint(search_films)
     assert response["body"] == search_films
 
