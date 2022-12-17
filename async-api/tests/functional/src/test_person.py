@@ -71,4 +71,4 @@ async def test_persons_cache(redis_client, es_write_data, make_get_request, quer
     cache_data = eval(cache_data.replace('null', 'None'))
     logging.info("#4 Checking the answers")
     assert response["status"] == expected_answer["status"]
-    assert response["body"][0] == cache_data[0]
+    assert response["body"] == cache_data
