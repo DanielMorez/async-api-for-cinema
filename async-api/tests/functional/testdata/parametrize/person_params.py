@@ -1,7 +1,7 @@
 person_list_params = [
-    (None, {"status": 200, "length": 50}),
+    (None, {"status": 200, "length": 30}),
     ({"page[size]": 10}, {"status": 200, "length": 10}),
-    ({"page[size]": 60}, {"status": 200, "length": 60}),
+    ({"page[size]": 30}, {"status": 200, "length": 30}),
 ]
 
 cache_person_list_params = [
