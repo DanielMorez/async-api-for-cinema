@@ -1,12 +1,12 @@
 import logging
 from http import HTTPStatus
 
-from aioredis import Redis
 from elasticsearch import AsyncElasticsearch, NotFoundError
 from fastapi import Depends, HTTPException
 from pydantic.tools import lru_cache
 
 from api.v1.queries_params.persons import PersonSearchParams
+from db.cache_base import AsyncCacheStorage
 from db.elastic import get_elastic
 from db.redis import get_redis
 from models.film import Film
@@ -80,7 +80,7 @@ class PersonService(BaseService):
 
 @lru_cache()
 def get_person_service(
-    redis: Redis = Depends(get_redis),
+    cache: AsyncCacheStorage = Depends(get_redis),
     elastic: AsyncElasticsearch = Depends(get_elastic),
 ) -> PersonService:
-    return PersonService(redis, elastic)
+    return PersonService(cache, elastic)

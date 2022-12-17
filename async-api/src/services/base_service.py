@@ -1,14 +1,14 @@
 from typing import Any
 
-from aioredis import Redis
 from elasticsearch import AsyncElasticsearch
 
 from api.v1.queries_params.base import QueryListBaseModel
+from db.cache_base import AsyncCacheStorage
 
 
 class BaseService:
-    def __init__(self, redis: Redis, elastic: AsyncElasticsearch):
-        self.redis = redis
+    def __init__(self, cache: AsyncCacheStorage, elastic: AsyncElasticsearch):
+        self.cache = cache
         self.elastic = elastic
 
     def get_by_id(self, id: str) -> Any | None:

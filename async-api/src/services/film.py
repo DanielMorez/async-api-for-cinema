@@ -1,11 +1,11 @@
 import logging
 from functools import lru_cache
 
-from aioredis import Redis
 from elasticsearch import AsyncElasticsearch, NotFoundError
 from fastapi import Depends
 
 from api.v1.queries_params.films import FilmListParams, FilmQueryParams
+from db.cache_base import AsyncCacheStorage
 from db.elastic import get_elastic
 from db.redis import get_redis
 from models.film import Film
@@ -82,7 +82,7 @@ class FilmService(BaseService):
 
 @lru_cache()
 def get_film_service(
-    redis: Redis = Depends(get_redis),
+    cache: AsyncCacheStorage = Depends(get_redis),
     elastic: AsyncElasticsearch = Depends(get_elastic),
 ) -> FilmService:
-    return FilmService(redis, elastic)
+    return FilmService(cache, elastic)
