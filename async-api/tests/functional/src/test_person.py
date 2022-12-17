@@ -58,7 +58,7 @@ async def test_get_person_film(es_write_data, make_get_request):
 
 
 @pytest.mark.parametrize(
-    'query_data, expected_answer', cache_person_list_params
+    "query_data, expected_answer", cache_person_list_params
 )
 async def test_persons_cache(redis_client, es_write_data, make_get_request, query_data, expected_answer):
     logging.info("#1 Generating content")
@@ -68,7 +68,7 @@ async def test_persons_cache(redis_client, es_write_data, make_get_request, quer
     response = await make_get_request(test_settings.service_url, "/api/v1/persons/search", query_data)
     logging.info("#3 Get cache from Redis")
     cache_data = await redis_client.get(expected_answer["key"])
-    cache_data = eval(cache_data.replace('null', 'None'))
+    cache_data = eval(cache_data.replace("null", "None"))
     logging.info("#4 Checking the answers")
     assert response["status"] == expected_answer["status"]
     assert response["body"] == cache_data
