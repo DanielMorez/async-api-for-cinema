@@ -11,7 +11,7 @@ def generate_film() -> dict:
     film = {
         "id": str(uuid.uuid4()),
         "imdb_rating": 8.5,
-        "genres": [
+        "genres_": [
             {"id": "123", "name": "Action"},
             {"id": "124", "name": "Sci-Fi"},
         ],

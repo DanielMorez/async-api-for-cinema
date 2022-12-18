@@ -2,12 +2,13 @@ from pydantic import BaseModel
 
 
 class Genre(BaseModel):
+    """Описание модели жанр."""
     id: str
     name: str
-    description: str | None
 
 
 class Person(BaseModel):
+    """Описание модели персон."""
     id: str
     name: str
 

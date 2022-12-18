@@ -9,7 +9,7 @@ def generate_persons(amount: int = 60) -> list[dict]:
 def generate_person() -> dict:
     person = {
         "id": str(uuid.uuid4()),
-        "name": "Rafael Ferrer",
+        "name": "Michael Johns",
         "gender": "male",
         "roles_names": ["director", "writer"],
         "films_names": ["Casper", "Kolombiana", "Star Dust"],
