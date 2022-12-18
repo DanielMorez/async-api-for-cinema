@@ -19,12 +19,13 @@ class PersonCBV:
     service: PersonService = Depends(get_person_service)
     response_model = Person
 
-    @router.get("/search",
-                description="Search for persons by keywords",
-                summary="Person's search by keywords",
-                response_description="Person's data according to keywords",
-                tags=["persons"]
-                )
+    @router.get(
+        "/search",
+        description="Search for persons by keywords",
+        summary="Person's search by keywords",
+        response_description="Person's data according to keywords",
+        tags=["persons"],
+    )
     @cache(expire=CACHE_EXPIRE_IN_SECONDS, coder=JsonCoder, key_builder=key_builder)
     async def person_list(self, params: PersonSearchParams = Depends()) -> list[Person]:
         """
@@ -33,12 +34,13 @@ class PersonCBV:
         persons = await self.service.get_list(params)
         return persons
 
-    @router.get("/{person_id}",
-                description="Get person's data by it's id",
-                summary="Person's data",
-                response_description="Person's data",
-                tags=["persons"]
-                )
+    @router.get(
+        "/{person_id}",
+        description="Get person's data by id",
+        summary="Person's data",
+        response_description="Person's data",
+        tags=["persons"],
+    )
     @cache(expire=CACHE_EXPIRE_IN_SECONDS, coder=JsonCoder, key_builder=key_builder)
     async def person_details(self, person_id: str) -> Person:
         """
@@ -51,12 +53,13 @@ class PersonCBV:
             )
         return person
 
-    @router.get("/{person_id}/film",
-                description="Search for films by person's id",
-                summary="Films by person's id",
-                response_description="The list of films by person's id",
-                tags=["persons"]
-                )
+    @router.get(
+        "/{person_id}/film",
+        description="Search for films by person's id",
+        summary="Films by person's id",
+        response_description="The list of films by person's id",
+        tags=["persons"],
+    )
     @cache(expire=CACHE_EXPIRE_IN_SECONDS, coder=JsonCoder, key_builder=key_builder)
     async def person_films(self, person_id: str) -> list[Film]:
         """

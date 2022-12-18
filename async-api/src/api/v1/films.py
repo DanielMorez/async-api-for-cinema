@@ -19,12 +19,13 @@ class FilmCBV:
     service: FilmService = Depends(get_film_service)
     response_model = Film
 
-    @router.get("/",
-                description="Get the list of films",
-                summary="The list of films",
-                response_description="The list of films with data",
-                tags=["films"]
-                )
+    @router.get(
+        "/",
+        description="Get the list of films",
+        summary="The list of films",
+        response_description="The list of films",
+        tags=["films"],
+    )
     @cache(expire=CACHE_EXPIRE_IN_SECONDS, coder=JsonCoder, key_builder=key_builder)
     async def film_list(self, params: FilmListParams = Depends()) -> list[Film]:
         """
@@ -33,12 +34,13 @@ class FilmCBV:
         films = await self.service.get_list(params)
         return films
 
-    @router.get("/search",
-                description="Search for films by keywords",
-                summary="Film's search by keywords",
-                response_description="Film's data according to keywords",
-                tags=["films"]
-                )
+    @router.get(
+        "/search",
+        description="Search for films by keywords",
+        summary="Film's search by keywords",
+        response_description="Film's data according to keywords",
+        tags=["films"],
+    )
     @cache(expire=CACHE_EXPIRE_IN_SECONDS, coder=JsonCoder, key_builder=key_builder)
     async def search_film(self, params: FilmQueryParams = Depends()) -> list[Film]:
         """
@@ -47,12 +49,13 @@ class FilmCBV:
         films = await self.service.search(params)
         return films
 
-    @router.get("/{film_id}",
-                description="Get film's data by it's id",
-                summary="Film's data",
-                response_description="Film's data",
-                tags=["films"]
-                )
+    @router.get(
+        "/{film_id}",
+        description="Get film's data by id",
+        summary="Film's data",
+        response_description="Film's data",
+        tags=["films"],
+    )
     @cache(expire=CACHE_EXPIRE_IN_SECONDS, coder=JsonCoder, key_builder=key_builder)
     async def film_details(self, film_id: str) -> Film:
         """
