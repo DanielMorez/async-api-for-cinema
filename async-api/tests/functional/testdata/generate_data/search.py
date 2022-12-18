@@ -10,7 +10,7 @@ def generate_search_films(amount: int = 1) -> list:
             "imdb_rating": 8.5,
             "title": "The Star",
             "description": "New World",
-            "genres_": [
+            "genres": [
                 {"id": "111111", "name": "Action"},
                 {"id": "222222", "name": "Sci-Fi"},
             ],

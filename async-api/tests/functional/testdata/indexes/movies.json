@@ -70,7 +70,7 @@
           }
         }
       },
-      "genres_": {
+      "genres": {
         "type": "nested",
         "dynamic": "strict",
         "properties": {
