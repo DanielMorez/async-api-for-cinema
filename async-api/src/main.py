@@ -15,12 +15,35 @@ from db import elastic
 from db import redis
 
 settings = Settings()
+description = """
+## Data search 🚀
+Data search for **films, persons, genres**.
+\nYou will be able to search data by params (e.g. page size, page number, keywords, ids) according to sorting conditions.
+\n**Default sorting conditions are settled.**
+"""
+
+tags_metadata = [
+    {
+        "name": "films",
+        "description": "Data searching for films.",
+    },
+    {
+        "name": "persons",
+        "description": "Data searching for persons.",
+    },
+    {
+        "name": "genres",
+        "description": "Data searching for genres.",
+    },
+]
 
 app = FastAPI(
     title=settings.project_name,
+    description=description,
     docs_url="/api/openapi",
     openapi_url="/api/openapi.json",
     default_response_class=ORJSONResponse,
+    openapi_tags=tags_metadata
 )
 
 
@@ -39,9 +62,9 @@ async def shutdown():
     await elastic.es.close()
 
 
-app.include_router(films.router, prefix="/api/v1/films", tags=["films"])
-app.include_router(persons.router, prefix="/api/v1/persons", tags=["persons"])
-app.include_router(genres.router, prefix="/api/v1/genres", tags=["genres"])
+app.include_router(films.router, prefix="/api/v1/films")
+app.include_router(persons.router, prefix="/api/v1/persons")
+app.include_router(genres.router, prefix="/api/v1/genres")
 
 if __name__ == "__main__":
     uvicorn.run(

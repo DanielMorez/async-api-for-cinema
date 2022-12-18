@@ -23,6 +23,7 @@ class GenreCBV:
                 description="Get the list of genres",
                 summary="The list of genres",
                 response_description="The list of genres with data",
+                tags=["genres"]
     )
     @cache(expire=CACHE_EXPIRE_IN_SECONDS, coder=JsonCoder, key_builder=key_builder)
     async def genre_list(self, params: GenreListParams = Depends()) -> list[Genre]:
@@ -36,6 +37,7 @@ class GenreCBV:
                 description="Get genre's data by it's id",
                 summary="Genre's data",
                 response_description="Genre's data",
+                tags=["genres"]
                 )
     @cache(expire=CACHE_EXPIRE_IN_SECONDS, coder=JsonCoder, key_builder=key_builder)
     async def genre_details(self, genre_id: str) -> Genre:
