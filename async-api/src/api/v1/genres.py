@@ -19,7 +19,13 @@ class GenreCBV:
     service: GenreService = Depends(get_genre_service)
     response_model = Genre
 
-    @router.get("/")
+    @router.get(
+        "/",
+        description="Get the list of genres",
+        summary="The list of genres",
+        response_description="The list of genres",
+        tags=["genres"],
+    )
     @cache(expire=CACHE_EXPIRE_IN_SECONDS, coder=JsonCoder, key_builder=key_builder)
     async def genre_list(self, params: GenreListParams = Depends()) -> list[Genre]:
         """
@@ -28,7 +34,13 @@ class GenreCBV:
         genres = await self.service.get_list(params)
         return genres
 
-    @router.get("/{genre_id}")
+    @router.get(
+        "/{genre_id}",
+        description="Get genre's data by id",
+        summary="Genre's data",
+        response_description="Genre's data",
+        tags=["genres"],
+    )
     @cache(expire=CACHE_EXPIRE_IN_SECONDS, coder=JsonCoder, key_builder=key_builder)
     async def genre_details(self, genre_id: str) -> Genre:
         """
