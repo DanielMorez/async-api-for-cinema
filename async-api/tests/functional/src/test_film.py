@@ -1,4 +1,5 @@
 import pytest
+from http import HTTPStatus
 
 from settings import test_settings
 from testdata.generate_data.films import generate_films, generate_film
@@ -12,7 +13,7 @@ async def test_film_by_id(es_write_data, make_get_request):
     await es_write_data([film_es], "movies", "id")
     response = await make_get_request(test_settings.service_url, path)
 
-    assert response["status"] == 200
+    assert response["status"] == HTTPStatus.OK
 
 
 async def test_film_validation(es_write_data, make_get_request):

@@ -1,5 +1,6 @@
 import logging
 import pytest
+from http import HTTPStatus
 
 from settings import test_settings
 from testdata.generate_data.genres import generate_genre, generate_genres
@@ -15,7 +16,7 @@ async def test_genre_by_id(es_write_data, make_get_request):
     logging.info("#2 Requesting data from ES via API")
     response = await make_get_request(test_settings.service_url, path)
     logging.info("#3 Checking the answers")
-    assert response["status"] == 200
+    assert response["status"] == HTTPStatus.OK
 
 
 async def test_genre_validation(es_write_data, make_get_request):

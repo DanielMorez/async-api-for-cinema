@@ -1,5 +1,6 @@
 import logging
 import pytest
+from http import HTTPStatus
 
 from settings import test_settings
 from testdata.generate_data.persons import generate_person, generate_persons
@@ -18,7 +19,7 @@ async def test_person_by_id(es_write_data, make_get_request):
     logging.info("#2 Requesting data from ES via API")
     response = await make_get_request(test_settings.service_url, path)
     logging.info("#3 Checking the answers")
-    assert response["status"] == 200
+    assert response["status"] == HTTPStatus.OK
 
 
 async def test_person_validation(es_write_data, make_get_request):
@@ -57,7 +58,7 @@ async def test_get_person_film(es_write_data, make_get_request):
     logging.info("#2 Requesting data from ES via API")
     response = await make_get_request(test_settings.service_url, path)
     logging.info("#3 Checking the answers")
-    assert response["status"] == 200
+    assert response["status"] == HTTPStatus.OK
 
 
 @pytest.mark.parametrize("query_data, expected_answer", cache_person_list_params)
