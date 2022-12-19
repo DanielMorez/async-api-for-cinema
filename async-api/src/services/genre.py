@@ -1,13 +1,12 @@
 import logging
 
-from elasticsearch import AsyncElasticsearch, NotFoundError
+from elasticsearch import NotFoundError
 from fastapi import Depends
 from pydantic.tools import lru_cache
 
 from api.v1.queries_params.genres import GenreListParams
-from db.cache_base import AsyncCacheStorage
 from db.elastic import get_elastic
-from db.redis import get_redis
+from db.storage_base import AsyncSearchStorage
 from models.genre import Genre
 from services.base_service import BaseService
 
@@ -21,7 +20,7 @@ class GenreService(BaseService):
 
     async def _get_genre_from_elastic(self, genre_id: str) -> Genre | None:
         try:
-            doc = await self.elastic.get(index="genres", id=genre_id)
+            doc = await self.storage.get(index="genres", id=genre_id)
         except NotFoundError:
             logger.debug(
                 f"An error occurred while trying to find genre in ES (id: {genre_id})"
@@ -46,7 +45,7 @@ class GenreService(BaseService):
                 )
                 use_body = True
 
-            docs = await self.elastic.search(
+            docs = await self.storage.search(
                 index="genres",
                 from_=params.page_size * params.page_number,
                 size=params.page_size,
@@ -61,7 +60,6 @@ class GenreService(BaseService):
 
 @lru_cache()
 def get_genre_service(
-    cache: AsyncCacheStorage = Depends(get_redis),
-    elastic: AsyncElasticsearch = Depends(get_elastic),
+    elastic: AsyncSearchStorage = Depends(get_elastic),
 ) -> GenreService:
-    return GenreService(cache, elastic)
+    return GenreService(elastic)
