@@ -1,18 +1,17 @@
+from abc import ABC, abstractmethod
 from typing import Any
 
-from elasticsearch import AsyncElasticsearch
-
 from api.v1.queries_params.base import QueryListBaseModel
-from db.cache_base import AsyncCacheStorage
 
 
-class BaseService:
-    def __init__(self, cache: AsyncCacheStorage, elastic: AsyncElasticsearch):
-        self.cache = cache
-        self.elastic = elastic
+class BaseService(ABC):
+    def __init__(self, storage):
+        self.storage = storage
 
+    @abstractmethod
     def get_by_id(self, id: str) -> Any | None:
-        raise NotImplementedError
+        pass
 
+    @abstractmethod
     def get_list(self, params: QueryListBaseModel) -> list | None:
-        raise NotImplementedError
+        pass
