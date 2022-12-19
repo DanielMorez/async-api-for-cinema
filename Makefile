@@ -15,3 +15,6 @@ staticfiles:
 
 reload nginx:
 	docker exec -ti nginx_async_api nginx -s reload
+
+test:
+	docker compose -f async-api/tests/functional/docker-compose.yml up --build

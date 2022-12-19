@@ -1,12 +1,10 @@
 from http import HTTPStatus
 
 from fastapi import APIRouter, Depends, HTTPException
-from fastapi_cache import JsonCoder
 from fastapi_cache.decorator import cache
 from fastapi_utils.cbv import cbv
 
 from api.v1.queries_params.films import FilmListParams, FilmQueryParams
-from helpers.cache_key_builder import CACHE_EXPIRE_IN_SECONDS, key_builder
 from helpers.detail_messages import DETAILS
 from models import Film
 from services.film import FilmService, get_film_service
@@ -26,7 +24,7 @@ class FilmCBV:
         response_description="The list of films",
         tags=["films"],
     )
-    @cache(expire=CACHE_EXPIRE_IN_SECONDS, coder=JsonCoder, key_builder=key_builder)
+    @cache()
     async def film_list(self, params: FilmListParams = Depends()) -> list[Film]:
         """
         Returns list of films sorted by imdb_rating: desc.
@@ -41,7 +39,7 @@ class FilmCBV:
         response_description="Film's data according to keywords",
         tags=["films"],
     )
-    @cache(expire=CACHE_EXPIRE_IN_SECONDS, coder=JsonCoder, key_builder=key_builder)
+    @cache()
     async def search_film(self, params: FilmQueryParams = Depends()) -> list[Film]:
         """
         Returns list of films filtered by specified params (genre, title).
@@ -56,7 +54,7 @@ class FilmCBV:
         response_description="Film's data",
         tags=["films"],
     )
-    @cache(expire=CACHE_EXPIRE_IN_SECONDS, coder=JsonCoder, key_builder=key_builder)
+    @cache()
     async def film_details(self, film_id: str) -> Film:
         """
         Returns the dict with all information about the film by ID.

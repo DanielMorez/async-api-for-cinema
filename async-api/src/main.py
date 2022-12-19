@@ -14,6 +14,7 @@ from core.config import Settings
 from core.logger import LOGGING
 from db import elastic
 from db import redis
+from helpers.cache_key_builder import key_builder
 
 settings = Settings()
 
@@ -32,7 +33,12 @@ async def startup():
     redis.redis = await aioredis.from_url(
         settings.redis_dsn, encoding="utf8", decode_responses=True
     )
-    FastAPICache.init(RedisBackend(redis.redis), prefix="fastapi-cache")
+    FastAPICache.init(
+        RedisBackend(redis.redis),
+        prefix="fastapi-cache",
+        expire=settings.cache_expire_in_seconds,
+        key_builder=key_builder,
+    )
     elastic.es = AsyncElasticsearch(hosts=[settings.es_dsn])
 
 

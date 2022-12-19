@@ -79,6 +79,6 @@ class PersonService(BaseService):
 
 @lru_cache()
 def get_person_service(
-    elastic: AsyncSearchStorage = Depends(get_elastic),
+    storage: AsyncSearchStorage = Depends(get_elastic)
 ) -> PersonService:
-    return PersonService(elastic)
+    return PersonService(storage)

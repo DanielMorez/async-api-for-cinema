@@ -81,6 +81,6 @@ class FilmService(BaseService):
 
 @lru_cache()
 def get_film_service(
-    elastic: AsyncSearchStorage = Depends(get_elastic),
+    storage: AsyncSearchStorage = Depends(get_elastic)
 ) -> FilmService:
-    return FilmService(elastic)
+    return FilmService(storage)
