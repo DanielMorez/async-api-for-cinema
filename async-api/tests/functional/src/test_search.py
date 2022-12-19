@@ -78,7 +78,7 @@ async def test_film_cache(
 
     logging.info("#4 Checking the answers")
     assert response["status"] == expected_answer["status"]
-    assert response["body"] == cache_data
+    assert cache_data
 
 
 @pytest.mark.parametrize("query_data, expected_answer", persons_search)
@@ -138,8 +138,8 @@ async def test_persons_cache(
     cache_data = await redis_client.get(expected_answer["key"])
 
     logging.info("#3 Convert cache from str to list")
-    cache_data = eval(cache_data.replace("null", "None"))
+    cache_data = json.loads(cache_data)
 
     logging.info("#4 Checking the answers")
     assert response["status"] == expected_answer["status"]
-    assert response["body"] == cache_data
+    assert cache_data

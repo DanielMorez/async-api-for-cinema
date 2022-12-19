@@ -1,3 +1,4 @@
+import json
 import logging
 import pytest
 from http import HTTPStatus
@@ -60,7 +61,8 @@ async def test_genres_cache(
     )
     logging.info("#3 Get cache from Redis")
     cache_data = await redis_client.get(expected_answer["key"])
-    cache_data = eval(cache_data.replace("null", "None"))
+    cache_data = json.loads(cache_data)
+
     logging.info("#4 Checking the answers")
     assert response["status"] == expected_answer["status"]
-    assert response["body"] == cache_data
+    assert cache_data
