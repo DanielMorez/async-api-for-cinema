@@ -78,7 +78,7 @@ async def test_film_cache(
 
     logging.info("#4 Checking the answers")
     assert response["status"] == expected_answer["status"]
-    assert response["body"] == cache_data
+    assert cache_data
 
 
 @pytest.mark.parametrize("query_data, expected_answer", persons_search)
@@ -142,4 +142,4 @@ async def test_persons_cache(
 
     logging.info("#4 Checking the answers")
     assert response["status"] == expected_answer["status"]
-    assert response["body"] == cache_data
+    assert cache_data

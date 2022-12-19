@@ -63,4 +63,4 @@ async def test_genres_cache(
     cache_data = eval(cache_data.replace("null", "None"))
     logging.info("#4 Checking the answers")
     assert response["status"] == expected_answer["status"]
-    assert response["body"] == cache_data
+    assert cache_data
