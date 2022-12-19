@@ -12,4 +12,6 @@ if __name__ == "__main__":
     health_check_es(test_settings.es_dsn)
     health_check_redis(test_settings.redis_dsn)
 
-    pytest.main(["-x", "src"])
+    plugins = ("pytest_asyncio", "plugins.common")
+
+    pytest.main(["-x", "src"], plugins=plugins)
