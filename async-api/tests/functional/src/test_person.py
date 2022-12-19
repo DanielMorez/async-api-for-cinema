@@ -80,5 +80,3 @@ async def test_persons_cache(
     logging.info("#4 Checking the answers")
     assert response["status"] == expected_answer["status"]
     assert cache_data
-
-
