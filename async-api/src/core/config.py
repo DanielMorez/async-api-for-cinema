@@ -1,6 +1,7 @@
 import os
 from logging import config as logging_config
 
+from pydantic import Field
 from pydantic.env_settings import BaseSettings
 from pydantic.networks import RedisDsn
 
@@ -14,6 +15,7 @@ class Settings(BaseSettings):
     redis_dsn: RedisDsn
     es_dsn: str
     base_dir: str = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    cache_expire_in_seconds: int = Field(60 * 5)  # 5 minutes
 
     class Config:
         case_sensitive = False

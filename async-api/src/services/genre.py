@@ -60,6 +60,6 @@ class GenreService(BaseService):
 
 @lru_cache()
 def get_genre_service(
-    elastic: AsyncSearchStorage = Depends(get_elastic),
+    storage: AsyncSearchStorage = Depends(get_elastic)
 ) -> GenreService:
-    return GenreService(elastic)
+    return GenreService(storage)
