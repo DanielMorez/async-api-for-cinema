@@ -23,7 +23,7 @@ app = FastAPI(
     docs_url="/api/openapi",
     openapi_url="/api/openapi.json",
     default_response_class=ORJSONResponse,
-    openapi_tags=tags_metadata
+    openapi_tags=tags_metadata,
 )
 
 
