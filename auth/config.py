@@ -4,7 +4,8 @@ from pydantic import BaseSettings, RedisDsn, PostgresDsn, Field
 class Settings(BaseSettings):
     redis_dsn: RedisDsn
     pg_dsn: PostgresDsn
-    project_name: str
+    pg_schema: str = Field("auth", env="AUTH_PG_DEFAULT_SCHEMA")
+    project_name: str = Field("auth")
     project_host: str = Field("0.0.0.0", env="AUTH_HOST")
     project_port: int = Field(5000, env="AUTH_PORT")
 

@@ -1,18 +1,17 @@
-from sqlalchemy import create_engine
-from sqlalchemy.orm import scoped_session, sessionmaker
-from sqlalchemy.ext.declarative import declarative_base
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
+
+from sqlalchemy import MetaData, event
+from sqlalchemy.schema import DDL
 
 from config import settings
 
+metadata_obj = MetaData(schema=settings.pg_schema)
 
-engine = create_engine(settings.pg_dsn, convert_unicode=True)
-db_session = scoped_session(sessionmaker(autocommit=False,
-                                         autoflush=False,
-                                         bind=engine))
-Base = declarative_base()
-Base.query = db_session.query_property()
+db = SQLAlchemy(metadata=metadata_obj)
 
 
-def init_db():
-    # TODO: import db models
-    Base.metadata.create_all(bind=engine)
+def init_db(app: Flask):
+    app.config['SQLALCHEMY_DATABASE_URI'] = settings.pg_dsn
+    db.init_app(app)
+    event.listen(db.metadata, "before_create", DDL(f"CREATE SCHEMA IF NOT EXISTS {settings.pg_schema}"))
