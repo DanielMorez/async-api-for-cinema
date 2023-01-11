@@ -12,8 +12,4 @@ RUN pip install --upgrade pip \
 
 COPY . .
 
-WORKDIR /opt/app/src
-
-EXPOSE 5000
-
 ENTRYPOINT ["python", "pywsgi.py"]

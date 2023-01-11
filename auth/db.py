@@ -12,6 +12,10 @@ db = SQLAlchemy(metadata=metadata_obj)
 
 
 def init_db(app: Flask):
-    app.config['SQLALCHEMY_DATABASE_URI'] = settings.pg_dsn
+    app.config["SQLALCHEMY_DATABASE_URI"] = settings.pg_dsn
     db.init_app(app)
-    event.listen(db.metadata, "before_create", DDL(f"CREATE SCHEMA IF NOT EXISTS {settings.pg_schema}"))
+    event.listen(
+        db.metadata,
+        "before_create",
+        DDL(f"CREATE SCHEMA IF NOT EXISTS {settings.pg_schema}"),
+    )

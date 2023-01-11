@@ -22,12 +22,12 @@ services:
       context: auth
       dockerfile: dev.Dockerfile
     container_name: auth
-      volumes:
-        - ./.env:/opt/app/src/.env
-      ports:
-        - "${AUTH_PORT}:${AUTH_PORT}"
-      networks:
-        - development_network
+    volumes:
+      - ./.env:/opt/app/.env
+    ports:
+      - "${AUTH_PORT}:${AUTH_PORT}"
+    networks:
+      - development_network
     depends_on:
       - postgres
       - redis

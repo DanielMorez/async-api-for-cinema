@@ -5,9 +5,15 @@ from db import db
 
 
 class User(db.Model):
-    __tablename__ = 'users'
+    __tablename__ = "users"
 
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, unique=True, nullable=False)
+    id = Column(
+        UUID(as_uuid=True),
+        primary_key=True,
+        default=uuid.uuid4,
+        unique=True,
+        nullable=False,
+    )
     login = Column(String, unique=True, nullable=False)
     password = Column(String, nullable=False)
 
@@ -16,4 +22,4 @@ class User(db.Model):
         self.password = password
 
     def __repr__(self):
-        return f'<User {self.login}>'
+        return f"<User {self.login}>"
