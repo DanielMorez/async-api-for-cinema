@@ -16,10 +16,13 @@ bp = Blueprint("superuser", __name__)
 def createsuperuser(login, password, password_confirm, email=None):
     user_exist = db.session.query(User).filter(User.login == login).first()
     if user_exist:
-        return "User already exist. Try another login"
+        print("User already exists. Try another login")
+        return "Error 401 - User exists"
     if password_confirm == password:
         superuser = User(login=login, password=password, email=email)
         superuser.save()
     else:
-        return "Password and Password_confirm are different. Try again"
-    return "Superuser was created"
+        print("Password and Password_confirm don't match. Try again")
+        return "Error 401 - Passwords don't match"
+    print("Superuser is created successfully")
+    return "200 OK"
