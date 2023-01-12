@@ -1,6 +1,7 @@
 import uuid
 import datetime
 
+from sqlalchemy import inspect
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import backref
 
@@ -20,14 +21,12 @@ class LoginHistory(db.Model):
     user_id = db.Column(
         UUID(as_uuid=True),
         db.ForeignKey("users.id", ondelete="CASCADE"),
-        nullable=False
+        nullable=False,
     )
     user_agent = db.Column(db.String, nullable=True)
     device = db.Column(db.String, nullable=True)
     created_at = db.Column(
-        db.DateTime,
-        default=datetime.datetime.utcnow,
-        nullable=False
+        db.DateTime, default=datetime.datetime.utcnow, nullable=False
     )
 
     user = db.relationship("User", backref=backref("login_histories", uselist=False))
@@ -40,6 +39,17 @@ class LoginHistory(db.Model):
     def save(self):
         db.session.add(self)
         db.session.commit()
+
+    @classmethod
+    def get_sessions(cls, user_id: UUID):
+        return cls.query.filter_by(user_id=user_id)
+
+    def serialize(self):
+        return {
+            "user_agent": self.user_agent,
+            "device": self.device,
+            "created_at": self.created_at.strftime("%d/%m/%Y, %H:%M:%S")
+        }
 
     def __repr__(self):
         return f"<Login at {self.created_at.strftime('%d/%m/%Y, %H:%M:%S')}>"

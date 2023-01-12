@@ -1,3 +1,4 @@
+import redis
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
@@ -9,6 +10,11 @@ from config import settings
 metadata_obj = MetaData(schema=settings.pg_schema)
 
 db = SQLAlchemy(metadata=metadata_obj)
+cache_storage = redis.Redis(
+    host=settings.redis_dsn.host,
+    port=settings.redis_dsn.port,
+    decode_responses=True,
+)
 
 
 def init_db(app: Flask):

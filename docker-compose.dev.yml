@@ -16,21 +16,21 @@ services:
     depends_on:
       elasticsearch:
         condition: service_healthy
-
-  auth:
-    build:
-      context: auth
-      dockerfile: dev.Dockerfile
-    container_name: auth
-    volumes:
-      - ./.env:/opt/app/.env
-    ports:
-      - "${AUTH_PORT}:${AUTH_PORT}"
-    networks:
-      - development_network
-    depends_on:
-      - postgres
-      - redis
+#
+#  auth:
+#    build:
+#      context: auth
+#      dockerfile: dev.Dockerfile
+#    container_name: auth
+#    volumes:
+#      - ./.env:/opt/app/.env
+#    ports:
+#      - "${AUTH_PORT}:${AUTH_PORT}"
+#    networks:
+#      - development_network
+#    depends_on:
+#      - postgres
+#      - redis
 
   elasticsearch:
     image: elasticsearch:8.5.1
