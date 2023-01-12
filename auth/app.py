@@ -1,5 +1,6 @@
 from flask import Flask
 
+from createsuperuser import bp
 from config import settings
 from db import db, init_db
 
@@ -7,7 +8,7 @@ from models.user import User
 from models.login_history import LoginHistory
 
 app = Flask(__name__)
-
+app.register_blueprint(bp, url_prefix='/superuser')
 init_db(app)
 app.app_context().push()
 db.create_all()
