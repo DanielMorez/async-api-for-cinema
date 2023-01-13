@@ -103,26 +103,26 @@ class UserService:
     def logout(cls, user_id: UUID, token: dict) -> (dict, HTTPStatus):
         user = get_user_or_error(user_id)
         block_token(token["jti"], token["exp"])
-        return {"msg": "Token successful revoked"}, HTTPStatus.OK
+        return {"msg": "Token successfully revoked"}, HTTPStatus.OK
 
     @classmethod
     def logout_from_all_devices(cls, user_id: UUID):
         # TODO:
         #  find all active access and refresh tokens
         #  and block them
-        return {"msg": "Tokens successful revoked"}, HTTPStatus.OK
+        return {"msg": "Tokens successfully revoked"}, HTTPStatus.OK
 
     @classmethod
     def change_password(cls, user_id: UUID, password: str) -> (dict, HTTPStatus):
         user = get_user_or_error(user_id)
         user.set_password(password)
-        return {"msg": "Password was successful changed"}, HTTPStatus.OK
+        return {"msg": "Password was successfully changed"}, HTTPStatus.OK
 
     @classmethod
     def change_login(cls, user_id: UUID, login: str) -> (dict, HTTPStatus):
         user = get_user_or_error(user_id)
         user.set_password(login)
-        return {"msg": "Login was successful changed"}, HTTPStatus.OK
+        return {"msg": "Login was successfully changed"}, HTTPStatus.OK
 
     @classmethod
     def get_login_histories(cls, user_id: UUID) -> list:
