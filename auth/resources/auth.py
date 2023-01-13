@@ -24,7 +24,7 @@ class Registration(Resource):
             "password_confirmation", help="This field cannot be blank", required=True
         )
         self.parser.add_argument(
-            "email", help="This field cannot be blank", required=False
+            "email", help="This field can be blank", required=False
         )
         data = self.parser.parse_args()
         payload, status = UserService.register(**data)
