@@ -9,7 +9,7 @@ auth_api = Api(auth_bp)
 # route endpoints
 auth_api.add_resource(auth.Registration, "/register")
 auth_api.add_resource(auth.Authorization, "/login")
-auth_api.add_resource(auth.Logout, "/login")
+auth_api.add_resource(auth.Logout, "/logout")
 auth_api.add_resource(auth.RefreshToken, "/token-refresh")
 
 auth_api.add_resource(profile.Profile, "/profile")
