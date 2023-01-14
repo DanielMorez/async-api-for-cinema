@@ -38,7 +38,6 @@ class Authorization(Resource):
             "password", help="This field cannot be blank", required=True
         )
         self.parser.add_argument("User-Agent", location="headers")
-        # self.parser.add_argument("Device", location="headers")
         data = self.parser.parse_args()
         self.device = UserService.device_type(data.get("User-Agent"))
         payload, status = UserService.login(
