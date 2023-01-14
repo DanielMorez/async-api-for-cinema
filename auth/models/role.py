@@ -1,6 +1,7 @@
 import uuid
 
 from sqlalchemy.dialects.postgresql import UUID
+
 from db import db
 
 
@@ -19,8 +20,13 @@ class Role(db.Model):
     can_read = db.Column(db.Boolean(), default=False)
     can_delete = db.Column(db.Boolean(), default=False)
 
-    def __init__(self, name: str):
+    def __init__(
+        self, name: str, can_create_update: bool, can_read: bool, can_delete: bool
+    ):
         self.name = name
+        self.can_create_update = can_create_update
+        self.can_read = can_read
+        self.can_delete = can_delete
 
     def save(self):
         db.session.add(self)

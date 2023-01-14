@@ -10,7 +10,7 @@ class AbstractModel(DefaultMeta):
 
 
 def get_or_create(model_class: AbstractModel, **kwargs) -> (AbstractModel, bool):
-    if instance := model_class.query.filter_by(**kwargs).first():
+    if instance := model_class.query.filter_by(name=kwargs["name"]).first():
         return instance, False
     instance = model_class(**kwargs)
     instance.save()

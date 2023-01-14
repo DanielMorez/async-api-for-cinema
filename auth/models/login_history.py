@@ -1,5 +1,5 @@
-import uuid
 import datetime
+import uuid
 
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import backref

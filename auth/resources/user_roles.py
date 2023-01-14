@@ -1,11 +1,11 @@
 from http import HTTPStatus
 
-from flask import jsonify, abort
+from flask import abort, jsonify
 from flask_jwt_extended import jwt_required
 from flask_restful import Resource, reqparse
 
-from utils.decorators import roles_required
 from services.user_role_service import UserRoleService
+from utils.decorators import roles_required
 
 
 class UserRolesResource(Resource):
@@ -20,7 +20,9 @@ class UserRolesResource(Resource):
             "role_id", help="This field cannot be blank", required=True
         )
         data = self.parser.parse_args()
-        users_role, created = UserRoleService.create_user_roles(data["user_id"], data["role_id"])
+        users_role, created = UserRoleService.create_user_roles(
+            data["user_id"], data["role_id"]
+        )
         if created:
             response = jsonify({"id": str(users_role.id)})
             response.status = HTTPStatus.CREATED
@@ -32,12 +34,14 @@ class UserRolesResource(Resource):
     def delete(self):
         self.parser = reqparse.RequestParser()
         self.parser.add_argument(
-                "role_id", help="This field cannot be blank", required=True
-            )
+            "role_id", help="This field cannot be blank", required=True
+        )
         self.parser.add_argument(
-                "user_id", help="This field cannot be blank", required=True
-            )
+            "user_id", help="This field cannot be blank", required=True
+        )
         data = self.parser.parse_args()
-        #user_id = get_jwt_identity()
-        payload, status = UserRoleService.remove_users_role(data["user_id"], data["role_id"])
+        # user_id = get_jwt_identity()
+        payload, status = UserRoleService.remove_users_role(
+            data["user_id"], data["role_id"]
+        )
         return payload, status

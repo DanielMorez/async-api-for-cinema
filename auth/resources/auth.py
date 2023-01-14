@@ -1,13 +1,10 @@
 from http import HTTPStatus
+
 from flask import jsonify
-from flask_jwt_extended import (
-    get_jwt_identity,
-    jwt_required,
-    get_jwt,
-)
+from flask_jwt_extended import get_jwt, get_jwt_identity, jwt_required
 from flask_restful import Resource, reqparse
 
-from services.user_service import UserService, JWTs
+from services.user_service import JWTs, UserService
 from utils.token import check_if_token_in_blacklist
 
 

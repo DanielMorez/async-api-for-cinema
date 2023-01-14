@@ -1,7 +1,7 @@
 from flask import Flask
 
 from config import Settings
-from db import init_db, db
+from db import db, init_db
 from utils.routing import register_endpoints
 
 

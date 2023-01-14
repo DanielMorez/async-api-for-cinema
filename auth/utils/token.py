@@ -1,5 +1,4 @@
 import time
-
 from functools import wraps
 from http import HTTPStatus
 
@@ -7,7 +6,6 @@ from flask import jsonify
 from flask_jwt_extended import get_jwt
 
 from db import cache_storage
-
 
 pipeline = cache_storage.pipeline()
 
