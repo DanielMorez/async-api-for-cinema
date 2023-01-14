@@ -34,15 +34,18 @@ class RoleResource(Resource):
     @jwt_required()
     @roles_required("Admin")
     def put(self):
+        self.parser = reqparse.RequestParser()
+        self.parser.add_argument(
+            "name", help="This field cannot be blank", required=True
+        )
+        data = self.parser.parse_args()
         role_id = get_jwt_identity()
-        # TODO: update role info
-        return jsonify(role_id)
+        payload, status = RoleService.update_role(role_id, data["name"])
+        return payload, status
 
     @jwt_required()
     @roles_required("Admin")
     def delete(self):
-        try:
-            role_id = get_jwt_identity()
-            return jsonify(role_id)
-        except NoResultFound:
-            abort(HTTPStatus.INTERNAL_SERVER_ERROR, {"msg": "Something went wrong"})
+        role_id = get_jwt_identity()
+        payload, status = RoleService.remove_role(role_id)
+        return payload, status
