@@ -17,9 +17,16 @@ class User(db.Model):
         unique=True,
         nullable=False,
     )
-    email = db.Column(EmailType, unique=True, nullable=True)
     login = db.Column(db.String, unique=True, nullable=False)
     password = db.Column(db.String, nullable=False)
+    email = db.Column(EmailType, unique=True, nullable=True)
+    first_name = db.Column(db.String, nullable=True)
+    last_name = db.Column(db.String, nullable=True)
+
+    active = db.Column(db.Boolean(), default=False)
+    is_superuser = db.Column(db.Boolean(), default=False)
+
+    roles = db.relationship("Role", secondary=f"{db.metadata.schema}.user_roles")
 
     def __init__(self, login, password, email=None):
         self.login = login
@@ -41,6 +48,22 @@ class User(db.Model):
 
     def verify_password(self, password) -> bool:
         return check_password_hash(self.password, password)
+
+    def get_roles_names(self) -> tuple:
+        roles_names = tuple(role.name for role in self.roles)
+        return roles_names
+
+    def has_roles(self, *requirements):
+        roles_names = self.get_roles_names()
+        for requirement in requirements:
+            if isinstance(requirement, (list, tuple)):
+                for role_name in roles_names:
+                    if role_name in requirement:
+                        return True
+            else:
+                if requirement in roles_names:
+                    return True
+        return False
 
     @classmethod
     def find_by_id(cls, user_id: UUID) -> "User":
