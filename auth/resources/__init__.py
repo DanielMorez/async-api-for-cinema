@@ -1,7 +1,7 @@
 from flask import Blueprint
 from flask_restful import Api
 
-from resources import auth, profile, login_history
+from resources import auth, login_history, profile
 
 auth_bp = Blueprint("auth", __name__, url_prefix="/api/v1/user")
 auth_api = Api(auth_bp)

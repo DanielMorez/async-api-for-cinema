@@ -1,7 +1,7 @@
-import uuid
 import datetime
+import uuid
 
-from sqlalchemy import inspect
+from sqlalchemy import JSON
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import backref
 
@@ -28,11 +28,22 @@ class LoginHistory(db.Model):
     created_at = db.Column(
         db.DateTime, default=datetime.datetime.utcnow, nullable=False
     )
+    access_token = db.Column(JSON)
+    refresh_token = db.Column(JSON)
 
     user = db.relationship("User", backref=backref("login_histories", uselist=False))
 
-    def __init__(self, user_id: UUID, user_agent=None, device=None):
+    def __init__(
+        self,
+        user_id: UUID,
+        access_token: dict,
+        refresh_token: dict,
+        user_agent=None,
+        device=None,
+    ):
         self.user_id = user_id
+        self.access_token = access_token
+        self.refresh_token = refresh_token
         self.user_agent = user_agent
         self.device = device
 
@@ -48,8 +59,11 @@ class LoginHistory(db.Model):
         return {
             "user_agent": self.user_agent,
             "device": self.device,
-            "created_at": self.created_at.strftime("%d/%m/%Y, %H:%M:%S")
+            "created_at": self.created_at.strftime("%d/%m/%Y, %H:%M:%S"),
         }
+
+    def serialize_tokens_id(self):
+        return self.access_token, self.refresh_token
 
     def __repr__(self):
         return f"<Login at {self.created_at.strftime('%d/%m/%Y, %H:%M:%S')}>"

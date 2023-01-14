@@ -1,17 +1,15 @@
 import logging
-
 from http import HTTPStatus
 from uuid import UUID
 
-from flask_jwt_extended import (
-    create_access_token,
-    create_refresh_token,
-)
+import jwt
+from flask_jwt_extended import create_access_token, create_refresh_token
 from flask_restful import abort
 from pydantic import BaseModel
+from user_agents import parse
 
-from models.user import User
 from models.login_history import LoginHistory
+from models.user import User
 from utils.token import block_token
 
 logger = logging.getLogger(__name__)
@@ -85,8 +83,29 @@ class UserService:
             return {"message": "Password is incorrect"}, HTTPStatus.FORBIDDEN
 
         tokens: JWTs = cls.get_tokens(user)
-
-        login = LoginHistory(user_id=user.id, user_agent=user_agent, device=device)
+        access_token = {
+            "jti": jwt.decode(tokens.access_token, options={"verify_signature": False})[
+                "jti"
+            ],
+            "exp": jwt.decode(tokens.access_token, options={"verify_signature": False})[
+                "exp"
+            ],
+        }
+        refresh_token = {
+            "jti": jwt.decode(
+                tokens.refresh_token, options={"verify_signature": False}
+            )["jti"],
+            "exp": jwt.decode(
+                tokens.refresh_token, options={"verify_signature": False}
+            )["exp"],
+        }
+        login = LoginHistory(
+            user_id=user.id,
+            user_agent=user_agent,
+            device=device,
+            access_token=access_token,
+            refresh_token=refresh_token,
+        )
         login.save()
         # TODO: notification about authorization
 
@@ -100,9 +119,9 @@ class UserService:
         return tokens, HTTPStatus.OK
 
     @classmethod
-    def logout(cls, user_id: UUID, token: dict) -> (dict, HTTPStatus):
-        user = get_user_or_error(user_id)
-        block_token(token["jti"], token["exp"])
+    def logout(cls, tokens_list: list) -> (dict, HTTPStatus):
+        for token in tokens_list:
+            block_token(token["jti"], token["exp"])
         return {"msg": "Token successfully revoked"}, HTTPStatus.OK
 
     @classmethod
@@ -128,3 +147,30 @@ class UserService:
     def get_login_histories(cls, user_id: UUID) -> list:
         login_histories = LoginHistory.get_sessions(user_id)
         return [obj.serialize() for obj in login_histories]
+
+    @classmethod
+    def get_tokens_from_login_histories(cls, user_id: UUID) -> list:
+        user = get_user_or_error(user_id)
+        login_histories = LoginHistory.get_sessions(user_id)
+        token_histories = []
+        for session in login_histories:
+            for token in session.serialize_tokens_id():
+                token_histories.append(token)
+        return token_histories
+
+    @staticmethod
+    def device_type(user_agent):
+        try:
+            device = parse(user_agent)
+            if device.is_pc:
+                return "pc"
+            elif device.is_mobile:
+                return "mobile"
+            elif device.is_tablet:
+                return "tablet"
+            elif device.is_bot:
+                return "bot"
+            else:
+                return None
+        except Exception as e:
+            return None

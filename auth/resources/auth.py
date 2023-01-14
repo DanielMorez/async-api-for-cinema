@@ -1,13 +1,10 @@
 from http import HTTPStatus
+
 from flask import jsonify
-from flask_jwt_extended import (
-    get_jwt_identity,
-    jwt_required,
-    get_jwt,
-)
+from flask_jwt_extended import get_jwt, get_jwt_identity, jwt_required
 from flask_restful import Resource, reqparse
 
-from services.user_service import UserService, JWTs
+from services.user_service import JWTs, UserService
 from utils.token import check_if_token_in_blacklist
 
 
@@ -41,10 +38,11 @@ class Authorization(Resource):
             "password", help="This field cannot be blank", required=True
         )
         self.parser.add_argument("User-Agent", location="headers")
-        self.parser.add_argument("Device", location="headers")
+        # self.parser.add_argument("Device", location="headers")
         data = self.parser.parse_args()
+        self.device = UserService.device_type(data.get("User-Agent"))
         payload, status = UserService.login(
-            data["login"], data["password"], data.get("User-Agent"), data.get("Device")
+            data["login"], data["password"], data.get("User-Agent"), self.device
         )
         if status == HTTPStatus.OK and isinstance(payload, JWTs):
             resp = jsonify(payload.dict())
@@ -72,6 +70,8 @@ class Logout(Resource):
     @check_if_token_in_blacklist()
     def post(self):
         user_id = get_jwt_identity()
-        payload = get_jwt()
-        payload, status = UserService.logout(user_id, payload)
+        token_histories = UserService.get_tokens_from_login_histories(user_id)
+        current_token = {"jti": get_jwt()["jti"], "exp": get_jwt()["exp"]}
+        token_histories.append(current_token)
+        payload, status = UserService.logout(token_histories)
         return payload, status
