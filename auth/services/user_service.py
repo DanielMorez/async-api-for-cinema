@@ -7,7 +7,7 @@ from flask_jwt_extended import (
     create_access_token,
     create_refresh_token,
 )
-from flask_restful import abort
+from flask import abort
 from pydantic import BaseModel
 
 from models.user import User
@@ -101,7 +101,7 @@ class UserService:
 
     @classmethod
     def logout(cls, user_id: UUID, token: dict) -> (dict, HTTPStatus):
-        user = get_user_or_error(user_id)
+        # user = get_user_or_error(user_id)
         block_token(token["jti"], token["exp"])
         return {"msg": "Token successfully revoked"}, HTTPStatus.OK
 

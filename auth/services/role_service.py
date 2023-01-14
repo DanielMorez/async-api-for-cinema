@@ -1,8 +1,5 @@
 import logging
 
-from http import HTTPStatus
-from uuid import UUID
-
 from models.role import Role
 from utils.models import get_or_create
 
