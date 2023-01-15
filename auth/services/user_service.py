@@ -9,6 +9,7 @@ from flask_jwt_extended import (
 )
 from flask_restful import abort
 from pydantic import BaseModel
+from sqlalchemy.exc import DataError
 
 from models.user import User
 from models.login_history import LoginHistory
@@ -18,10 +19,14 @@ logger = logging.getLogger(__name__)
 
 
 def get_user_or_error(user_id: UUID) -> User:
-    user = User.find_by_id(user_id)
-    if not user:
-        abort(HTTPStatus.FORBIDDEN, {"message": "Invalid token"})
-    return user
+    try:
+        user = User.find_by_id(user_id)
+    except DataError:
+        abort(HTTPStatus.BAD_REQUEST, "Invalid id")
+    else:
+        if not user:
+            abort(HTTPStatus.FORBIDDEN, "Invalid token")
+        return user
 
 
 class JWTs(BaseModel):
@@ -128,3 +133,28 @@ class UserService:
     def get_login_histories(cls, user_id: UUID) -> list:
         login_histories = LoginHistory.get_sessions(user_id)
         return [obj.serialize() for obj in login_histories]
+
+    @classmethod
+    def get_user_profile(cls, user_id: UUID) -> User:
+        user = get_user_or_error(user_id)
+        return user
+
+    @classmethod
+    def update_user_profile(
+        cls,
+        user_id: UUID,
+        first_name: str = None,
+        last_name: str = None,
+        email: str = None
+    ) -> User:
+        user = get_user_or_error(user_id)
+        if first_name:
+            user.first_name = first_name
+        if last_name:
+            user.last_name = last_name
+        if email:
+            user.email = email
+
+        if email or last_name or first_name:
+            user.save()
+            return user

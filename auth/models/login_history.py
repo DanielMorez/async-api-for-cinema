@@ -1,7 +1,6 @@
 import uuid
 import datetime
 
-from sqlalchemy import inspect
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import backref
 
@@ -48,7 +47,7 @@ class LoginHistory(db.Model):
         return {
             "user_agent": self.user_agent,
             "device": self.device,
-            "created_at": self.created_at.strftime("%d/%m/%Y, %H:%M:%S")
+            "created_at": self.created_at.strftime("%d/%m/%Y, %H:%M:%S"),
         }
 
     def __repr__(self):

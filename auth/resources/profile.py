@@ -1,3 +1,5 @@
+from http import HTTPStatus
+
 from flask import jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from flask_restful import Resource, reqparse
@@ -39,12 +41,19 @@ class Profile(Resource):
     @check_if_token_in_blacklist()
     def get(self):
         user_id = get_jwt_identity()
-        # TODO: get profile info
-        return jsonify(user_id)
+        user = UserService.get_user_profile(user_id)
+        return jsonify(user.as_dict)
 
     @jwt_required()
     @check_if_token_in_blacklist()
     def put(self):
         user_id = get_jwt_identity()
-        # TODO: update profile info
-        return jsonify(user_id)
+        self.parser = reqparse.RequestParser()
+        self.parser.add_argument("first_name", required=False)
+        self.parser.add_argument("last_name", required=False)
+        self.parser.add_argument("email", required=False)
+        data = self.parser.parse_args()
+        user = UserService.update_user_profile(user_id, **data)
+        if user:
+            return jsonify(user.as_dict)
+        return {"message": "Set first_name or last_name or email"}, HTTPStatus.BAD_REQUEST
