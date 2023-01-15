@@ -12,6 +12,7 @@ class RoleResource(Resource):
     @jwt_required()
     @roles_required("Admin")
     def post(self):
+        """Create role"""
         self.parser = reqparse.RequestParser()
         self.parser.add_argument(
             "name", help="This field cannot be blank", required=True
@@ -22,21 +23,34 @@ class RoleResource(Resource):
             response = jsonify({"id": str(role.id)})
             response.status = HTTPStatus.CREATED
             return response
-        return {"msg": "Role is already existing"}, HTTPStatus.BAD_REQUEST
+        return {"msg": "Role already exists"}, HTTPStatus.BAD_REQUEST
 
     @jwt_required()
     @roles_required("Admin")
     def get(self):
-        pass
+        """Get all roles"""
+        roles = RoleService.get_roles()
+        return jsonify(roles)
 
     @jwt_required()
     @roles_required("Admin")
     def put(self):
-        pass
+        """Change role"""
+        self.parser = reqparse.RequestParser()
+        self.parser.add_argument("id", help="This field cannot be blank", required=True)
+        self.parser.add_argument(
+            "name", help="This field cannot be blank", required=True
+        )
+        data = self.parser.parse_args()
+        RoleService.update(data["id"], data["name"])
+        return jsonify(success=True)
 
     @jwt_required()
     @roles_required("Admin")
     def delete(self):
-        pass
-
-
+        """Delete role"""
+        self.parser = reqparse.RequestParser()
+        self.parser.add_argument("id", help="This field cannot be blank", required=True)
+        data = self.parser.parse_args()
+        RoleService.delete(data["id"])
+        return jsonify(success=True)

@@ -21,7 +21,7 @@ def roles_required(*roles):
 
             # including JWT blacklist verification
             if is_block_token or not user:
-                abort(HTTPStatus.FORBIDDEN, {"msg": "Invalid token"})
+                abort(HTTPStatus.FORBIDDEN, "Invalid token")
 
             if user.is_superuser:
                 return view_function(*args, **kwargs)
@@ -29,7 +29,7 @@ def roles_required(*roles):
             if user.has_roles(*roles):
                 return view_function(*args, **kwargs)
 
-            abort(HTTPStatus.FORBIDDEN, {"msg": "No access permissions"})
+            abort(HTTPStatus.FORBIDDEN, "No access permissions")
 
         return decorator
 

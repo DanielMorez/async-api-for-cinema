@@ -2,9 +2,10 @@ import uuid
 
 from sqlalchemy.dialects.postgresql import UUID
 from db import db
+from models.mixins import ModelMixin
 
 
-class Role(db.Model):
+class Role(ModelMixin, db.Model):
     __tablename__ = "roles"
 
     id = db.Column(
@@ -23,12 +24,26 @@ class Role(db.Model):
         db.session.add(self)
         db.session.commit()
 
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
+
+    @classmethod
+    def find_by_id(cls, role_id: UUID) -> "Role":
+        if qs := cls.query.filter_by(id=role_id):
+            return qs.first()
+
+    @classmethod
+    def find_by_name(cls, name: str) -> "Role":
+        return cls.query.filter_by(name=name).first()
+
     def __repr__(self):
         return f"<Role {self.name}>"
 
 
 class UserRoles(db.Model):
     __tablename__ = "user_roles"
+    __table_args__ = (db.UniqueConstraint("user_id", "role_id"),)
 
     id = db.Column(
         UUID(as_uuid=True),
