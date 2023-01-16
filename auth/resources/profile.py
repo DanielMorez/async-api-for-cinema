@@ -46,7 +46,7 @@ class Profile(Resource):
 
     @jwt_required()
     @check_if_token_in_blacklist()
-    def put(self):
+    def patch(self):
         user_id = get_jwt_identity()
         self.parser = reqparse.RequestParser()
         self.parser.add_argument("first_name", required=False)

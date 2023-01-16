@@ -9,7 +9,7 @@ from services.user_role_service import UserRoleService
 class UserRoleResource(Resource):
     @jwt_required()
     @roles_required("Admin")
-    def put(self):
+    def post(self):
         """Assign role to user"""
         self.parser = reqparse.RequestParser()
         self.parser.add_argument(
