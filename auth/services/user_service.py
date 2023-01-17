@@ -183,13 +183,13 @@ class UserService:
     def get_tokens_from_login_histories(cls, user_id: UUID) -> list:
         user = get_user_or_error(user_id)
         login_histories = LoginHistory.get_sessions(user_id)
-        token_histories = []
+        tokens_histories = []
         for session in login_histories:
             if session.created_at >= datetime.datetime.utcnow() - timedelta(
                 seconds=settings.jwt_access_token_expires
             ):
-                token_histories.append(session.access_token)
+                tokens_histories.append(session.access_token)
         last_row_histories = LoginHistory.get_sessions_refresh_token(user_id)
         refresh_token = last_row_histories.refresh_token
-        token_histories.append(refresh_token)
-        return token_histories
+        tokens_histories.append(refresh_token)
+        return tokens_histories
