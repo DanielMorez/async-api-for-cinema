@@ -24,9 +24,20 @@
 - в режиме дебаг `python app.py` (выставите debug = True в .env);
 - в режиме продакшн `python pywsgi.py` (выставите debug = False в .env);
 
-## 🏃‍♂️ Запуск функии создания superuser-a
+## 🦸‍♂️ Создать суперпользователя
 
-- в терминале вводим при запущенных контейнерах и `app.py` строку типа:
-`flask app create-superuser login_supersuser-a`
-Затем следуем инструкциям и вводим: пароль (password), подтверждение пароля (password_confirmation) 
-и email (необязательный параметр);
+Для этого необходимо перейти в `auth` и ввести команду.
+```commandline
+flask create-superuser <login>
+```
+После чего вам предложат ввести пароль, подтвердить его и email. Итоговый вывод в консоли может выглядеть вот так:
+```commandline
+(venv) developer@MacBook-Pro auth % flask --app app create-superuser ADMIN
+Enter password: ADMIN
+Confirm password: ADMIN
+Enter email (optional): 
+Superuser was successfully created
+(venv) denisduginov@MacBook-Pro-Denis auth % flask create-superuser ADMIN 
+User already exists. Try again with another login
+
+```
