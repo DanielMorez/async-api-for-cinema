@@ -37,7 +37,7 @@ Enter password: ADMIN
 Confirm password: ADMIN
 Enter email (optional): 
 Superuser was successfully created
-(venv) denisduginov@MacBook-Pro-Denis auth % flask create-superuser ADMIN 
+(venv) developer@MacBook-Pro auth % flask create-superuser ADMIN 
 User already exists. Try again with another login
 
 ```
