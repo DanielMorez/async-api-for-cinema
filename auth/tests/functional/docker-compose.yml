@@ -63,6 +63,8 @@ services:
         condition: service_healthy
       postgres:
         condition: service_healthy
+      auth:
+        condition: service_started
     networks:
       - test_network
 
