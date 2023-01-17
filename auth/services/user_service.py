@@ -1,8 +1,11 @@
+import datetime
 import logging
+from datetime import timedelta
 
 from http import HTTPStatus
 from uuid import UUID
 
+import jwt
 from flask_jwt_extended import (
     create_access_token,
     create_refresh_token,
@@ -11,6 +14,7 @@ from flask_restful import abort
 from pydantic import BaseModel
 from sqlalchemy.exc import DataError
 
+from config import settings
 from models.user import User
 from models.login_history import LoginHistory
 from utils.token import block_token
@@ -91,7 +95,30 @@ class UserService:
 
         tokens: JWTs = cls.get_tokens(user)
 
-        login = LoginHistory(user_id=user.id, user_agent=user_agent, device=device)
+        access_token = {
+            "jti": jwt.decode(tokens.access_token, options={"verify_signature": False})[
+                "jti"
+            ],
+            "exp": jwt.decode(tokens.access_token, options={"verify_signature": False})[
+                "exp"
+            ],
+        }
+        refresh_token = {
+            "jti": jwt.decode(
+                tokens.refresh_token, options={"verify_signature": False}
+            )["jti"],
+            "exp": jwt.decode(
+                tokens.refresh_token, options={"verify_signature": False}
+            )["exp"],
+        }
+
+        login = LoginHistory(
+            user_id=user.id,
+            user_agent=user_agent,
+            device=device,
+            access_token=access_token,
+            refresh_token=refresh_token,
+        )
         login.save()
         # TODO: notification about authorization
 
@@ -105,17 +132,10 @@ class UserService:
         return tokens, HTTPStatus.OK
 
     @classmethod
-    def logout(cls, user_id: UUID, token: dict) -> (dict, HTTPStatus):
-        user = get_user_or_error(user_id)
-        block_token(token["jti"], token["exp"])
-        return {"msg": "Token successfully revoked"}, HTTPStatus.OK
-
-    @classmethod
-    def logout_from_all_devices(cls, user_id: UUID):
-        # TODO:
-        #  find all active access and refresh tokens
-        #  and block them
-        return {"msg": "Tokens successfully revoked"}, HTTPStatus.OK
+    def logout(cls, tokens_list: list) -> (dict, HTTPStatus):
+        for token in tokens_list:
+            block_token(token["jti"], token["exp"])
+        return {"Tokens successfully revoked": tokens_list}, HTTPStatus.OK
 
     @classmethod
     def change_password(cls, user_id: UUID, password: str) -> (dict, HTTPStatus):
@@ -145,7 +165,7 @@ class UserService:
         user_id: UUID,
         first_name: str = None,
         last_name: str = None,
-        email: str = None
+        email: str = None,
     ) -> User:
         user = get_user_or_error(user_id)
         if first_name:
@@ -158,3 +178,18 @@ class UserService:
         if email or last_name or first_name:
             user.save()
             return user
+
+    @classmethod
+    def get_tokens_from_login_histories(cls, user_id: UUID) -> list:
+        user = get_user_or_error(user_id)
+        login_histories = LoginHistory.get_sessions(user_id)
+        token_histories = []
+        for session in login_histories:
+            if session.created_at >= datetime.datetime.utcnow() - timedelta(
+                seconds=settings.jwt_access_token_expires
+            ):
+                token_histories.append(session.access_token)
+        last_row_histories = LoginHistory.get_sessions_refresh_token(user_id)
+        refresh_token = last_row_histories.refresh_token
+        token_histories.append(refresh_token)
+        return token_histories

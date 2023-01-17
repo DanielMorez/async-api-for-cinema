@@ -72,6 +72,6 @@ class Logout(Resource):
     @check_if_token_in_blacklist()
     def post(self):
         user_id = get_jwt_identity()
-        payload = get_jwt()
-        payload, status = UserService.logout(user_id, payload)
+        token_histories = UserService.get_tokens_from_login_histories(user_id)
+        payload, status = UserService.logout(token_histories)
         return payload, status
