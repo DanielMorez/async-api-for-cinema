@@ -7,7 +7,7 @@ from flask_jwt_extended import (
 )
 from flask_restful import Resource, reqparse
 
-from services.user_service import UserService, JWTs
+from services.user_service import UserService, JWTs, get_user_or_error
 from utils.token import check_if_token_in_blacklist
 
 
@@ -74,4 +74,15 @@ class Logout(Resource):
         user_id = get_jwt_identity()
         payload = get_jwt()
         payload, status = UserService.logout(user_id, payload)
+        return payload, status
+
+
+class LogoutAllDevices(Resource):
+    @jwt_required(verify_type=False)
+    @check_if_token_in_blacklist()
+    def post(self):
+        user_id = get_jwt_identity()
+        user = get_user_or_error(user_id)
+        tokens_histories = UserService.get_tokens_from_login_histories(user_id)
+        payload, status = UserService.logout_from_all_devices(tokens_histories)
         return payload, status

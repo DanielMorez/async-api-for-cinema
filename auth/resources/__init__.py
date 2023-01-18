@@ -11,6 +11,7 @@ auth_api.add_resource(auth.Registration, "/register")
 auth_api.add_resource(auth.Authorization, "/login")
 auth_api.add_resource(auth.Logout, "/logout")
 auth_api.add_resource(auth.RefreshToken, "/token-refresh")
+auth_api.add_resource(auth.LogoutAllDevices, "/logout-all-devices")
 
 auth_api.add_resource(profile.Profile, "/profile")
 auth_api.add_resource(profile.ChangePassword, "/change-password")
