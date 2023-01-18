@@ -60,9 +60,7 @@ class Authorization(Resource):
             data["login"], data["password"], data.get("User-Agent"), data.get("Device")
         )
         if status == HTTPStatus.OK and isinstance(payload, JWTs):
-            resp = jsonify(payload.dict())
-            resp.headers = {"Authorization": f"Bearer {payload.access_token}"}
-            return resp
+            return payload.dict(), status
         return payload, status
 
 
