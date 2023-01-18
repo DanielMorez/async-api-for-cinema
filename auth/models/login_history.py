@@ -25,12 +25,8 @@ class LoginHistory(db.Model):
     )
     user_agent = db.Column(db.String, nullable=True)
     device = db.Column(db.String, nullable=True)
-    created_at = db.Column(
-        db.DateTime, default=datetime.datetime.utcnow, nullable=False
-    )
-    token_updated_at = db.Column(
-        db.DateTime, default=datetime.datetime.utcnow, nullable=False
-    )
+    created_at = db.Column(db.DateTime, default=datetime.datetime.utcnow, nullable=False)
+    token_updated_at = db.Column(db.DateTime, default=datetime.datetime.utcnow, nullable=False)
 
     jti_access_token = db.Column(UUID(as_uuid=True), nullable=False)
     jti_refresh_token = db.Column(UUID(as_uuid=True), nullable=False)
@@ -64,8 +60,7 @@ class LoginHistory(db.Model):
         return cls.query.filter(
             cls.user_id == user_id,
             cls.token_updated_at
-            >= datetime.datetime.utcnow()
-            - datetime.timedelta(seconds=settings.jwt_refresh_token_expires),
+            >= datetime.datetime.utcnow() - datetime.timedelta(seconds=settings.jwt_refresh_token_expires),
         )
 
     def serialize(self):
