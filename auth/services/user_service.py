@@ -103,9 +103,7 @@ class UserService:
         user = get_user_or_error(user_id)
         tokens: JWTs = cls.get_tokens(user)
         block_token(token["jti"], token["exp"])
-        login_histories = LoginHistory.query.filter_by(jti_refresh_token=token["jti"]).first()
-        login_histories.token_updated_at = datetime.datetime.utcnow()
-        login_histories.save()
+        save_token_updated_at = LoginHistory.save_token_updated_at(token['jti'])
         return tokens, HTTPStatus.OK
 
     @classmethod

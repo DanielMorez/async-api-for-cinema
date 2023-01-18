@@ -56,6 +56,14 @@ class LoginHistory(db.Model):
         return cls.query.filter_by(user_id=user_id)
 
     @classmethod
+    def save_token_updated_at(cls, token: UUID):
+        login_histories = cls.query.filter_by(jti_refresh_token=token).first()
+        if login_histories:
+            login_histories.token_updated_at = datetime.datetime.utcnow()
+            login_histories.save()
+        return
+
+    @classmethod
     def get_sessions_with_date(cls, user_id: UUID):
         return cls.query.filter(
             cls.user_id == user_id,
