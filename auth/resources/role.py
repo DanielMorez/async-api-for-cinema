@@ -6,9 +6,14 @@ from flask_restful import Resource, reqparse
 
 from utils.decorators import roles_required
 from services.role_service import RoleService
+from utils.namespaces.roles import ns, role
+from utils.parsers.auth import access_token_required
 
 
+@ns.route("/")
+@ns.expect(access_token_required)
 class RoleResource(Resource):
+    @ns.marshal_with(role, code=HTTPStatus.CREATED)
     @jwt_required()
     @roles_required("Admin")
     def post(self):
@@ -20,15 +25,16 @@ class RoleResource(Resource):
         data = self.parser.parse_args()
         role, created = RoleService.create_role(data["name"])
         if created:
-            response = jsonify({"id": str(role.id)})
+            response = jsonify({"id": str(role.id), "name": role.name})
             response.status = HTTPStatus.CREATED
             return response
         return {"msg": "Role already exists"}, HTTPStatus.BAD_REQUEST
 
+    @ns.marshal_list_with(role)
     @jwt_required()
     @roles_required("Admin")
     def get(self):
-        """Get all roles"""
+        """Get list of roles"""
         roles = RoleService.get_roles()
         return jsonify(roles)
 

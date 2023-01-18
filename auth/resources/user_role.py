@@ -2,10 +2,15 @@ from flask import jsonify
 from flask_jwt_extended import jwt_required
 from flask_restful import Resource, reqparse
 
-from utils.decorators import roles_required
 from services.user_role_service import UserRoleService
+from utils.namespaces.roles import role
+from utils.namespaces.user_role import ns
+from utils.parsers.auth import access_token_required
+from utils.decorators import roles_required
 
 
+@ns.route("/")
+@ns.expect(access_token_required)
 class UserRoleResource(Resource):
     @jwt_required()
     @roles_required("Admin")
@@ -37,6 +42,7 @@ class UserRoleResource(Resource):
         UserRoleService.remove_user_role(data["user_id"], data["role_id"])
         return jsonify(succes=True)
 
+    @ns.marshal_list_with(role)
     @jwt_required()
     @roles_required("Admin")
     def get(self):

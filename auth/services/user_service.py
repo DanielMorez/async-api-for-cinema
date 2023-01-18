@@ -145,7 +145,7 @@ class UserService:
         user_id: UUID,
         first_name: str = None,
         last_name: str = None,
-        email: str = None
+        email: str = None,
     ) -> User:
         user = get_user_or_error(user_id)
         if first_name:
