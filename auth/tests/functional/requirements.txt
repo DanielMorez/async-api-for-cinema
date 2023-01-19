@@ -6,3 +6,4 @@ python-dotenv==0.21.0
 redis==4.3.4
 aioredis==2.0.1
 psycopg2-binary==2.9.5
+names==0.3.0
