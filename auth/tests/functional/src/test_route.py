@@ -1,13 +1,13 @@
 from http import HTTPStatus
 
 import pytest
-from tests.functional.settings import test_settings
-from tests.functional.testdata.parametrize.test_route import (
+from settings import test_settings
+from testdata.parametrize.test_route import (
     test_register_post,
     test_refresh_post,
     test_login_post,
 )
-from tests.functional.testdata.parametrize.test_route import test_roles_get
+from testdata.parametrize.test_route import test_roles_get
 
 
 @pytest.mark.parametrize("query_data, expected_answer", test_register_post)

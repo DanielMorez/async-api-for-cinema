@@ -48,3 +48,10 @@ User already exists. Try again with another login
 ## 📚 OpenAPI
 
 Для просмотра документации перейдите по `http://0.0.0.0:5000/api/v1/user/` 
+
+
+## 🧩 Тестирование
+
+Для тестирования приложения перейдите в `auth/tests/functional` и выполните `python main.py`.
+
+Более подробно о написание тестах и запуске в Docker compose смотрите в [README.md](https://github.com/DanielMorez/async-api-for-cinema/tree/dev/auth/tests#readme)

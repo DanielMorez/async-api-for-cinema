@@ -5,53 +5,38 @@ services:
     build:
       context: ../../.
       dockerfile: dev.Dockerfile
-    container_name: auth
+    container_name: auth_test
     restart: always
     volumes:
-      - ../../.env:/opt/app/.env
+      - ./.env:/opt/app/.env
     ports:
       - "${AUTH_PORT}:${AUTH_PORT}"
     networks:
       - test_network
     depends_on:
-      redis:
-        condition: service_healthy
-      postgres:
-        condition: service_healthy
+      - postgres
+      - redis
 
   redis:
     image: redis:7.0.5
-    container_name: redis_async_api
+    container_name: redis_test
     restart: always
     ports:
       - "${REDIS_PORT}:${REDIS_PORT}"
     networks:
       - test_network
-    healthcheck:
-      test: [ "CMD", "redis-cli", "ping" ]
-      interval: 1s
-      timeout: 3s
-      retries: 30
 
   postgres:
     image: postgres:15.1
-    container_name: postgres_async_api
+    container_name: postgres_test
     ports:
       - "${PG_PORT}:${PG_PORT}"
     environment:
       POSTGRES_USER: ${PG_USER}
       POSTGRES_PASSWORD: ${PG_PASSWORD}
       POSTGRES_DB: ${PG_DB_NAME}
-      PGDATA: /var/lib/postgresql/data/pgdata
-    volumes:
-      - .:/var/lib/postgresql/data
     networks:
       - test_network
-    healthcheck:
-      test: [ "CMD-SHELL", "pg_isready", "-d", "db_prod" ]
-      interval: 1s
-      timeout: 3s
-      retries: 30
 
   tests:
     build: .
@@ -59,12 +44,9 @@ services:
     volumes:
       - ./.env:/opt/app/src/.env
     depends_on:
-      redis:
-        condition: service_healthy
-      postgres:
-        condition: service_healthy
-      auth:
-        condition: service_started
+      - redis
+      - postgres
+      - auth
     networks:
       - test_network
 

@@ -53,18 +53,15 @@ class UserService:
         **kwargs
     ) -> (dict, int):
         if User.find_by_login(login):
-            return {
-                "message": "User with login {} already exists".format(login)
-            }, HTTPStatus.BAD_REQUEST
+            abort("User with login {} already exists".format(login)
+            , HTTPStatus.BAD_REQUEST)
 
         if email:
             if User.find_by_email(email):
-                return {
-                    "message": "User with email {} already exists".format(email)
-                }, HTTPStatus.BAD_REQUEST
+                abort("User with email {} already exists".format(email), HTTPStatus.BAD_REQUEST)
 
         if password != password_confirmation:
-            return {"message": "Passwords do not match"}, HTTPStatus.BAD_REQUEST
+            abort("Passwords do not match", HTTPStatus.BAD_REQUEST)
 
         new_user = User(login=login, password=password, email=email)
         try:
@@ -74,7 +71,7 @@ class UserService:
             return tokens.dict(), HTTPStatus.CREATED
         except Exception as error:
             logger.error(error)
-            return {"message": "Something went wrong"}, HTTPStatus.INTERNAL_SERVER_ERROR
+            return abort("Something went wrong", HTTPStatus.INTERNAL_SERVER_ERROR)
 
     @classmethod
     def login(cls, login, password, user_agent: str = None, device: str = None):
