@@ -6,13 +6,14 @@ from flask_restful import Resource, reqparse
 
 from utils.decorators import roles_required
 from services.role_service import RoleService
-from utils.namespaces.roles import ns, role
+from utils.namespaces.roles import ns, role, parser, role_id
 from utils.parsers.auth import access_token_required
 
 
 @ns.route("/")
 @ns.expect(access_token_required)
 class RoleResource(Resource):
+    @ns.expect(parser)
     @ns.marshal_with(role, code=HTTPStatus.CREATED)
     @jwt_required()
     @roles_required("Admin")
@@ -38,6 +39,7 @@ class RoleResource(Resource):
         roles = RoleService.get_roles()
         return jsonify(roles)
 
+    @ns.expect(parser)
     @jwt_required()
     @roles_required("Admin")
     def put(self):
@@ -51,6 +53,7 @@ class RoleResource(Resource):
         RoleService.update(data["id"], data["name"])
         return jsonify(success=True)
 
+    @ns.expect(role_id)
     @jwt_required()
     @roles_required("Admin")
     def delete(self):

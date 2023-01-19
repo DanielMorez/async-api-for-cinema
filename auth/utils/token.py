@@ -25,7 +25,7 @@ def check_if_token_in_blacklist():
         def decorator(*args, **kwargs):
             payload = get_jwt()
             token = payload["jti"]
-            if cache_storage.get(token):
+            if cache_storage.exists(token):
                 abort(HTTPStatus.FORBIDDEN, "Invalid token")
             return func(*args, **kwargs)
 

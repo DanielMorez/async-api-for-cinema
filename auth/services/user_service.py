@@ -7,7 +7,7 @@ from flask_jwt_extended import (
     create_access_token,
     create_refresh_token,
 )
-from flask_restful import abort
+from flask import abort
 from pydantic import BaseModel
 from sqlalchemy.exc import DataError
 
@@ -54,19 +54,28 @@ class UserService:
     ) -> (dict, int):
         if User.find_by_login(login):
             abort(
-                "User with login {} already exists".format(login),
                 HTTPStatus.BAD_REQUEST,
+                "User with login {} already exists".format(login)
+            )
+
+        if len(login) <= 6:
+            abort(
+                HTTPStatus.BAD_REQUEST,
+                "Login has to contains more pr equal 6 symbols"
             )
 
         if email:
             if User.find_by_email(email):
                 abort(
-                    "User with email {} already exists".format(email),
                     HTTPStatus.BAD_REQUEST,
+                    "User with email {} already exists".format(email),
                 )
 
         if password != password_confirmation:
-            abort("Passwords do not match", HTTPStatus.BAD_REQUEST)
+            abort(HTTPStatus.BAD_REQUEST, "Passwords do not match")
+
+        if len(password) < 6:
+            abort(HTTPStatus.BAD_REQUEST, "Password has to contains more pr equal 6 symbols")
 
         new_user = User(login=login, password=password, email=email)
         try:
@@ -76,20 +85,21 @@ class UserService:
             return tokens.dict(), HTTPStatus.CREATED
         except Exception as error:
             logger.error(error)
-            return abort("Something went wrong", HTTPStatus.INTERNAL_SERVER_ERROR)
+            return abort(HTTPStatus.INTERNAL_SERVER_ERROR, "Something went wrong")
 
     @classmethod
     def login(cls, login, password, user_agent: str = None, device: str = None):
         user = User.find_by_login(login)
         if not user:
-            return {
-                "message": "User with login {} does not exist".format(login)
-            }, HTTPStatus.BAD_REQUEST
+            abort(
+                HTTPStatus.BAD_REQUEST,
+                "User with login {} does not exist".format(login)
+            )
 
         is_correct_password = user.verify_password(password)
 
         if not is_correct_password:
-            return {"message": "Password is incorrect"}, HTTPStatus.FORBIDDEN
+            abort(HTTPStatus.BAD_REQUEST, "Password is incorrect")
 
         tokens: JWTs = cls.get_tokens(user)
 
@@ -110,7 +120,7 @@ class UserService:
     def logout(cls, user_id: UUID, token: dict) -> (dict, HTTPStatus):
         user = get_user_or_error(user_id)
         block_token(token["jti"], token["exp"])
-        return {"msg": "Token successfully revoked"}, HTTPStatus.OK
+        return {"message": "Token successfully revoked"}, HTTPStatus.OK
 
     @classmethod
     def logout_from_all_devices(cls, user_id: UUID):

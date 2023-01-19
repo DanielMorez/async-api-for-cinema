@@ -75,9 +75,7 @@ class RefreshToken(Resource):
         refresh_token = get_jwt()
         payload, status = UserService.refresh(user_id, refresh_token)
         if status == HTTPStatus.OK and isinstance(payload, JWTs):
-            resp = jsonify(payload.dict())
-            resp.headers = {"Authorization": f"Bearer {payload.access_token}"}
-            return resp
+            return payload.dict(), status
         return payload, status
 
 

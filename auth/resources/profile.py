@@ -5,13 +5,14 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 from flask_restful import Resource, reqparse
 
 from services.user_service import UserService
-from utils.namespaces.profile import ns, user
+from utils.namespaces.profile import ns, user, login, password
 from utils.parsers.auth import access_token_required
+from utils.parsers.profile import parser
 from utils.token import check_if_token_in_blacklist
 
 
 @ns.route("/change-password")
-@ns.expect(access_token_required)
+@ns.expect(access_token_required, password)
 class ChangePassword(Resource):
     @jwt_required()
     @check_if_token_in_blacklist()
@@ -28,7 +29,7 @@ class ChangePassword(Resource):
 
 
 @ns.route("/change-login")
-@ns.expect(access_token_required)
+@ns.expect(access_token_required, login)
 class ChangeLogin(Resource):
     @jwt_required()
     @check_if_token_in_blacklist()
@@ -54,9 +55,10 @@ class Profile(Resource):
         """Get user profile"""
         user_id = get_jwt_identity()
         user = UserService.get_user_profile(user_id)
-        return jsonify(user.as_dict)
+        return user.as_dict
 
     @ns.marshal_with(user)
+    @ns.expect(parser)
     @jwt_required()
     @check_if_token_in_blacklist()
     def patch(self):
