@@ -5,13 +5,18 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 from flask_restful import Resource, reqparse
 
 from services.user_service import UserService
+from utils.namespaces.profile import ns, user
+from utils.parsers.auth import access_token_required
 from utils.token import check_if_token_in_blacklist
 
 
+@ns.route("/change-password")
+@ns.expect(access_token_required)
 class ChangePassword(Resource):
     @jwt_required()
     @check_if_token_in_blacklist()
     def post(self):
+        """Change password"""
         self.parser = reqparse.RequestParser()
         self.parser.add_argument(
             "password", help="This field cannot be blank", required=True
@@ -22,10 +27,13 @@ class ChangePassword(Resource):
         return payload, status
 
 
+@ns.route("/change-login")
+@ns.expect(access_token_required)
 class ChangeLogin(Resource):
     @jwt_required()
     @check_if_token_in_blacklist()
     def post(self):
+        """Change login"""
         self.parser = reqparse.RequestParser()
         self.parser.add_argument(
             "login", help="This field cannot be blank", required=True
@@ -36,17 +44,23 @@ class ChangeLogin(Resource):
         return payload, status
 
 
+@ns.route("")
+@ns.expect(access_token_required)
 class Profile(Resource):
+    @ns.marshal_with(user)
     @jwt_required()
     @check_if_token_in_blacklist()
     def get(self):
+        """Get user profile"""
         user_id = get_jwt_identity()
         user = UserService.get_user_profile(user_id)
         return jsonify(user.as_dict)
 
+    @ns.marshal_with(user)
     @jwt_required()
     @check_if_token_in_blacklist()
     def patch(self):
+        """Change first or last names or email"""
         user_id = get_jwt_identity()
         self.parser = reqparse.RequestParser()
         self.parser.add_argument("first_name", required=False)
@@ -56,4 +70,6 @@ class Profile(Resource):
         user = UserService.update_user_profile(user_id, **data)
         if user:
             return jsonify(user.as_dict)
-        return {"message": "Set first_name or last_name or email"}, HTTPStatus.BAD_REQUEST
+        return {
+            "message": "Set first_name or last_name or email"
+        }, HTTPStatus.BAD_REQUEST

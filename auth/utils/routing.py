@@ -3,4 +3,4 @@ def register_endpoints(app):
     from utils.commands import cli_bp
 
     app.register_blueprint(auth_bp)  # API
-    app.register_blueprint(cli_bp)   # CLI
+    app.register_blueprint(cli_bp)  # CLI

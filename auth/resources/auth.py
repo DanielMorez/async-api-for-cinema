@@ -8,11 +8,20 @@ from flask_jwt_extended import (
 from flask_restful import Resource, reqparse
 
 from services.user_service import UserService, JWTs
+from utils.namespaces import registration, login, refresh, logout
+from utils.namespaces.login import tokens
+from utils.parsers.auth import access_token_required, refresh_token_required
+from utils.parsers.login import credentials
+from utils.parsers.registration import register_data
 from utils.token import check_if_token_in_blacklist
 
 
+@registration.ns.route("")
+@registration.ns.expect(register_data)
 class Registration(Resource):
+    @registration.ns.marshal_with(tokens, code=HTTPStatus.CREATED)
     def post(self):
+        """Register user"""
         self.parser = reqparse.RequestParser()
         self.parser.add_argument(
             "login", help="This field cannot be blank", required=True
@@ -31,8 +40,12 @@ class Registration(Resource):
         return payload, status
 
 
+@login.ns.route("")
+@login.ns.expect(credentials)
 class Authorization(Resource):
+    @login.ns.marshal_with(tokens)
     def post(self):
+        """Authorization by credentials"""
         self.parser = reqparse.RequestParser()
         self.parser.add_argument(
             "login", help="This field cannot be blank", required=True
@@ -47,13 +60,14 @@ class Authorization(Resource):
             data["login"], data["password"], data.get("User-Agent"), data.get("Device")
         )
         if status == HTTPStatus.OK and isinstance(payload, JWTs):
-            resp = jsonify(payload.dict())
-            resp.headers = {"Authorization": f"Bearer {payload.access_token}"}
-            return resp
+            return payload.dict(), status
         return payload, status
 
 
+@refresh.ns.route("")
+@refresh.ns.expect(refresh_token_required)
 class RefreshToken(Resource):
+    @refresh.ns.marshal_with(tokens)
     @jwt_required(refresh=True)
     @check_if_token_in_blacklist()
     def post(self):
@@ -67,6 +81,8 @@ class RefreshToken(Resource):
         return payload, status
 
 
+@logout.ns.route("")
+@logout.ns.expect(access_token_required)
 class Logout(Resource):
     @jwt_required(verify_type=False)
     @check_if_token_in_blacklist()
