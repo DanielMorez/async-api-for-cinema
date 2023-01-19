@@ -9,5 +9,5 @@ tokens = ns.model(
     {
         "access_token": fields.Raw(),
         "refresh_token": fields.Raw(),
-    }
+    },
 )

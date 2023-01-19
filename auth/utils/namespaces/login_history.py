@@ -8,9 +8,11 @@ ns = Namespace(
 login_history = ns.model(
     "Login History",
     {
-        "id": fields.String(readonly=True, description="The login history UUID identifier"),
+        "id": fields.String(
+            readonly=True, description="The login history UUID identifier"
+        ),
         "user_agent": fields.String(),
         "device": fields.String(),
-        "created_at": fields.DateTime()
-    }
+        "created_at": fields.DateTime(),
+    },
 )

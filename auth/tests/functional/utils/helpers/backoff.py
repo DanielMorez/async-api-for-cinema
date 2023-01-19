@@ -2,7 +2,6 @@ import time
 import logging
 
 from functools import wraps
-from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -28,7 +27,9 @@ def backoff(
                         if waiting < border_sleep_time:
                             n += 1
                             waiting = start_sleep_time * factor**n
-                        logger.warning(f"{func.__name__} restarts after {waiting} seconds")
+                        logger.warning(
+                            f"{func.__name__} restarts after {waiting} seconds"
+                        )
                         time.sleep(waiting)
 
         return inner
