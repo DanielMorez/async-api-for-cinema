@@ -25,3 +25,10 @@ test_refresh_post = [
         {"body": ['access_token', 'refresh_token']}
     )
 ]
+
+test_login_post = [
+    (
+        {"login": "admin", "password": "1234"},
+        {"body": ['access_token', 'refresh_token']}
+    )
+]
