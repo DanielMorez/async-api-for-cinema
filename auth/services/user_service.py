@@ -53,12 +53,17 @@ class UserService:
         **kwargs
     ) -> (dict, int):
         if User.find_by_login(login):
-            abort("User with login {} already exists".format(login)
-            , HTTPStatus.BAD_REQUEST)
+            abort(
+                "User with login {} already exists".format(login),
+                HTTPStatus.BAD_REQUEST,
+            )
 
         if email:
             if User.find_by_email(email):
-                abort("User with email {} already exists".format(email), HTTPStatus.BAD_REQUEST)
+                abort(
+                    "User with email {} already exists".format(email),
+                    HTTPStatus.BAD_REQUEST,
+                )
 
         if password != password_confirmation:
             abort("Passwords do not match", HTTPStatus.BAD_REQUEST)
