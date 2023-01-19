@@ -30,5 +30,7 @@ def backoff(
                             waiting = start_sleep_time * factor**n
                         logger.warning(f"{func.__name__} restarts after {waiting} seconds")
                         time.sleep(waiting)
+
         return inner
+
     return func_wrapper
