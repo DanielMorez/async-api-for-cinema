@@ -1,13 +1,15 @@
 import uuid
 import datetime
 
+from flask_sqlalchemy.query import Query
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import backref
 
 from db import db
+from models.mixins import ModelMixin
 
 
-class LoginHistory(db.Model):
+class LoginHistory(ModelMixin, db.Model):
     __tablename__ = "login_histories"
 
     id = db.Column(
@@ -40,15 +42,8 @@ class LoginHistory(db.Model):
         db.session.commit()
 
     @classmethod
-    def get_sessions(cls, user_id: UUID):
+    def get_sessions(cls, user_id: UUID) -> Query:
         return cls.query.filter_by(user_id=user_id)
-
-    def serialize(self):
-        return {
-            "user_agent": self.user_agent,
-            "device": self.device,
-            "created_at": self.created_at.strftime("%d/%m/%Y, %H:%M:%S"),
-        }
 
     def __repr__(self):
         return f"<Login at {self.created_at.strftime('%d/%m/%Y, %H:%M:%S')}>"
