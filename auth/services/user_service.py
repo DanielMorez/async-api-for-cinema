@@ -138,13 +138,13 @@ class UserService:
     def change_password(cls, user_id: UUID, password: str) -> (dict, HTTPStatus):
         user = get_user_or_error(user_id)
         user.set_password(password)
-        return {"msg": "Password was successfully changed"}, HTTPStatus.OK
+        return {"message": "Password was successfully changed"}, HTTPStatus.OK
 
     @classmethod
     def change_login(cls, user_id: UUID, login: str) -> (dict, HTTPStatus):
         user = get_user_or_error(user_id)
         user.set_password(login)
-        return {"msg": "Login was successfully changed"}, HTTPStatus.OK
+        return {"message": "Login was successfully changed"}, HTTPStatus.OK
 
     @classmethod
     def get_login_histories(
