@@ -30,7 +30,7 @@ class User(db.Model, ModelMixin):
 
     roles = db.relationship("Role", secondary=f"{db.metadata.schema}.user_roles")
 
-    def __init__(self, login, password, email=None):
+    def __init__(self, login: str, password: str, email=None):
         self.login = login
         self.password = password
         self.email = email
@@ -40,7 +40,7 @@ class User(db.Model, ModelMixin):
         return self._password
 
     @password.setter
-    def password(self, password):
+    def password(self, password: str):
         new_password_hash = generate_password_hash(password)
         self._password = new_password_hash
 
@@ -56,7 +56,7 @@ class User(db.Model, ModelMixin):
         self.login = login
         db.session.commit()
 
-    def verify_password(self, password) -> bool:
+    def verify_password(self, password: str) -> bool:
         return check_password_hash(self._password, password)
 
     def get_roles_names(self) -> tuple:
@@ -80,11 +80,11 @@ class User(db.Model, ModelMixin):
         return cls.query.filter_by(id=user_id).first()
 
     @classmethod
-    def find_by_login(cls, login) -> "User":
+    def find_by_login(cls, login: str) -> "User":
         return cls.query.filter_by(login=login).first()
 
     @classmethod
-    def find_by_email(cls, email) -> "User":
+    def find_by_email(cls, email: str) -> "User":
         return cls.query.filter_by(email=email).first()
 
     @property

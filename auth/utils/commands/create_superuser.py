@@ -5,7 +5,7 @@ from models import User
 
 @click.command()
 @click.argument("login")
-def create_superuser(login):
+def create_superuser(login: str):
     if User.find_by_login(login):
         print("User already exists. Try again with another login")
         return

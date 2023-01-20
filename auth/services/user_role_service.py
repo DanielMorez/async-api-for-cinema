@@ -28,7 +28,7 @@ class UserRoleService:
             abort(HTTPStatus.BAD_REQUEST, "User already does not have the role")
 
     @classmethod
-    def get_user_roles(cls, user_id) -> tuple:
+    def get_user_roles(cls, user_id: UUID) -> tuple:
         user = get_user_or_error(user_id)
         roles = tuple(role.as_dict for role in user.roles)
         return roles

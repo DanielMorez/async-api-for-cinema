@@ -1,6 +1,8 @@
 import logging
 
 from http import HTTPStatus
+from uuid import UUID
+
 from sqlalchemy.exc import DataError
 from flask import abort
 
@@ -10,7 +12,7 @@ from utils.models import get_or_create
 logger = logging.getLogger(__name__)
 
 
-def get_role_or_error(role_id):
+def get_role_or_error(role_id: UUID):
     try:
         role = Role.find_by_id(role_id)
     except DataError:
@@ -23,7 +25,7 @@ def get_role_or_error(role_id):
 
 class RoleService:
     @classmethod
-    def create_role(cls, name) -> (Role, bool):
+    def create_role(cls, name: str) -> (Role, bool):
         instance, created = get_or_create(Role, name=name)
         return instance, created
 
@@ -33,12 +35,12 @@ class RoleService:
         return roles
 
     @classmethod
-    def update(cls, role_id, name) -> None:
+    def update(cls, role_id: UUID, name: str) -> None:
         role = get_role_or_error(role_id)
         role.name = name
         role.save()
 
     @classmethod
-    def delete(cls, role_id) -> None:
+    def delete(cls, role_id: UUID) -> None:
         role = get_role_or_error(role_id)
         role.delete()

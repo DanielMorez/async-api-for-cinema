@@ -88,7 +88,7 @@ class UserService:
             return abort(HTTPStatus.INTERNAL_SERVER_ERROR, "Something went wrong")
 
     @classmethod
-    def login(cls, login, password, user_agent: str = None, device: str = None):
+    def login(cls, login: str, password: str, user_agent: str = None, device: str = None):
         user = User.find_by_login(login)
         if not user:
             abort(
