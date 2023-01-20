@@ -1,22 +1,19 @@
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from flask_restful import Resource, reqparse
+from flask_restful import Resource
 
+from resources.parsers.login_history import parser
 from services.user_service import UserService
 from utils.namespaces.login_history import ns, pagination_login_histories
 from utils.parsers.auth import access_token_required
+from utils.parsers.login_history import expect_page
 from utils.token import check_if_token_in_blacklist
-
-
-parser = reqparse.RequestParser()
-parser.add_argument("page", type=int, location="values")
-parser.add_argument("page_size", type=int, location="values")
 
 
 @ns.route("")
 @ns.expect(access_token_required)
 class LoginHistories(Resource):
     @ns.marshal_with(pagination_login_histories)
-    @ns.expect(parser)
+    @ns.expect(expect_page)
     @jwt_required()
     @check_if_token_in_blacklist()
     def get(self):
