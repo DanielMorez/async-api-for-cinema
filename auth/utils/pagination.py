@@ -8,6 +8,8 @@ def paginate(query: Query, page: int = 1, page_size: int = 10) -> dict:
     """Important notice:
     query have to implement property `as_dict` that helps serialize db.Model objects
     """
+    page = 1 or page
+    page_size = 10 or page_size
     if page < 1 or page_size < 1:
         abort(HTTPStatus.BAD_REQUEST, "Page and page size are positive integer values")
     if page_size > 30:
