@@ -16,3 +16,13 @@ login_history = ns.model(
         "created_at": fields.DateTime(),
     },
 )
+
+pagination_login_histories = ns.model(
+    "Pagination Login Histories",
+    {
+        "count": fields.Integer,
+        "prev": fields.String,
+        "next": fields.String,
+        "results": fields.List(fields.Nested(login_history)),
+    },
+)
