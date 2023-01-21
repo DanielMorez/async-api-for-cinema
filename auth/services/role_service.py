@@ -35,15 +35,16 @@ class RoleService:
         return instance, created
 
     @classmethod
-    def get_roles(cls) -> (str,):
-        roles = tuple(role.as_dict for role in Role.query.all())
+    def get_roles(cls) -> list:
+        roles = [role.as_dict for role in Role.query.all()]
         return roles
 
     @classmethod
-    def update(cls, role_id: UUID, name: str) -> None:
+    def update(cls, role_id: UUID, name: str) -> Role:
         role = get_role_or_error(role_id)
         role.name = name
         role.save()
+        return role
 
     @classmethod
     def delete(cls, role_id: UUID) -> None:

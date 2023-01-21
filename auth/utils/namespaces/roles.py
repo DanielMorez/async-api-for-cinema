@@ -14,5 +14,9 @@ role = ns.model(
 parser = reqparse.RequestParser()
 parser.add_argument("name", type=str, required=True, location="json")
 
+role_id_and_name = reqparse.RequestParser()
+role_id_and_name.add_argument("name", type=str, required=True, location="json")
+role_id_and_name.add_argument("id", type=str, required=True, location="json")
+
 role_id = reqparse.RequestParser()
 role_id.add_argument("id", type=str, required=True, location="json")
