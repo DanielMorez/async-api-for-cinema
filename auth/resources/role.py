@@ -7,7 +7,7 @@ from flask_restful import Resource
 
 from resources.parsers.role import role_creating, role_updating, role_deleting
 from utils.decorators import roles_required
-from services.role_service import RoleService, uuid_convert
+from services.role_service import RoleService
 from utils.namespaces.roles import (
     ns,
     parser,
@@ -37,7 +37,6 @@ class RoleResource(Resource):
     def get(self):
         """Get list of roles"""
         roles = RoleService.get_roles()
-        roles = ast.literal_eval(json.dumps(roles, indent=4, default=uuid_convert))
         return roles
 
     @ns.expect(role_id_and_name)
