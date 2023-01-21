@@ -7,7 +7,7 @@ from flask_restful import Resource
 
 from resources.parsers.role import role_creating, role_updating, role_deleting
 from utils.decorators import roles_required
-from services.role_service import RoleService
+from services.role_service import RoleService, uuid_convert
 from utils.namespaces.roles import (
     ns,
     parser,

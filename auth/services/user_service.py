@@ -167,9 +167,9 @@ class UserService:
         return user
 
     @classmethod
-    def delete_user_profile(cls, user_id: UUID) -> User:
+    def delete_user_profile(cls, user_id: UUID) -> (dict, HTTPStatus):
         user = delete_user_or_error(user_id)
-        return user
+        return {"message": "User was successfully removed"}, HTTPStatus.OK
 
     @classmethod
     def update_user_profile(

@@ -1,7 +1,7 @@
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from flask_restful import Resource
 
-from resources.parsers.profile import change_password, change_login, change_profile
+from resources.parsers.profile import change_password, change_login, change_profile, delete_profile
 from services.user_service import UserService
 from utils.namespaces.profile import ns, user, login, password
 from utils.parsers.auth import access_token_required
@@ -57,11 +57,9 @@ class Profile(Resource):
         FOR PYTEST
         Delete user profile
         """
-        self.parser = reqparse.RequestParser()
-        self.parser.add_argument("user_id", help="This field cannot be blank", required=True)
-        data = self.parser.parse_args()
-        UserService.delete_user_profile(data["user_id"])
-        return jsonify(succes=True)
+        data = delete_profile.parse_args()
+        payload, status = UserService.delete_user_profile(data["user_id"])
+        return payload, status
 
     @ns.marshal_with(user)
     @ns.expect(parser)
