@@ -12,4 +12,6 @@ RUN pip install --upgrade pip \
 
 COPY . .
 
-ENTRYPOINT ["python", "pywsgi.py"]
+ENV FLASK_APP=wsgi_app
+
+ENTRYPOINT python3 -m flask run --with-threads --reload --host=0.0.0.0 --port=5001

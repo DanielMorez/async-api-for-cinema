@@ -1,8 +1,8 @@
 dev docker:
-	docker compose -f docker-compose.dev.yml up --build
+	docker-compose -f docker-compose.dev.yml up --build
 
 prod docker:
-	docker compose -f docker-compose.prod.yml up --build
+	docker-compose -f docker-compose.prod.yml up --build
 
 init migrations:
 	docker exec -ti admin_panel_async_api python manage.py migrate
@@ -17,4 +17,10 @@ reload nginx:
 	docker exec -ti nginx_async_api nginx -s reload
 
 test:
-	docker compose -f async-api/tests/functional/docker-compose.yml up --build
+	docker-compose -f async-api/tests/functional/docker-compose.yml up --build
+
+auth:
+	docker-compose -f docker-compose.prod.yml up -d --no-deps --build auth
+
+nginx:
+	docker-compose -f docker-compose.prod.yml up -d --no-deps --build nginx
