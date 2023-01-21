@@ -23,6 +23,11 @@ def get_role_or_error(role_id: UUID):
         return role
 
 
+def uuid_convert(o):
+    if isinstance(o, UUID):
+        return o.hex
+
+
 class RoleService:
     @classmethod
     def create_role(cls, name: str) -> (Role, bool):

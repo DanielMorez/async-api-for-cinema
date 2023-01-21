@@ -10,6 +10,8 @@ from utils.parsers.auth import access_token_required
 from utils.parsers.profile import parser
 from utils.token import check_if_token_in_blacklist
 
+from utils.decorators import roles_required
+
 
 @ns.route("/change-password")
 @ns.expect(access_token_required, password)
@@ -19,9 +21,7 @@ class ChangePassword(Resource):
     def post(self):
         """Change password"""
         self.parser = reqparse.RequestParser()
-        self.parser.add_argument(
-            "password", help="This field cannot be blank", required=True
-        )
+        self.parser.add_argument("password", help="This field cannot be blank", required=True)
         data = self.parser.parse_args()
         user_id = get_jwt_identity()
         payload, status = UserService.change_password(user_id, data["password"])
@@ -36,9 +36,7 @@ class ChangeLogin(Resource):
     def post(self):
         """Change login"""
         self.parser = reqparse.RequestParser()
-        self.parser.add_argument(
-            "login", help="This field cannot be blank", required=True
-        )
+        self.parser.add_argument("login", help="This field cannot be blank", required=True)
         data = self.parser.parse_args()
         user_id = get_jwt_identity()
         payload, status = UserService.change_login(user_id, data["login"])
@@ -57,6 +55,20 @@ class Profile(Resource):
         user = UserService.get_user_profile(user_id)
         return user.as_dict
 
+    @jwt_required()
+    @roles_required("Admin")
+    @check_if_token_in_blacklist()
+    def delete(self):
+        """
+        FOR PYTEST
+        Delete user profile
+        """
+        self.parser = reqparse.RequestParser()
+        self.parser.add_argument("user_id", help="This field cannot be blank", required=True)
+        data = self.parser.parse_args()
+        UserService.delete_user_profile(data["user_id"])
+        return jsonify(succes=True)
+
     @ns.marshal_with(user)
     @ns.expect(parser)
     @jwt_required()
@@ -72,6 +84,4 @@ class Profile(Resource):
         user = UserService.update_user_profile(user_id, **data)
         if user:
             return jsonify(user.as_dict)
-        return {
-            "message": "Set first_name or last_name or email"
-        }, HTTPStatus.BAD_REQUEST
+        return {"message": "Set first_name or last_name or email"}, HTTPStatus.BAD_REQUEST
