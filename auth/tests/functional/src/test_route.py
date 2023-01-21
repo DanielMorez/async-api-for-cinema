@@ -18,7 +18,6 @@ from plugins.common import add_role
 @pytest.mark.asyncio
 async def test_register_post(query_data, expected_answer):
     response = await make_post_request(test_settings.service_url, "/api/v1/user/register", query_data)
-
     assert response["status"] == HTTPStatus.CREATED
     assert list(response["body"].keys()) == expected_answer["body"]
 

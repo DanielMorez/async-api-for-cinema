@@ -1,7 +1,5 @@
 import names
 
-admin_authorization = {"login": "pytest_superuser", "password": "123456"}
-
 login_authorization = {"login": f"pytest_{names.get_last_name()}", "password": "123456"}
 
 test_register_post = [
