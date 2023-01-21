@@ -31,18 +31,6 @@ def get_user_or_error(user_id: UUID) -> User:
         return user
 
 
-def delete_user_or_error(user_id: UUID) -> User:
-    try:
-        user = User.find_by_id(user_id)
-        user.delete()
-    except DataError:
-        abort(HTTPStatus.BAD_REQUEST, "Invalid id")
-    else:
-        if not user:
-            abort(HTTPStatus.FORBIDDEN, "Invalid token")
-        return user
-
-
 class JWTs(BaseModel):
     access_token: str
     refresh_token: str
@@ -165,11 +153,6 @@ class UserService:
     def get_user_profile(cls, user_id: UUID) -> User:
         user = get_user_or_error(user_id)
         return user
-
-    @classmethod
-    def delete_user_profile(cls, user_id: UUID) -> (dict, HTTPStatus):
-        user = delete_user_or_error(user_id)
-        return {"message": "User was successfully removed"}, HTTPStatus.OK
 
     @classmethod
     def update_user_profile(

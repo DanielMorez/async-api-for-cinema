@@ -8,8 +8,6 @@ from utils.parsers.auth import access_token_required
 from utils.parsers.profile import parser
 from utils.token import check_if_token_in_blacklist
 
-from utils.decorators import roles_required
-
 
 @ns.route("/change-password")
 @ns.expect(access_token_required, password)
@@ -48,18 +46,6 @@ class Profile(Resource):
         user_id = get_jwt_identity()
         user_instance = UserService.get_user_profile(user_id)
         return user_instance.as_dict
-
-    @jwt_required()
-    @roles_required("Admin")
-    @check_if_token_in_blacklist()
-    def delete(self):
-        """
-        FOR PYTEST
-        Delete user profile
-        """
-        data = delete_profile.parse_args()
-        payload, status = UserService.delete_user_profile(data["user_id"])
-        return payload, status
 
     @ns.marshal_with(user)
     @ns.expect(parser)
