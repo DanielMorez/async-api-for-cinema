@@ -24,10 +24,10 @@ services:
     container_name: auth
     volumes:
       - ./.env:/opt/app/.env
-    expose:
-      - "${AUTH_PORT}"
+    ports:
+      - "${AUTH_PORT}:${AUTH_PORT}"
     networks:
-      - development_network
+      - production_network
     depends_on:
       - postgres
       - redis

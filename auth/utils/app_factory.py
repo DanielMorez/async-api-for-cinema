@@ -8,7 +8,6 @@ from utils.routing import register_endpoints
 def create_app(settings: Settings) -> Flask:
     app = Flask(__name__)
     app.config["DEBUG"] = settings.debug
-    app.config["SERVER_NAME"] = f"{settings.host}:{settings.port}"
 
     app.config["JWT_SECRET_KEY"] = settings.jwt_secrete_key
     app.config["JWT_COOKIE_SECURE"] = settings.jwt_cookie_secure
