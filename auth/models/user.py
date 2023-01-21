@@ -48,10 +48,6 @@ class User(db.Model, ModelMixin):
         db.session.add(self)
         db.session.commit()
 
-    def delete(self) -> None:
-        db.session.delete(self)
-        db.session.commit()
-
     def set_password(self, password: str) -> None:
         self.password = password
         self.save()

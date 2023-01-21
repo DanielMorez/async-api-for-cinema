@@ -1,7 +1,7 @@
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from flask_restful import Resource
 
-from resources.parsers.profile import change_password, change_login, change_profile, delete_profile
+from resources.parsers.profile import change_password, change_login, change_profile
 from services.user_service import UserService
 from utils.namespaces.profile import ns, user, login, password
 from utils.parsers.auth import access_token_required

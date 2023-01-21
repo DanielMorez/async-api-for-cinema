@@ -17,7 +17,6 @@ from plugins.common import add_role
 @pytest.mark.parametrize("query_data, expected_answer", test_register_post)
 @pytest.mark.asyncio
 async def test_register_post(query_data, expected_answer):
-    pytest.status = "First test"
     response = await make_post_request(test_settings.service_url, "/api/v1/user/register", query_data)
 
     assert response["status"] == HTTPStatus.CREATED
