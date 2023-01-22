@@ -12,11 +12,6 @@ logger = logging.getLogger(__name__)
 app = create_app(settings)
 jwt = JWTManager(app)
 
-urls = app.url_map.iter_rules()
-
-for i in urls:
-    logger.error(str(i))
-
 if __name__ == "__main__":
     from config import settings
     app.run(host=settings.host, port=settings.port)
