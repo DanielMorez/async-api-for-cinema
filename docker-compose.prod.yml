@@ -24,13 +24,14 @@ services:
     container_name: auth
     volumes:
       - ./.env:/opt/app/.env
-    ports:
-      - "${AUTH_PORT}:${AUTH_PORT}"
+    expose:
+      - "${AUTH_PORT}"
     networks:
       - production_network
     depends_on:
       - postgres
       - redis
+    restart: always
 
   elasticsearch:
     image: elasticsearch:8.5.1
@@ -44,7 +45,7 @@ services:
       - xpack.security.enabled=false
       - ES_JAVA_OPTS=-Xms1g -Xmx1g
       - discovery.type=single-node
-    ports:
+    expose:
       - "${ES_PORT}"
     networks:
       - production_network
@@ -54,7 +55,7 @@ services:
     image: redis:7.0.5
     container_name: redis_async_api
     restart: always
-    ports:
+    expose:
       - "${REDIS_PORT}"
     networks:
       - production_network
@@ -62,7 +63,7 @@ services:
   postgres:
     image: postgres:15.1
     container_name: postgres_async_api
-    ports:
+    expose:
       - "${PG_PORT}"
     environment:
       POSTGRES_USER: ${PG_USER}
@@ -119,6 +120,7 @@ services:
       - "80:80"
     networks:
       - production_network
+    restart: always
 
 networks:
   production_network:
