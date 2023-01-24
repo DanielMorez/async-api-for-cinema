@@ -1,5 +1,6 @@
 import redis
 from flask import Flask
+from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 
 from sqlalchemy import MetaData, event
@@ -25,3 +26,7 @@ def init_db(app: Flask):
         "before_create",
         DDL(f"CREATE SCHEMA IF NOT EXISTS {settings.pg_schema}"),
     )
+
+
+def init_migrate(app: Flask, database: SQLAlchemy):
+    Migrate(app, database)
