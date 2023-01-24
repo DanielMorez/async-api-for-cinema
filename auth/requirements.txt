@@ -15,3 +15,4 @@ flask-jwt-extended==4.4.4
 redis==4.3.4
 flask-restx==1.0.5
 Flask-Migrate==4.0.2
+names==0.3.0
