@@ -13,6 +13,7 @@ from sqlalchemy.exc import DataError
 
 from models.user import User
 from models.login_history import LoginHistory
+
 from utils.pagination import paginate
 from utils.token import block_token
 
@@ -60,9 +61,7 @@ class UserService:
             )
 
         if len(login) <= 6:
-            abort(
-                HTTPStatus.BAD_REQUEST, "Login has to contains more pr equal 6 symbols"
-            )
+            abort(HTTPStatus.BAD_REQUEST, "Login has to contains more pr equal 6 symbols")
 
         if email:
             if User.find_by_email(email):
@@ -91,9 +90,7 @@ class UserService:
             return abort(HTTPStatus.INTERNAL_SERVER_ERROR, "Something went wrong")
 
     @classmethod
-    def login(
-        cls, login: str, password: str, user_agent: str = None, device: str = None
-    ):
+    def login(cls, login: str, password: str, user_agent: str = None, device: str = None):
         user = User.find_by_login(login)
         if not user:
             abort(
@@ -147,9 +144,7 @@ class UserService:
         return {"message": "Login was successfully changed"}, HTTPStatus.OK
 
     @classmethod
-    def get_login_histories(
-        cls, user_id: UUID, page: int = 1, page_size: int = 10
-    ) -> dict:
+    def get_login_histories(cls, user_id: UUID, page: int = 1, page_size: int = 10) -> dict:
         query = LoginHistory.get_sessions(user_id)
         data = paginate(query, page, page_size)
         return data

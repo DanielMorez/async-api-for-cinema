@@ -4,7 +4,7 @@ services:
   auth:
     build:
       context: ../../.
-      dockerfile: dev.Dockerfile
+      dockerfile: Dockerfile
     container_name: auth_test
     restart: always
     volumes:
@@ -42,7 +42,7 @@ services:
     build: .
     container_name: tests
     volumes:
-      - ./.env:/opt/app/src/.env
+      - ./.env:/opt/app/.env
     depends_on:
       - redis
       - postgres

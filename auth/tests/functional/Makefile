@@ -1,2 +1,2 @@
 create-superuser:
-	docker exec -it auth flask app create-superuser admin
+	docker exec -it auth flask create-superuser pytest_superuser
