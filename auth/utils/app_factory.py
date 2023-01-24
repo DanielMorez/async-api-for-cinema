@@ -1,7 +1,7 @@
 from flask import Flask
 
 from config import Settings
-from db import init_db, db
+from db import init_db, db, init_migrate
 from utils.routing import register_endpoints
 
 
@@ -19,8 +19,10 @@ def create_app(settings: Settings) -> Flask:
     # routing endpoints
     register_endpoints(app)
 
+    init_migrate(app, db)
+
     # init database
     init_db(app)
     app.app_context().push()
-    db.create_all()
+
     return app
