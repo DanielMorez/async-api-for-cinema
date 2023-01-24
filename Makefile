@@ -6,6 +6,7 @@ prod docker:
 
 init migrations:
 	docker exec -ti admin_panel_async_api python manage.py migrate
+	docker exec -ti auth flask db upgrade
 
 superuser in admin:
 	docker exec -ti admin_panel_async_api python manage.py createsuperuser
@@ -20,7 +21,7 @@ test:
 	docker-compose -f async-api/tests/functional/docker-compose.yml up --build
 
 auth:
-	docker-compose -f docker-compose.prod.yml up -d --no-deps --build auth
+	docker-compose -f docker-compose.dev.yml up -d --no-deps --build auth
 
 nginx:
 	docker-compose -f docker-compose.prod.yml up -d --no-deps --build nginx
