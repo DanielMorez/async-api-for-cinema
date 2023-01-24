@@ -12,7 +12,3 @@ change_profile = reqparse.RequestParser()
 change_profile.add_argument("first_name", required=False)
 change_profile.add_argument("last_name", required=False)
 change_profile.add_argument("email", required=False)
-
-delete_profile = reqparse.RequestParser()
-delete_profile.parser = reqparse.RequestParser()
-delete_profile.add_argument("user_id", help="This field cannot be blank", required=True)
