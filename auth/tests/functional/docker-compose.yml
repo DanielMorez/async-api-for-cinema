@@ -1,0 +1,56 @@
+version: '3'
+
+services:
+  auth:
+    build:
+      context: ../../.
+      dockerfile: Dockerfile
+    container_name: auth_test
+    restart: always
+    volumes:
+      - ./.env:/opt/app/.env
+    ports:
+      - "${AUTH_PORT}:${AUTH_PORT}"
+    networks:
+      - test_network
+    depends_on:
+      - postgres
+      - redis
+
+  redis:
+    image: redis:7.0.5
+    container_name: redis_test
+    restart: always
+    ports:
+      - "${REDIS_PORT}:${REDIS_PORT}"
+    networks:
+      - test_network
+
+  postgres:
+    image: postgres:15.1
+    container_name: postgres_test
+    ports:
+      - "${PG_PORT}:${PG_PORT}"
+    environment:
+      POSTGRES_USER: ${PG_USER}
+      POSTGRES_PASSWORD: ${PG_PASSWORD}
+      POSTGRES_DB: ${PG_DB_NAME}
+    networks:
+      - test_network
+
+  tests:
+    build: .
+    container_name: tests
+    volumes:
+      - ./.env:/opt/app/.env
+    depends_on:
+      - redis
+      - postgres
+      - auth
+    networks:
+      - test_network
+
+networks:
+  test_network:
+    name: test_network
+    external: false

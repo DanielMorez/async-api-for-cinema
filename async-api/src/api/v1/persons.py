@@ -1,12 +1,10 @@
 from http import HTTPStatus
 
 from fastapi import APIRouter, Depends, HTTPException
-from fastapi_cache import JsonCoder
 from fastapi_cache.decorator import cache
 from fastapi_utils.cbv import cbv
 
 from api.v1.queries_params.persons import PersonSearchParams
-from helpers.cache_key_builder import CACHE_EXPIRE_IN_SECONDS, key_builder
 from helpers.detail_messages import DETAILS
 from models import Person, Film
 from services.person import PersonService, get_person_service
@@ -19,8 +17,14 @@ class PersonCBV:
     service: PersonService = Depends(get_person_service)
     response_model = Person
 
-    @router.get("/search")
-    @cache(expire=CACHE_EXPIRE_IN_SECONDS, coder=JsonCoder, key_builder=key_builder)
+    @router.get(
+        "/search",
+        description="Search for persons by keywords",
+        summary="Person's search by keywords",
+        response_description="Person's data according to keywords",
+        tags=["persons"],
+    )
+    @cache()
     async def person_list(self, params: PersonSearchParams = Depends()) -> list[Person]:
         """
         Returns list of persons filtered by specified params (gender, name).
@@ -28,8 +32,14 @@ class PersonCBV:
         persons = await self.service.get_list(params)
         return persons
 
-    @router.get("/{person_id}")
-    @cache(expire=CACHE_EXPIRE_IN_SECONDS, coder=JsonCoder, key_builder=key_builder)
+    @router.get(
+        "/{person_id}",
+        description="Get person's data by id",
+        summary="Person's data",
+        response_description="Person's data",
+        tags=["persons"],
+    )
+    @cache()
     async def person_details(self, person_id: str) -> Person:
         """
         Returns the dict with all information about the person by ID.
@@ -41,8 +51,14 @@ class PersonCBV:
             )
         return person
 
-    @router.get("/{person_id}/film")
-    @cache(expire=CACHE_EXPIRE_IN_SECONDS, coder=JsonCoder, key_builder=key_builder)
+    @router.get(
+        "/{person_id}/film",
+        description="Search for films by person's id",
+        summary="Films by person's id",
+        response_description="The list of films by person's id",
+        tags=["persons"],
+    )
+    @cache()
     async def person_films(self, person_id: str) -> list[Film]:
         """
         Returns list of films by specified person_id.

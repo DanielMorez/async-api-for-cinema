@@ -1,13 +1,12 @@
 import logging
 from functools import lru_cache
 
-from aioredis import Redis
-from elasticsearch import AsyncElasticsearch, NotFoundError
+from elasticsearch import NotFoundError
 from fastapi import Depends
 
 from api.v1.queries_params.films import FilmListParams, FilmQueryParams
 from db.elastic import get_elastic
-from db.redis import get_redis
+from db.storage_base import AsyncSearchStorage
 from models.film import Film
 from services.base_service import BaseService
 
@@ -31,7 +30,7 @@ class FilmService(BaseService):
 
     async def _get_film_from_elastic(self, film_id: str) -> Film | None:
         try:
-            doc = await self.elastic.get(index=self.index, id=film_id)
+            doc = await self.storage.get(index=self.index, id=film_id)
         except NotFoundError:
             logger.debug(
                 f"An error occurred while trying to find film in ES (id: {film_id})"
@@ -58,15 +57,16 @@ class FilmService(BaseService):
                 )
                 return body
         elif isinstance(params, FilmQueryParams):
-            body = {"query": {"query_string": {"query": params.query}}}
-            return body
+            if params.query:
+                body = {"query": {"query_string": {"query": params.query}}}
+                return body
 
     async def _get_films_from_elastic(
         self, params: FilmListParams | FilmQueryParams
     ) -> list[Film] | None:
         try:
             body = self._get_body(params)
-            docs = await self.elastic.search(
+            docs = await self.storage.search(
                 index=self.index,
                 from_=params.page_size * params.page_number,
                 size=params.page_size,
@@ -81,7 +81,6 @@ class FilmService(BaseService):
 
 @lru_cache()
 def get_film_service(
-    redis: Redis = Depends(get_redis),
-    elastic: AsyncElasticsearch = Depends(get_elastic),
+    storage: AsyncSearchStorage = Depends(get_elastic)
 ) -> FilmService:
-    return FilmService(redis, elastic)
+    return FilmService(storage)

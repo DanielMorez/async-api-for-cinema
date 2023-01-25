@@ -1,14 +1,13 @@
 import logging
 from http import HTTPStatus
 
-from aioredis import Redis
-from elasticsearch import AsyncElasticsearch, NotFoundError
+from elasticsearch import NotFoundError
 from fastapi import Depends, HTTPException
 from pydantic.tools import lru_cache
 
 from api.v1.queries_params.persons import PersonSearchParams
 from db.elastic import get_elastic
-from db.redis import get_redis
+from db.storage_base import AsyncSearchStorage
 from models.film import Film
 from models.person import Person
 from services.base_service import BaseService
@@ -25,7 +24,7 @@ class PersonService(BaseService):
 
     async def _get_person_from_elastic(self, person_id: str) -> Person | None:
         try:
-            doc = await self.elastic.get(index=self.index, id=person_id)
+            doc = await self.storage.get(index=self.index, id=person_id)
         except NotFoundError:
             logger.debug(
                 f"An error occurred while trying to find person in ES (id: {person_id})"
@@ -44,7 +43,7 @@ class PersonService(BaseService):
             body = None
             if params.query:
                 body = {"query": {"query_string": {"query": params.query}}}
-            docs = await self.elastic.search(
+            docs = await self.storage.search(
                 index=self.index,
                 from_=params.page_size * params.page_number,
                 size=params.page_size,
@@ -68,7 +67,7 @@ class PersonService(BaseService):
     async def _get_person_films_from_es(self, film_ids: list[str]) -> list[Film]:
         try:
             body = {"query": {"ids": {"values": film_ids}}}
-            docs = await self.elastic.search(
+            docs = await self.storage.search(
                 index="movies",
                 body=body,
             )
@@ -80,7 +79,6 @@ class PersonService(BaseService):
 
 @lru_cache()
 def get_person_service(
-    redis: Redis = Depends(get_redis),
-    elastic: AsyncElasticsearch = Depends(get_elastic),
+    storage: AsyncSearchStorage = Depends(get_elastic)
 ) -> PersonService:
-    return PersonService(redis, elastic)
+    return PersonService(storage)

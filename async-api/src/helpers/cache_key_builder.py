@@ -3,8 +3,6 @@ from typing import Callable
 
 from fastapi_cache import FastAPICache
 
-CACHE_EXPIRE_IN_SECONDS = 60 * 5  # 5 минут
-
 
 def key_builder(
     func: Callable,

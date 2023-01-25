@@ -1,18 +1,18 @@
+from abc import ABC, abstractmethod
 from typing import Any
 
-from aioredis import Redis
-from elasticsearch import AsyncElasticsearch
-
 from api.v1.queries_params.base import QueryListBaseModel
+from db.storage_base import AsyncSearchStorage
 
 
-class BaseService:
-    def __init__(self, redis: Redis, elastic: AsyncElasticsearch):
-        self.redis = redis
-        self.elastic = elastic
+class BaseService(ABC):
+    def __init__(self, storage: AsyncSearchStorage):
+        self.storage = storage
 
+    @abstractmethod
     def get_by_id(self, id: str) -> Any | None:
-        raise NotImplementedError
+        pass
 
+    @abstractmethod
     def get_list(self, params: QueryListBaseModel) -> list | None:
-        raise NotImplementedError
+        pass
