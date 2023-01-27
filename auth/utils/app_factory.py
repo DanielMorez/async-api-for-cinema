@@ -4,6 +4,8 @@ from config import Settings
 from db import init_db, db, init_migrate
 from utils.routing import register_endpoints
 
+from utils.limiter import init_limiter
+
 
 def create_app(settings: Settings) -> Flask:
     app = Flask(__name__)
@@ -23,5 +25,7 @@ def create_app(settings: Settings) -> Flask:
     # init database
     init_db(app)
     app.app_context().push()
+
+    init_limiter(app)
 
     return app

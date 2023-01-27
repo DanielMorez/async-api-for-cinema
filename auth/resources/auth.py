@@ -4,8 +4,9 @@ from flask_jwt_extended import (
     jwt_required,
     get_jwt,
 )
-from flask_restful import Resource, reqparse
+from flask_restful import Resource
 
+from utils.limiter import limiter
 from resources.parsers.auth import register_parser, auth_parser
 from services.user_service import UserService, JWTs
 from utils.namespaces import registration, login, refresh, logout
@@ -19,6 +20,7 @@ from utils.token import check_if_token_in_blacklist
 @registration.ns.route("")
 @registration.ns.expect(register_data)
 class Registration(Resource):
+    @limiter.limit("5 per minute")
     @registration.ns.marshal_with(tokens, code=HTTPStatus.CREATED)
     def post(self):
         """Register user"""
@@ -30,6 +32,7 @@ class Registration(Resource):
 @login.ns.route("")
 @login.ns.expect(credentials)
 class Authorization(Resource):
+    @limiter.limit("1 per minute")
     @login.ns.marshal_with(tokens)
     def post(self):
         """Authorization by credentials"""
