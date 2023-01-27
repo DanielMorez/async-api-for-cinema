@@ -6,7 +6,7 @@ from config import Settings
 
 settings = Settings()
 limiter = Limiter(get_remote_address,
-                  default_limits=settings.redis_default_limits,
+                  default_limits=settings.auth_default_limits,
                   storage_uri=settings.redis_dsn
                   )
 
