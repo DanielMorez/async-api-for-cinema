@@ -8,6 +8,7 @@ from resources.parsers.auth import auth_parser, register_parser
 from services.social_account_service import SocialAccountService
 from services.user_service import JWTs, UserService
 from utils.namespaces import login, login_google, logout, refresh, registration
+from utils.limiter import limiter
 from utils.namespaces.login import tokens
 from utils.parsers.auth import access_token_required, refresh_token_required
 from utils.parsers.login import credentials
@@ -38,6 +39,7 @@ class LoginGoogleCallback(Resource):
 @registration.ns.route("")
 @registration.ns.expect(register_data)
 class Registration(Resource):
+    @limiter.limit("5 per minute")
     @registration.ns.marshal_with(tokens, code=HTTPStatus.CREATED)
     def post(self):
         """Register user"""
@@ -49,6 +51,7 @@ class Registration(Resource):
 @login.ns.route("")
 @login.ns.expect(credentials)
 class Authorization(Resource):
+    @limiter.limit("1 per minute")
     @login.ns.marshal_with(tokens)
     def post(self):
         """Authorization by credentials"""

@@ -6,6 +6,7 @@ from pydantic import BaseSettings, RedisDsn, PostgresDsn, Field
 
 class Settings(BaseSettings):
     redis_dsn: RedisDsn
+    auth_default_limits: list = Field(["50 per hour"], env="AUTH_DEFAULT_LIMITS")
     pg_dsn: PostgresDsn
     pg_schema: str = Field("auth", env="AUTH_PG_DEFAULT_SCHEMA")
     name: str = Field("auth")
