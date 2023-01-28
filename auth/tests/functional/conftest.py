@@ -9,13 +9,18 @@ from settings import test_settings
 from testdata.parametrize.test_route import login_authorization
 
 
-@pytest.fixture(params=[{"url": test_settings.service_url, "auth_data": login_authorization}], scope="session")
+@pytest.fixture(
+    params=[{"url": test_settings.service_url, "auth_data": login_authorization}],
+    scope="session",
+)
 def get_token(request: SubRequest):
     async def inner():
         session = aiohttp.ClientSession()
         url = request.param["url"] + "/api/v1/user/login"
         headers = [("Content-Type", "application/json;")]
-        async with session.post(url, headers=headers, data=json.dumps(request.param["auth_data"])) as response:
+        async with session.post(
+            url, headers=headers, data=json.dumps(request.param["auth_data"])
+        ) as response:
             data = await response.read()
             body = json.loads(data)
             response = {

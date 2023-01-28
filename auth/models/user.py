@@ -7,6 +7,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 from db import db
 from models.mixins import ModelMixin
+from utils.before_requests.jaeger import trace
 
 
 class User(db.Model, ModelMixin):
@@ -44,6 +45,7 @@ class User(db.Model, ModelMixin):
         new_password_hash = generate_password_hash(password)
         self._password = new_password_hash
 
+    @trace()
     def save(self) -> None:
         db.session.add(self)
         db.session.commit()

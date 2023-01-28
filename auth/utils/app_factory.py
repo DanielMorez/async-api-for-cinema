@@ -2,8 +2,8 @@ from flask import Flask
 
 from config import Settings
 from db import init_db, db, init_migrate
+from utils.before_requests.jaeger import configure_tracer, init_jaeger
 from utils.routing import register_endpoints
-
 from utils.limiter import init_limiter
 
 
@@ -18,14 +18,17 @@ def create_app(settings: Settings) -> Flask:
     app.config["JWT_REFRESH_TOKEN_EXPIRES"] = settings.jwt_refresh_token_expires
 
     # routing endpoints
-    register_endpoints(app)
-
-    init_migrate(app, db)
+    register_endpoints(app, settings)
 
     # init database
+    init_migrate(app, db)
     init_db(app)
     app.app_context().push()
 
     init_limiter(app)
+
+    if settings.request_id_enable:
+        configure_tracer(settings.jaeger_host, settings.jaeger_port)
+        init_jaeger(app)
 
     return app

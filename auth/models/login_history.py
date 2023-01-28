@@ -26,9 +26,13 @@ class LoginHistory(ModelMixin, db.Model):
     )
     user_agent = db.Column(db.String, nullable=True)
     device = db.Column(db.String, nullable=True)
-    created_at = db.Column(db.DateTime, default=datetime.datetime.utcnow, nullable=False)
+    created_at = db.Column(
+        db.DateTime, default=datetime.datetime.utcnow, nullable=False
+    )
 
-    user = db.relationship("User", backref=backref("login_histories", cascade="all,delete", uselist=False))
+    user = db.relationship(
+        "User", backref=backref("login_histories", cascade="all,delete", uselist=False)
+    )
 
     def __init__(self, user_id: UUID, user_agent=None, device=None):
         self.user_id = user_id
