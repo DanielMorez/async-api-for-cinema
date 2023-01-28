@@ -12,21 +12,20 @@ from db import db
 config = context.config
 
 fileConfig(config.config_file_name)
-logger = logging.getLogger('alembic.env')
+logger = logging.getLogger("alembic.env")
 
 
 def get_engine():
     try:
         # this works with Flask-SQLAlchemy<3 and Alchemical
-        return current_app.extensions['migrate'].db.get_engine()
+        return current_app.extensions["migrate"].db.get_engine()
     except TypeError:
         # this works with Flask-SQLAlchemy>=3
-        return current_app.extensions['migrate'].db.engine
+        return current_app.extensions["migrate"].db.engine
 
 
-config.set_main_option(
-    'sqlalchemy.url', str(get_engine().url).replace('%', '%%'))
-target_db = current_app.extensions['migrate'].db
+config.set_main_option("sqlalchemy.url", str(get_engine().url).replace("%", "%%"))
+target_db = current_app.extensions["migrate"].db
 
 
 def get_metadata():
@@ -46,9 +45,7 @@ def run_migrations_offline():
 
     """
     url = config.get_main_option("sqlalchemy.url")
-    context.configure(
-        url=url, target_metadata=get_metadata(), literal_binds=True
-    )
+    context.configure(url=url, target_metadata=get_metadata(), literal_binds=True)
 
     with context.begin_transaction():
         context.run_migrations()
@@ -63,25 +60,25 @@ def run_migrations_online():
     """
 
     def process_revision_directives(context, revision, directives):
-        if getattr(config.cmd_opts, 'autogenerate', False):
+        if getattr(config.cmd_opts, "autogenerate", False):
             script = directives[0]
             if script.upgrade_ops.is_empty():
                 directives[:] = []
-                logger.info('No changes in schema detected.')
+                logger.info("No changes in schema detected.")
 
     connectable = get_engine()
-    get_metadata().reflect(connectable, schema='public')
+    get_metadata().reflect(connectable, schema="public")
 
     with connectable.connect() as connection:
         context.configure(
             connection=connection,
             target_metadata=get_metadata(),
             process_revision_directives=process_revision_directives,
-            **current_app.extensions['migrate'].configure_args
+            **current_app.extensions["migrate"].configure_args,
         )
 
         with context.begin_transaction():
-            context.execute(f'create schema if not exists {get_metadata().schema};')
+            context.execute(f"create schema if not exists {get_metadata().schema};")
             context.run_migrations()
 
 

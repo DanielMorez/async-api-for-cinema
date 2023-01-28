@@ -17,3 +17,7 @@ flask-restx==1.0.5
 Flask-Migrate==4.0.2
 names==0.3.0
 flask-limiter==3.1.0
+opentelemetry-api==1.15.0
+opentelemetry-sdk==1.15.0
+opentelemetry-instrumentation-flask==0.36b0
+opentelemetry-exporter-jaeger==1.15.0

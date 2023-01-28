@@ -6,6 +6,7 @@ from flask_jwt_extended import (
 )
 from flask_restful import Resource
 
+from utils.before_requests.jaeger import trace
 from utils.limiter import limiter
 from resources.parsers.auth import register_parser, auth_parser
 from services.user_service import UserService, JWTs
@@ -20,6 +21,7 @@ from utils.token import check_if_token_in_blacklist
 @registration.ns.route("")
 @registration.ns.expect(register_data)
 class Registration(Resource):
+    @trace()
     @limiter.limit("5 per minute")
     @registration.ns.marshal_with(tokens, code=HTTPStatus.CREATED)
     def post(self):
@@ -32,6 +34,7 @@ class Registration(Resource):
 @login.ns.route("")
 @login.ns.expect(credentials)
 class Authorization(Resource):
+    @trace()
     @limiter.limit("1 per minute")
     @login.ns.marshal_with(tokens)
     def post(self):

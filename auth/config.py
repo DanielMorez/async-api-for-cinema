@@ -3,7 +3,6 @@ from pydantic import BaseSettings, RedisDsn, PostgresDsn, Field
 
 class Settings(BaseSettings):
     redis_dsn: RedisDsn
-    auth_default_limits: list = Field(["50 per hour"], env="AUTH_DEFAULT_LIMITS")
     pg_dsn: PostgresDsn
     pg_schema: str = Field("auth", env="AUTH_PG_DEFAULT_SCHEMA")
     name: str = Field("auth")
@@ -17,6 +16,10 @@ class Settings(BaseSettings):
     jwt_refresh_token_expires: int = Field(
         60 * 60 * 24, env="JWT_REFRESH_TOKEN_EXPIRES"
     )
+    auth_default_limits: list = Field([], env="AUTH_DEFAULT_LIMITS")
+    request_id_enable: bool = Field(False, env="REQUEST_ID_ENABLE")
+    jaeger_host: str = Field("localhost", env="JAEGER_HOST")
+    jaeger_port: int = Field(6831, env="JAEGER_PORT")
 
     class Config:
         case_sensitive = False
