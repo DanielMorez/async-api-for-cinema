@@ -1,15 +1,20 @@
 from http import HTTPStatus
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Request
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from fastapi_cache.decorator import cache
 from fastapi_utils.cbv import cbv
 
 from api.v1.queries_params.films import FilmListParams, FilmQueryParams
+from core.config import Settings
 from helpers.detail_messages import DETAILS
 from models import Film
 from services.film import FilmService, get_film_service
 
+settings = Settings()
+
 router = APIRouter()
+auth_scheme = HTTPBearer()
 
 
 @cbv(router)
@@ -25,11 +30,19 @@ class FilmCBV:
         tags=["films"],
     )
     @cache()
-    async def film_list(self, params: FilmListParams = Depends()) -> list[Film]:
+    async def film_list(self, request: Request, token: HTTPAuthorizationCredentials = Depends(auth_scheme), params: FilmListParams = Depends()) -> list[Film]:
         """
         Returns list of films sorted by imdb_rating: desc.
         """
         films = await self.service.get_list(params)
+        if not request.user.is_authenticated:
+            for film in films:
+                film.description = None
+                film.imdb_rating = None
+        if request.user.is_authenticated:
+            if "Subscriber" not in request.user.roles:
+                for film in films:
+                    film.description = None
         return films
 
     @router.get(
