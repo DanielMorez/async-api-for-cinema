@@ -1,19 +1,38 @@
 from http import HTTPStatus
-from flask_jwt_extended import (
-    get_jwt_identity,
-    jwt_required,
-    get_jwt,
-)
-from flask_restful import Resource, reqparse
 
-from resources.parsers.auth import register_parser, auth_parser
-from services.user_service import UserService, JWTs
-from utils.namespaces import registration, login, refresh, logout
+from flask import redirect
+from flask_jwt_extended import get_jwt, get_jwt_identity, jwt_required
+from flask_restful import Resource
+
+from resources.parsers.auth import auth_parser, register_parser
+from services.social_account_service import SocialAccountService
+from services.user_service import JWTs, UserService
+from utils.namespaces import login, login_google, logout, refresh, registration
 from utils.namespaces.login import tokens
 from utils.parsers.auth import access_token_required, refresh_token_required
 from utils.parsers.login import credentials
 from utils.parsers.registration import register_data
 from utils.token import check_if_token_in_blacklist
+
+
+@login_google.ns.route("")
+class LoginWithGoogle(Resource):
+    def get(self):
+        redirect_uri = SocialAccountService.get_redirect_uri()
+        return redirect(redirect_uri)
+
+
+class LoginGoogleCallback(Resource):
+    def get(self):
+        token_response = SocialAccountService.get_google_token_access()
+        social_account, account_data = SocialAccountService.get_social_account_data(token_response)
+
+        if not social_account:
+            payload, status = SocialAccountService.create_user(account_data)
+        else:
+            payload, status = SocialAccountService.current_user_login(social_account)
+
+        return payload, status
 
 
 @registration.ns.route("")
@@ -34,9 +53,7 @@ class Authorization(Resource):
     def post(self):
         """Authorization by credentials"""
         data = auth_parser.parse_args()
-        payload, status = UserService.login(
-            data["login"], data["password"], data.get("User-Agent"), data.get("Device")
-        )
+        payload, status = UserService.login(data["login"], data["password"], data.get("User-Agent"), data.get("Device"))
         if status == HTTPStatus.OK and isinstance(payload, JWTs):
             return payload.dict(), status
         return payload, status

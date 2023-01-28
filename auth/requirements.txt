@@ -16,3 +16,7 @@ redis==4.3.4
 flask-restx==1.0.5
 Flask-Migrate==4.0.2
 names==0.3.0
+requests==2.28.2
+oauthlib==3.2.2
+pyOpenSSL==23.0.0
+Flask-Login==0.6.2
