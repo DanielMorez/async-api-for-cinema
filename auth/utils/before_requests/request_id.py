@@ -8,4 +8,4 @@ def before_request():
         raise RuntimeError("request id is required")
     tracer = tr.get_tracer(request.path)
     with tracer.start_as_current_span("Getting X-Request-Id") as span:
-        span.set_attribute('http.request_id', request_id)
+        span.set_attribute("http.request_id", request_id)

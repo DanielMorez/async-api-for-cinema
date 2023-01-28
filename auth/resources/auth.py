@@ -12,6 +12,7 @@ from utils.namespaces import login, login_google, logout, refresh, registration
 from utils.before_requests.jaeger import trace
 from utils.limiter import limiter
 from utils.namespaces.login import tokens
+from utils.namespaces.login_google import google_auth
 from utils.parsers.auth import access_token_required, refresh_token_required
 from utils.parsers.login import credentials
 from utils.parsers.registration import register_data
@@ -20,15 +21,18 @@ from utils.token import check_if_token_in_blacklist
 
 @login_google.ns.route("")
 class LoginWithGoogle(Resource):
-    def get(self):
+    @login_google.ns.marshal_with(google_auth)
+    def post(self):
         redirect_uri = SocialAccountService.get_redirect_uri()
-        return redirect(redirect_uri)
+        return {"redirect_uri": redirect_uri}
 
 
 class LoginGoogleCallback(Resource):
     def get(self):
         token_response = SocialAccountService.get_google_token_access()
-        social_account, account_data = SocialAccountService.get_social_account_data(token_response)
+        social_account, account_data = SocialAccountService.get_social_account_data(
+            token_response
+        )
 
         if not social_account:
             payload, status = SocialAccountService.create_user(account_data)
@@ -60,7 +64,9 @@ class Authorization(Resource):
     def post(self):
         """Authorization by credentials"""
         data = auth_parser.parse_args()
-        payload, status = UserService.login(data["login"], data["password"], data.get("User-Agent"), data.get("Device"))
+        payload, status = UserService.login(
+            data["login"], data["password"], data.get("User-Agent"), data.get("Device")
+        )
         if status == HTTPStatus.OK and isinstance(payload, JWTs):
             return payload.dict(), status
         return payload, status

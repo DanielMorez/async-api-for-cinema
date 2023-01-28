@@ -37,4 +37,4 @@ class Settings(BaseSettings):
 settings = Settings()
 client = WebApplicationClient(settings.GOOGLE_CLIENT_ID)
 
-os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
+os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"

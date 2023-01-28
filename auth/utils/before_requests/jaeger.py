@@ -10,9 +10,7 @@ from opentelemetry.exporter.jaeger.thrift import JaegerExporter
 
 
 def configure_tracer(host: str, port: int, service_name: str = "auth") -> None:
-    resource = Resource(attributes={
-        "service.name": service_name
-    })
+    resource = Resource(attributes={"service.name": service_name})
     tr.set_tracer_provider(TracerProvider(resource=resource))
     tr.get_tracer_provider().add_span_processor(
         BatchSpanProcessor(
@@ -22,7 +20,9 @@ def configure_tracer(host: str, port: int, service_name: str = "auth") -> None:
             )
         )
     )
-    tr.get_tracer_provider().add_span_processor(BatchSpanProcessor(ConsoleSpanExporter()))
+    tr.get_tracer_provider().add_span_processor(
+        BatchSpanProcessor(ConsoleSpanExporter())
+    )
 
 
 def init_jaeger(app: Flask):

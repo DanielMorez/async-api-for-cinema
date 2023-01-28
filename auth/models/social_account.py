@@ -22,7 +22,9 @@ class SocialAccount(ModelMixin, db.Model):
     social_id = db.Column(db.Text, nullable=False)
     social_name = db.Column(db.Text, nullable=False)
 
-    __table_args__ = (db.UniqueConstraint("social_id", "social_name", name="social_pk"),)
+    __table_args__ = (
+        db.UniqueConstraint("social_id", "social_name", name="social_pk"),
+    )
 
     def __init__(self, user_id: UUID, social_id=str, social_name=str):
         self.user_id = user_id

@@ -1,39 +1,22 @@
+import jwt
 import json
-from http import HTTPStatus
 import string
+import requests
+
+from http import HTTPStatus
 from secrets import choice as secrets_choice
 
-import jwt
-import requests
 from flask import abort, request, Response
 from flask_jwt_extended import create_access_token, create_refresh_token
-from pydantic import BaseModel
-from sqlalchemy.exc import DataError
 
 from config import settings, client
 from models.social_account import SocialAccount
-from services.user_service import UserService
-
-
-def get_user_or_error(social_id: str) -> SocialAccount | str:
-    try:
-        social_account = SocialAccount.find_by_id(social_id)
-    except DataError:
-        abort(HTTPStatus.BAD_REQUEST, "Invalid id")
-    else:
-        if not social_account:
-            return "Social_account not found"
-        return social_account
+from services.user_service import UserService, JWTs
 
 
 def generate_random_string():
     alphabet = string.ascii_letters + string.digits
     return "".join(secrets_choice(alphabet) for _ in range(16))
-
-
-class JWTs(BaseModel):
-    access_token: str
-    refresh_token: str
 
 
 class SocialAccountService:
@@ -69,7 +52,10 @@ class SocialAccountService:
         token_endpoint = google_provider_cfg["token_endpoint"]
 
         token_url, headers, body = client.prepare_token_request(
-            token_endpoint, authorization_response=request.url, redirect_url=request.base_url, code=code
+            token_endpoint,
+            authorization_response=request.url,
+            redirect_url=request.base_url,
+            code=code,
         )
         token_response = requests.post(
             token_url,
@@ -102,7 +88,10 @@ class SocialAccountService:
             social_account = SocialAccount.find_by_id(social_id=social_id)
             return social_account, account_data
         else:
-            abort(HTTPStatus.BAD_REQUEST, "User email not available or not verified by Google")
+            abort(
+                HTTPStatus.BAD_REQUEST,
+                "User email not available or not verified by Google",
+            )
 
     @classmethod
     def create_user(cls, account_data) -> (dict, HTTPStatus):
@@ -110,15 +99,20 @@ class SocialAccountService:
         account_data["password"] = password
         account_data["password_confirmation"] = password
         payload, status = UserService.register(**account_data)
-        user_id = jwt.decode(payload["access_token"], options={"verify_signature": False})["sub"]
+        user_id = jwt.decode(
+            payload["access_token"], options={"verify_signature": False}
+        )["sub"]
         if status == HTTPStatus.CREATED:
             social_account = SocialAccount(
-                user_id=user_id, social_id=account_data["social_id"], social_name=account_data["user_name"]
+                user_id=user_id,
+                social_id=account_data["social_id"],
+                social_name=account_data["user_name"],
             )
             social_account.save()
             payload[
                 "password"
-            ] = password  # TODO send the password to the user's email and a message about the need to update the password
+            ] = password
+            # TODO: send the password to the user's email and a message about the need to update the password
             return payload, status
         else:
             abort(HTTPStatus.BAD_REQUEST, "User already exists")
