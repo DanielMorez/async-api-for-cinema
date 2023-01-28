@@ -31,7 +31,17 @@ services:
     depends_on:
       - postgres
       - redis
+      - jaeger
     restart: always
+
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    container_name: jaeger_async_api
+    ports:
+      - "${JAEGER_PORT}:${JAEGER_PORT}/udp"
+      - "16686:16686"
+    networks:
+      - production_network
 
   elasticsearch:
     image: elasticsearch:8.5.1

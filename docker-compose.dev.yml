@@ -32,6 +32,15 @@ services:
       - postgres
       - redis
 
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    container_name: jaeger_async_api
+    ports:
+      - "${JAEGER_PORT}:${JAEGER_PORT}/udp"
+      - "16686:16686"
+    networks:
+      - development_network
+
   elasticsearch:
     image: elasticsearch:8.5.1
     container_name: elasticsearch_async_api
@@ -104,6 +113,22 @@ services:
       - postgres
     networks:
       - development_network
+
+  nginx:
+    image: nginx:1.23.2
+    container_name: nginx_async_api
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./configs:/etc/nginx/conf.d:ro
+      - ./admin-panel/movies/static:/static
+    depends_on:
+      - admin_panel
+      - async_api
+    ports:
+      - "80:80"
+    networks:
+      - development_network
+    restart: always
 
 networks:
   development_network:

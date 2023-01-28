@@ -10,14 +10,22 @@ from testdata.parametrize.test_route import (
     test_roles_put,
 )
 from testdata.parametrize.test_route import test_roles_get
-from utils.helpers.request_methods import make_post_request, make_get_request, make_put_request, make_delete_request
+from utils.helpers.request_methods import (
+    make_post_request,
+    make_get_request,
+    make_put_request,
+    make_delete_request,
+)
 from plugins.common import add_role
+
 
 @pytest.mark.order(1)
 @pytest.mark.parametrize("query_data, expected_answer", test_register_post)
 @pytest.mark.asyncio
 async def test_register_post(query_data, expected_answer):
-    response = await make_post_request(test_settings.service_url, "/api/v1/user/register", query_data)
+    response = await make_post_request(
+        test_settings.service_url, "/api/v1/user/register", query_data
+    )
     assert response["status"] == HTTPStatus.CREATED
     assert list(response["body"].keys()) == expected_answer["body"]
 
@@ -26,7 +34,9 @@ async def test_register_post(query_data, expected_answer):
 @pytest.mark.parametrize("query_data, expected_answer", test_login_post)
 @pytest.mark.asyncio
 async def test_login_post(query_data, expected_answer):
-    response = await make_post_request(test_settings.service_url, "/api/v1/user/login", query_data)
+    response = await make_post_request(
+        test_settings.service_url, "/api/v1/user/login", query_data
+    )
 
     assert response["status"] == HTTPStatus.OK
     assert list(response["body"].keys()) == expected_answer["body"]
@@ -53,7 +63,10 @@ async def test_refresh_post(get_token, query_data, expected_answer):
 @pytest.mark.asyncio
 async def test_roles_post(query_data, expected_answer):
     response = await add_role(
-        test_settings.service_url, "/api/v1/user/roles", pytest.token["access_token"], query_data["login"]
+        test_settings.service_url,
+        "/api/v1/user/roles",
+        pytest.token["access_token"],
+        query_data["login"],
     )
     assert response["status"] == HTTPStatus.FORBIDDEN
 
