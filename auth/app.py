@@ -14,4 +14,5 @@ jwt = JWTManager(app)
 
 if __name__ == "__main__":
     from config import settings
+
     app.run(host=settings.host, port=settings.port)
