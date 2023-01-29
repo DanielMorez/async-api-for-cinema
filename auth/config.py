@@ -19,6 +19,7 @@ class Settings(BaseSettings):
     jwt_refresh_token_expires: int = Field(
         60 * 60 * 24, env="JWT_REFRESH_TOKEN_EXPIRES"
     )
+    auth_limiter_enable: bool = Field(False, env="AUTH_LIMITER_ENABLE")
     auth_default_limits: list = Field([], env="AUTH_DEFAULT_LIMITS")
     request_id_enable: bool = Field(False, env="REQUEST_ID_ENABLE")
     jaeger_host: str = Field("localhost", env="JAEGER_HOST")
