@@ -1,18 +1,23 @@
 import click
+import logging
 
 from models import User
+
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
 
 
 @click.command()
 @click.argument("login")
 def create_superuser(login: str):
     if User.find_by_login(login):
-        print("User already exists. Try again with another login")
+        logger.error("User already exists.")
         return
     password = input("Enter password: ")
     password_confirmation = input("Confirm password: ")
     if password != password_confirmation:
-        print("Passwords do not match. Superuser wasn't created")
+        logger.error("Passwords do not match.")
         return
 
     email = input("Enter email (optional): ")
@@ -21,8 +26,8 @@ def create_superuser(login: str):
         user.is_superuser = True
         user.active = True
         user.save()
-        print("Superuser was successfully created")
+        logger.debug("Superuser was created.")
         return
     except Exception as error:
-        print(error)
+        logger.error(f"Error: {error}")
         return
