@@ -19,14 +19,15 @@ class Settings(BaseSettings):
     jwt_refresh_token_expires: int = Field(
         60 * 60 * 24, env="JWT_REFRESH_TOKEN_EXPIRES"
     )
+    auth_limiter_enable: bool = Field(False, env="AUTH_LIMITER_ENABLE")
     auth_default_limits: list = Field([], env="AUTH_DEFAULT_LIMITS")
     request_id_enable: bool = Field(False, env="REQUEST_ID_ENABLE")
     jaeger_host: str = Field("localhost", env="JAEGER_HOST")
     jaeger_port: int = Field(6831, env="JAEGER_PORT")
 
-    GOOGLE_CLIENT_ID: str = Field(env="GOOGLE_CLIENT_ID")
-    GOOGLE_CLIENT_SECRET: str = Field(env="GOOGLE_CLIENT_SECRET")
-    GOOGLE_DISCOVERY_URL: str = Field(env="GOOGLE_DISCOVERY_URL")
+    GOOGLE_CLIENT_ID: str = Field("", env="GOOGLE_CLIENT_ID")
+    GOOGLE_CLIENT_SECRET: str = Field("", env="GOOGLE_CLIENT_SECRET")
+    GOOGLE_DISCOVERY_URL: str = Field("", env="GOOGLE_DISCOVERY_URL")
 
     class Config:
         case_sensitive = False

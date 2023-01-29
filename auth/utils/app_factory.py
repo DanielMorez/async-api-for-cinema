@@ -25,7 +25,8 @@ def create_app(settings: Settings) -> Flask:
     init_db(app)
     app.app_context().push()
 
-    init_limiter(app)
+    if settings.auth_limiter_enable:
+        init_limiter(app)
 
     if settings.request_id_enable:
         configure_tracer(settings.jaeger_host, settings.jaeger_port)
