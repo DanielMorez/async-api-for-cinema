@@ -12,6 +12,5 @@ RUN pip install --upgrade pip \
 
 COPY . .
 
-ENV FLASK_APP=wsgi_app
-
-ENTRYPOINT gunicorn -w 4 -b 0.0.0.0:5001 'app:create_app()'
+RUN chmod +x entrypoint.sh
+ENTRYPOINT bash entrypoint.sh
