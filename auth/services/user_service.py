@@ -63,11 +63,6 @@ class UserService:
                 "User with login {} already exists".format(login),
             )
 
-        if len(login) <= 6:
-            abort(
-                HTTPStatus.BAD_REQUEST, "Login has to contains more pr equal 6 symbols"
-            )
-
         if email:
             if User.find_by_email(email):
                 abort(
@@ -77,12 +72,6 @@ class UserService:
 
         if password != password_confirmation:
             abort(HTTPStatus.BAD_REQUEST, "Passwords do not match")
-
-        if len(password) < 6:
-            abort(
-                HTTPStatus.BAD_REQUEST,
-                "Password has to contains more pr equal 6 symbols",
-            )
 
         new_user = User(login=login, password=password, email=email)
         try:

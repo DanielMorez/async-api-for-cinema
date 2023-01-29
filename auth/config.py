@@ -25,9 +25,9 @@ class Settings(BaseSettings):
     jaeger_host: str = Field("localhost", env="JAEGER_HOST")
     jaeger_port: int = Field(6831, env="JAEGER_PORT")
 
-    GOOGLE_CLIENT_ID: str = Field(env="GOOGLE_CLIENT_ID")
-    GOOGLE_CLIENT_SECRET: str = Field(env="GOOGLE_CLIENT_SECRET")
-    GOOGLE_DISCOVERY_URL: str = Field(env="GOOGLE_DISCOVERY_URL")
+    GOOGLE_CLIENT_ID: str = Field("", env="GOOGLE_CLIENT_ID")
+    GOOGLE_CLIENT_SECRET: str = Field("", env="GOOGLE_CLIENT_SECRET")
+    GOOGLE_DISCOVERY_URL: str = Field("", env="GOOGLE_DISCOVERY_URL")
 
     class Config:
         case_sensitive = False
