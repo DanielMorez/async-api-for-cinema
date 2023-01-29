@@ -12,6 +12,9 @@ swagger = OpenAPI(
 )
 
 # route endpoints
+auth_api.add_resource(auth.LoginWithGoogle, "/login-google")
+auth_api.add_resource(auth.LoginGoogleCallback, "/login-google/callback")
+
 auth_api.add_resource(auth.Registration, "/register")
 auth_api.add_resource(auth.Authorization, "/login")
 auth_api.add_resource(auth.Logout, "/logout")
@@ -29,6 +32,7 @@ auth_api.add_resource(user_role.UserRoleResource, "/user-role")
 # openapi
 swagger.add_namespace(auth.registration.ns, "/register")
 swagger.add_namespace(auth.login.ns, "/login")
+swagger.add_namespace(auth.login_google.ns, "/login-google")
 swagger.add_namespace(auth.logout.ns, "/logout")
 swagger.add_namespace(auth.refresh.ns, "/token-refresh")
 
