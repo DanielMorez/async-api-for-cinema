@@ -14,4 +14,4 @@ COPY . .
 
 ENV FLASK_APP=wsgi_app
 
-ENTRYPOINT python3 -m flask run --with-threads --reload --host=0.0.0.0 --port=5001
+ENTRYPOINT gunicorn -w 4 -b 0.0.0.0:5001 'app:create_app()'
