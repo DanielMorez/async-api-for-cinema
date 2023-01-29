@@ -54,8 +54,9 @@ def upgrade():
         sa.Column("device", sa.String(), nullable=True),
         sa.Column("created_at", sa.DateTime(), nullable=False),
         sa.ForeignKeyConstraint(["user_id"], ["auth.users.id"], ondelete="CASCADE"),
-        sa.PrimaryKeyConstraint("id"),
-        sa.UniqueConstraint("id"),
+        sa.PrimaryKeyConstraint("id", "created_at"),
+        sa.UniqueConstraint("id", "created_at"),
+        postgresql_partition_by="RANGE (created_at)",
         schema="auth",
     )
     op.create_table(
@@ -69,6 +70,15 @@ def upgrade():
         sa.UniqueConstraint("id"),
         sa.UniqueConstraint("user_id", "role_id"),
         schema="auth",
+    )
+    op.execute(
+        """CREATE TABLE IF NOT EXISTS "auth"."login_histories_2022" PARTITION OF "auth"."login_histories" FOR VALUES 
+        FROM ('2022-1-1 00:00:00') TO ('2023-1-1 00:00:00')"""
+    )
+    op.execute(
+        """CREATE TABLE IF NOT EXISTS "auth"."login_histories_2023" PARTITION OF "auth"."login_histories" FOR VALUES
+        FROM ('2023-1-1 00:00:00') TO ('2024-1-1 00:00:00')"""
+
     )
     # ### end Alembic commands ###
 
