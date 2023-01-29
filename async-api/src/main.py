@@ -7,6 +7,8 @@ from fastapi.responses import ORJSONResponse
 from fastapi_cache import FastAPICache
 from fastapi_cache.backends.redis import RedisBackend
 from fastapi import FastAPI
+from starlette.middleware import Middleware
+from starlette.middleware.authentication import AuthenticationMiddleware
 
 from api.v1 import films, persons, genres
 from constants.documentations import description, tags_metadata
@@ -15,6 +17,7 @@ from core.logger import LOGGING
 from db import elastic
 from db import redis
 from helpers.cache_key_builder import key_builder
+from middlewares.authentication import CustomAuthBackend
 
 settings = Settings()
 
@@ -25,6 +28,7 @@ app = FastAPI(
     openapi_url="/api/openapi.json",
     default_response_class=ORJSONResponse,
     openapi_tags=tags_metadata,
+    middleware=[Middleware(AuthenticationMiddleware, backend=CustomAuthBackend())]
 )
 
 

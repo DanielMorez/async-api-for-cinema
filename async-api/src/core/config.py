@@ -3,7 +3,7 @@ from logging import config as logging_config
 
 from pydantic import Field
 from pydantic.env_settings import BaseSettings
-from pydantic.networks import RedisDsn
+from pydantic.networks import RedisDsn, AnyUrl
 
 from core.logger import LOGGING
 
@@ -16,6 +16,7 @@ class Settings(BaseSettings):
     es_dsn: str
     base_dir: str = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     cache_expire_in_seconds: int = Field(60 * 5)  # 5 minutes
+    auth_dsn: AnyUrl = Field("0.0.0.0:5001")
 
     class Config:
         case_sensitive = False

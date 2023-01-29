@@ -1,25 +1,51 @@
 from http import HTTPStatus
-from flask_jwt_extended import (
-    get_jwt_identity,
-    jwt_required,
-    get_jwt,
-)
+
+from flask import redirect
+from flask_jwt_extended import get_jwt, get_jwt_identity, jwt_required
 from flask_restful import Resource
 
+
+from resources.parsers.auth import auth_parser, register_parser
+from services.social_account_service import SocialAccountService
+from services.user_service import JWTs, UserService
+from utils.namespaces import login, login_google, logout, refresh, registration
+from utils.before_requests.jaeger import trace
 from utils.limiter import limiter
-from resources.parsers.auth import register_parser, auth_parser
-from services.user_service import UserService, JWTs
-from utils.namespaces import registration, login, refresh, logout
 from utils.namespaces.login import tokens
+from utils.namespaces.login_google import google_auth
 from utils.parsers.auth import access_token_required, refresh_token_required
 from utils.parsers.login import credentials
 from utils.parsers.registration import register_data
 from utils.token import check_if_token_in_blacklist
 
 
+@login_google.ns.route("")
+class LoginWithGoogle(Resource):
+    @login_google.ns.marshal_with(google_auth)
+    def post(self):
+        redirect_uri = SocialAccountService.get_redirect_uri()
+        return {"redirect_uri": redirect_uri}
+
+
+class LoginGoogleCallback(Resource):
+    def get(self):
+        token_response = SocialAccountService.get_google_token_access()
+        social_account, account_data = SocialAccountService.get_social_account_data(
+            token_response
+        )
+
+        if not social_account:
+            payload, status = SocialAccountService.create_user(account_data)
+        else:
+            payload, status = SocialAccountService.current_user_login(social_account)
+
+        return payload, status
+
+
 @registration.ns.route("")
 @registration.ns.expect(register_data)
 class Registration(Resource):
+    @trace()
     @limiter.limit("5 per minute")
     @registration.ns.marshal_with(tokens, code=HTTPStatus.CREATED)
     def post(self):
@@ -32,6 +58,7 @@ class Registration(Resource):
 @login.ns.route("")
 @login.ns.expect(credentials)
 class Authorization(Resource):
+    @trace()
     @limiter.limit("1 per minute")
     @login.ns.marshal_with(tokens)
     def post(self):

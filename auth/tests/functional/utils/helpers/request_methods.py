@@ -17,7 +17,9 @@ async def make_get_request(
         headers = {f"Authorization": f"Bearer {token}"}
     else:
         headers = [("Content-Type", "application/json;")]
-    async with session.get(url, headers=headers, data=json.dumps(query_data)) as response:
+    async with session.get(
+        url, headers=headers, data=json.dumps(query_data)
+    ) as response:
         body = await response.json()
         response = {
             "headers": response.headers,
@@ -41,7 +43,9 @@ async def make_post_request(
         headers = {f"Authorization": f"Bearer {token}"}
     else:
         headers = [("Content-Type", "application/json;")]
-    async with session.post(url, headers=headers, data=json.dumps(query_data)) as response:
+    async with session.post(
+        url, headers=headers, data=json.dumps(query_data)
+    ) as response:
         data = await response.read()
         body = json.loads(data)
         response = {
@@ -66,7 +70,9 @@ async def make_put_request(
         headers = {f"Authorization": f"Bearer {token}"}
     else:
         headers = [("Content-Type", "application/json;")]
-    async with session.put(url, headers=headers, data=json.dumps(query_data)) as response:
+    async with session.put(
+        url, headers=headers, data=json.dumps(query_data)
+    ) as response:
         data = await response.read()
         body = json.loads(data)
         response = {
@@ -91,7 +97,9 @@ async def make_delete_request(
         f"Authorization": f"Bearer {token}",
         "Content-Type": "application/json",
     }
-    async with session.delete(url, headers=headers, data=json.dumps(query_data)) as response:
+    async with session.delete(
+        url, headers=headers, data=json.dumps(query_data)
+    ) as response:
         data = await response.read()
         body = json.loads(data)
         response = {
