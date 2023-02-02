@@ -1,0 +1,76 @@
+version: '3.9'
+
+# volumes:
+#   postgres_data: null
+#   redis_data: null
+
+services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.3.0
+    restart: always
+    expose:
+      - "2181"
+    environment:
+      - ZOOKEEPER_CLIENT_PORT=2181
+      - ZOOKEEPER_TICK_TIME=2000
+      - ALLOW_ANONYMOUS_LOGIN=yes
+
+  broker:
+    image: confluentinc/cp-kafka:7.3.0
+    restart: always
+    ports:
+      - "9092:9092"
+      - "9192:9192"
+    depends_on:
+      - zookeeper
+    environment:
+      - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
+      - KAFKA_AUTO_CREATE_TOPICS_ENABLE=true
+      - KAFKA_ADVERTISED_HOST_NAME=broker
+      - ALLOW_PLAINTEXT_LISTENER=yes
+      - KAFKA_LISTENERS=OUTSIDE://:9092,INSIDE://:9192
+      - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=OUTSIDE:PLAINTEXT,INSIDE:PLAINTEXT
+      - KAFKA_ADVERTISED_LISTENERS=OUTSIDE://localhost:9092,INSIDE://broker:9192
+      - KAFKA_INTER_BROKER_LISTENER_NAME=OUTSIDE
+
+  broker-ui:
+    image: obsidiandynamics/kafdrop:3.30.0
+    ports:
+      - "9999:9999"
+    depends_on:
+      - broker
+    environment:
+      - KAFKA_BROKERCONNECT=broker:9192
+      - SERVER_PORT=9999
+
+  clickhouse-node1:
+    image: yandex/clickhouse-server:20.4
+    ports:
+      - "8123:8123"
+      - "9000:9000"
+    volumes:
+      - ./src/db/clickhouse/data/node1:/etc/clickhouse-server
+    depends_on:
+      - zookeeper
+
+  clickhouse-node2:
+    image: yandex/clickhouse-server:20.4
+    volumes:
+      - ./src/db/clickhouse/data/node2:/etc/clickhouse-server
+    depends_on:
+      - zookeeper
+
+  clickhouse-node3:
+    image: yandex/clickhouse-server:20.4
+    volumes:
+      - ./src/db/clickhouse/data/node3:/etc/clickhouse-server
+    depends_on:
+      - zookeeper
+
+  clickhouse-node4:
+    image: yandex/clickhouse-server:20.4
+    volumes:
+      - ./src/db/clickhouse/data/node4:/etc/clickhouse-server
+    depends_on:
+      - zookeeper

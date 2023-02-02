@@ -1,0 +1,9 @@
+isort==5.10.1
+flake8==3.9.0
+flake8-bandit==2.1.2 
+bandit==1.7.2
+black==22.10.0
+pydantic[dotenv]==1.10.2
+asyncio==3.4.3
+aiokafka==0.8.0
+clickhouse-driver==0.2.5
