@@ -1,0 +1,60 @@
+@startuml
+"Client"
+
+
+package web-server #LightGreen {
+    [NGINX] #White
+}
+package Auth_API {
+    [Flask_auth_api] #White
+    database Postgres_Auth #Aqua
+    database Redis_auth
+}
+package ETL {
+    [ETL_service] #White
+}
+package Async_FastAPI {
+    [Fast_API] #White
+    database ElasticSearch #LightPink
+    database Redis_cache
+}
+package Django {
+    [Movies_admin] #White
+    database Postgres #Aqua
+}
+
+
+
+'------------Связи ---------------
+[Client] --> [NGINX]: 1. фильм
+[NGINX] --> [Fast_API]: 2. фильм
+[Fast_API] ---> [Flask_auth_api]: 3. кто это?
+[Flask_auth_api] -r-> Postgres_Auth: 4. есть такой юзер?
+[Flask_auth_api] <-[#green] Postgres_Auth: 5. да
+[Flask_auth_api] --> [Redis_auth]: 6. токен действителен?
+[Flask_auth_api] -[hidden]-> [Redis_auth]
+[Flask_auth_api] <-[#green] [Redis_auth]: 7. да
+[Fast_API] <-[#green]- [Flask_auth_api]: 8. все нормально
+[Fast_API] --> Redis_cache: 9. фильм
+[Fast_API] -[hidden]-> Redis_cache
+[Fast_API] <-[#red]- Redis_cache: 10. пусто
+[Fast_API] -r-> ElasticSearch: 11. фильм
+[Fast_API] <-[#green]- ElasticSearch: 12. держи
+[Fast_API] <-[hidden]- ElasticSearch
+[NGINX] <-[#green]- [Fast_API]: 13. держи
+[NGINX] <-[hidden]- [Fast_API]
+[Client] <-[hidden]- [NGINX]
+[Client] <-[#green]- [NGINX]: 14. фильм
+Postgres <-- [Movies_admin]
+[ETL_service] --> ElasticSearch
+[ETL_service] -[hidden]-> ElasticSearch
+[ETL_service] <-- Postgres
+
+
+'--------- Комментарии ----------
+note right of [Client]: Клиентский запрос на фильм
+
+'--------- Раскраска ------------
+skinparam PackageBackgroundColor Azure
+skinparam ArrowColor Black
+@enduml
