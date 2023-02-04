@@ -1,8 +1,8 @@
 import asyncio
 from contextlib import asynccontextmanager
 
-from src.adapters.broker import KafkaConsumerClient
-from src.core.config import settings
+from adapters.broker import KafkaConsumerClient
+from core.config import settings
 
 
 @asynccontextmanager
