@@ -4,9 +4,8 @@ import os
 
 from pydantic import BaseSettings
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-ENV_DIR = os.path.join(BASE_DIR, "..")
 
+ENV_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 class BrokerSettings(BaseSettings):
     host: str
@@ -14,13 +13,8 @@ class BrokerSettings(BaseSettings):
     topic: str
 
 
-class ClickHouseSettings(BaseSettings):
-    host: str
-
-
 class Settings(BaseSettings):
     broker: BrokerSettings
-    clickhouse: ClickHouseSettings
 
     class Config:
         #  Для локальной разработки вне docker

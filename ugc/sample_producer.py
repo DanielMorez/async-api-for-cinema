@@ -3,12 +3,13 @@ from contextlib import asynccontextmanager
 from datetime import datetime, timedelta
 from random import randint
 
-from src.adapters.broker import KafkaProducerClient
-from src.core.config import settings
+from adapters.broker import KafkaProducerClient
+from core.config import settings
 
 
 @asynccontextmanager
 async def kafka_producer():
+    print(f"{settings.broker.host}:{settings.broker.port}")
     client = KafkaProducerClient(
         f"{settings.broker.host}:{settings.broker.port}"
     )
