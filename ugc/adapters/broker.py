@@ -87,14 +87,11 @@ class KafkaConsumerClient(MessageBrokerConsumerClient):
     def __init__(
         self, bootstrap_servers, topic, group_id=None, take_oldest=False
     ) -> None:
-
         self._consumer = None
         self._bootstrap_servers = bootstrap_servers
         self._topic = topic
         self._group_id = group_id
-        self._auto_offset_reset = (
-            "earliest" if take_oldest is True else "latest"
-        )
+        self._auto_offset_reset = "earliest" if take_oldest is True else "latest"
 
     async def startup(
         self,
