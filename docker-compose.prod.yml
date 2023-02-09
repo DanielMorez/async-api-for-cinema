@@ -132,6 +132,24 @@ services:
       - production_network
     restart: always
 
+  ugc:
+    container_name: ugc
+    build:
+      context: ugc
+      dockerfile: Dockerfile
+    expose:
+      - "${UGC_PORT}"
+    volumes:
+      - ./.env:/opt/app/.env
+    depends_on:
+      - auth
+      - zookeeper
+      - broker
+      - broker-ui
+    restart: always
+    networks:
+      - production_network
+
   zookeeper:
     image: confluentinc/cp-zookeeper:7.3.0
     container_name: zookeeper
