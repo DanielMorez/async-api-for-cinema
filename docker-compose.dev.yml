@@ -177,6 +177,25 @@ services:
       - SERVER_PORT=${BROKER_UI_PORT}
     networks:
       - development_network
+  
+  clickhouse:
+    image: yandex/clickhouse-server:21.3
+    container_name: clickhouse
+    ports:
+      - "${CLICKHOUSE_HTTP_PORT}:${CLICKHOUSE_HTTP_PORT}"
+      - "${CLICKHOUSE_TCP_PORT}:${CLICKHOUSE_TCP_PORT}"
+    volumes:
+      - ./ugc/db/clickhouse/config:/etc/clickhouse-server
+    depends_on:
+      - zookeeper
+    environment:
+      - ADMIN_PASSWORD=${CLICKHOUSE_PASSWORD}
+      - CLICKHOUSE_LOGGER_LEVEL=debug
+      - CLICKHOUSE_HTTP_PORT=${CLICKHOUSE_HTTP_PORT}
+      - CLICKHOUSE_TCP_PORT=${CLICKHOUSE_TCP_PORT}
+      - ZOOKEEPER_PORT=${ZOOKEEPER_PORT}
+    networks:
+      - development_network
 
 networks:
   development_network:
