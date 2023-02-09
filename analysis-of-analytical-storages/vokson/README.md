@@ -13,7 +13,7 @@
   #### запрос: 
       SELECT count(DISTINCT user_id) FROM views
 - `select_distinct_movie_by_user` - подсчитать кол-во уникальных просмотренных фильмов по каждому пользователю
-  #### запрос:
+  #### запрос: 
       SELECT
          user_id,
          count(distinct movie_id)
