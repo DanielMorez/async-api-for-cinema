@@ -1,9 +1,10 @@
 from clickhouse_driver import Client
 
+from db.base import BaseStorage
 
-def init_ch(client: Client):
-    client.execute(
-        """
+
+class ClickHouseStorage(BaseStorage):
+    CREATE_QUERY = """
             CREATE TABLE  IF NOT EXISTS  views
                 (
                     id UInt64,
@@ -15,8 +16,12 @@ def init_ch(client: Client):
             ENGINE = MergeTree
             ORDER BY id;
         """
-    )
 
+    def __init__(self):
+        self._conn = Client(host="localhost")
 
-def flush_ch(client: Client):
-    client.execute("""DROP TABLE  IF EXISTS  views;""")
+    def _execute(self, *args):
+        self._conn.execute(*args)
+
+    def _execute_many(self, *args):
+        return self._execute(*args)
