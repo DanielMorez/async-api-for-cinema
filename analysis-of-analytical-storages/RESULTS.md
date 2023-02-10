@@ -6,12 +6,9 @@
 ### 🚀 Запуск тестов
 Чтобы поднять тесты надо выполнить следующие команды 
    (у вас должен быть установлен docker-compose и python3):
-- `pip3 install -r requirements.txt`
-- `docker-compose build`
+- `python3 -m venv venv && source venv/bin/activate && pip install -r requirements.txt`
 - `docker-compose up -d`
-- `python3 test_data/fake_data.py`
-- `python3 test_insert.py`
-- `python3 test_read.py`
+- `python test.py`
 
 
 ### 📙 Описания тестов:
@@ -49,10 +46,9 @@
         WHERE event_time > '2021-04-13 23:09:02'
         GROUP by user_id
 - `insert_values` - вставка данных в БД
-  #### запрос:
+  #### запрос CLICK HOUSE:
       INSERT INTO views VALUES
-- `insert_values_params` - вставка данных в БД с определенными значениями
-  #### запрос:
+  #### запрос VERTICA:
       INSERT INTO views (
          id, 
          user_id,
@@ -66,14 +62,13 @@
 
 | Тест | ClickHouse, sec | Vertica, sec |
 |---|:---------------:|:------------:|
-| `select_count` |     0.0031      |    0.0117    |
-| `select_count_distinct_movie_id` |     0.1761      |    0.4499    |
-| `select_count_distinct_user_id` |     0.3795      |  1.0505  |
-| `select_distinct_movie_by_user` |   2.8090    |  11.3791  |
-| `select_sum_and_max_viewed_frame` |   1.1621    |  4.1204  |
-| `select_sum_and_max_viewed_frame_with_where` |   0.8180    |  3.5423  |
-| `insert_values` |   0.8180    |  3.5423  |
-| `insert_values_params` |   0.8180    |  3.5423  |
+| `select_count` |     0.0028      |    0.0100   |
+| `select_count_distinct_movie_id` |     0.1183      |    0.2366    |
+| `select_count_distinct_user_id` |     0.1219      |  0.6363  |
+| `select_distinct_movie_by_user` |   2.6907    |  10.4877  |
+| `select_sum_and_max_viewed_frame` |   0.4162    |  1.7255  |
+| `select_sum_and_max_viewed_frame_with_where` |   0.3859    |  1.9968  |
+| `insert 10 000 000 rows` |   179.1    |  182.3  |
 
 
 Как видно по данным, при схожих параметрах, в запросах на получение и вставку данных Clickhouse обгоняет Vertica в разы.
