@@ -6,6 +6,18 @@ from abc import ABC, abstractmethod
 from aiokafka import AIOKafkaConsumer, AIOKafkaProducer
 
 
+producer: "MessageBrokerProducerClient" = None
+consumer: "MessageBrokerConsumerClient" = None
+
+
+async def get_producer() -> "MessageBrokerProducerClient":
+    return producer
+
+
+async def get_consumer() -> "MessageBrokerConsumerClient":
+    return consumer
+
+
 def json_serializer(data):
     return json.dumps(data).encode()
 
