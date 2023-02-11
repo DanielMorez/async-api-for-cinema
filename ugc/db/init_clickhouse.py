@@ -19,7 +19,7 @@ def create_watch_event_kafka_table(client: Client):
             CREATE TABLE ugc.watch_events_kafka
                 (
                     user_id String,
-                    movie_id String,
+                    film_id String,
                     timestamp Datetime
                 )
             ENGINE = Kafka
@@ -40,7 +40,7 @@ def create_watch_event_target_table(client: Client):
             CREATE TABLE ugc.watch_events
                     (
                         user_id String,
-                        movie_id String,
+                        film_id String,
                         timestamp Datetime
                     )
                 ENGINE = MergeTree() PARTITION BY toYYYYMMDD(timestamp)

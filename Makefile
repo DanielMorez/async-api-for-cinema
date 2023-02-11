@@ -27,4 +27,4 @@ nginx:
 	docker-compose -f docker-compose.prod.yml up -d --no-deps --build nginx
 
 ugc depends on:
-	docker-compose -f docker-compose.dev.yml up -d postgres redis auth zookeeper broker broker-ui
+	docker-compose -f docker-compose.dev.yml up -d postgres redis auth zookeeper broker broker-ui clickhouse
