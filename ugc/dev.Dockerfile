@@ -12,4 +12,6 @@ RUN  pip install --upgrade pip \
      
 COPY . .
 
+CMD ["python", "init_clickhouse.py"]
+
 ENTRYPOINT ["python", "main.py"]

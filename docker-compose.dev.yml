@@ -200,16 +200,16 @@ services:
     image: yandex/clickhouse-server:21.3
     container_name: clickhouse
     ports:
-      - "${CLICKHOUSE_HTTP_PORT}:${CLICKHOUSE_HTTP_PORT}"
+      - "${CLICKHOUSE__PORT}:${CLICKHOUSE__PORT}"
       - "${CLICKHOUSE_TCP_PORT}:${CLICKHOUSE_TCP_PORT}"
     volumes:
       - ./ugc/db/clickhouse/config:/etc/clickhouse-server
     depends_on:
       - zookeeper
     environment:
-      - ADMIN_PASSWORD=${CLICKHOUSE_PASSWORD}
+      - ADMIN_PASSWORD=${CLICKHOUSE__PASSWORD}
       - CLICKHOUSE_LOGGER_LEVEL=debug
-      - CLICKHOUSE_HTTP_PORT=${CLICKHOUSE_HTTP_PORT}
+      - CLICKHOUSE_HTTP_PORT=${CLICKHOUSE__PORT}
       - CLICKHOUSE_TCP_PORT=${CLICKHOUSE_TCP_PORT}
       - ZOOKEEPER_PORT=${ZOOKEEPER_PORT}
     networks:

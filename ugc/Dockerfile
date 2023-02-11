@@ -12,4 +12,6 @@ RUN pip install --upgrade pip \
 
 COPY . .
 
+CMD ["python", "db/clickhouse/init_clickhouse.py"]
+
 ENTRYPOINT ["gunicorn", "--bind", "0.0.0.0:8001", "-k", "uvicorn.workers.UvicornWorker", "main:app"]
