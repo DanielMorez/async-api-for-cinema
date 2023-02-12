@@ -6,18 +6,6 @@ from abc import ABC, abstractmethod
 from aiokafka import AIOKafkaConsumer, AIOKafkaProducer
 
 
-producer: "MessageBrokerProducerClient" = None
-consumer: "MessageBrokerConsumerClient" = None
-
-
-async def get_producer() -> "MessageBrokerProducerClient":
-    return producer
-
-
-async def get_consumer() -> "MessageBrokerConsumerClient":
-    return consumer
-
-
 def json_serializer(data):
     return json.dumps(data).encode()
 
@@ -38,7 +26,7 @@ class MessageBrokerProducerClient(ABC):
         pass
 
     @abstractmethod
-    def send(self, topic, message, key):
+    def send(self, topic: str, message: dict, key: str):
         """Метод отправки сообщения в шину"""
         pass
 
@@ -55,7 +43,7 @@ class MessageBrokerConsumerClient(ABC):
         pass
 
     @abstractmethod
-    def receive(self, topic, message, key):
+    def receive(self, topic: str, message: dict, key: str):
         """Метод получения сообщения из шины"""
         pass
 
@@ -86,7 +74,7 @@ class KafkaProducerClient(MessageBrokerProducerClient):
             await self._producer.stop()
             self._producer = None
 
-    async def send(self, topic, message, key):
+    async def send(self, topic: str, message: dict, key: str):
         """Метод получения сообщения из шины"""
 
         if not self._producer:
@@ -97,7 +85,11 @@ class KafkaProducerClient(MessageBrokerProducerClient):
 
 class KafkaConsumerClient(MessageBrokerConsumerClient):
     def __init__(
-        self, bootstrap_servers, topic, group_id=None, take_oldest=False
+        self,
+        bootstrap_servers: str,
+        topic: str,
+        group_id: str = None,
+        take_oldest: bool = False,
     ) -> None:
         self._consumer = None
         self._bootstrap_servers = bootstrap_servers

@@ -3,6 +3,8 @@ from uuid import UUID
 from orjson import orjson
 from pydantic import BaseModel
 
+from core.utils import orjson_dumps
+
 
 class Frame(BaseModel):
     user_id: UUID
@@ -12,4 +14,4 @@ class Frame(BaseModel):
     class Config:
         arbitrary_types_allowed = True
         json_loads = orjson.loads
-        json_dumps = orjson.dumps
+        json_dumps = orjson_dumps

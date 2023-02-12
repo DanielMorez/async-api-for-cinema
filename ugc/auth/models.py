@@ -4,6 +4,8 @@ from orjson import orjson
 from pydantic import BaseModel, Field
 from starlette.authentication import BaseUser
 
+from core.utils import orjson_dumps
+
 
 class User(BaseModel, BaseUser):
     id: UUID
@@ -16,7 +18,7 @@ class User(BaseModel, BaseUser):
     class Config:
         arbitrary_types_allowed = True
         json_loads = orjson.loads
-        json_dumps = orjson.dumps
+        json_dumps = orjson_dumps
 
     @property
     def is_authenticated(self) -> bool:
