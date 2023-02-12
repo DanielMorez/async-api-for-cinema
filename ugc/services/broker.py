@@ -3,12 +3,12 @@ from functools import lru_cache
 
 from fastapi import Depends
 
+from adapters import get_consumer, get_producer
 from adapters.broker import (
     MessageBrokerProducerClient,
-    get_producer,
     MessageBrokerConsumerClient,
-    get_consumer,
 )
+
 from core.config import settings
 
 
@@ -34,7 +34,7 @@ class BaseBrokerService(ABC):
 
 class BrokerKafkaService(BaseBrokerService):
     def __init__(self, *args, **kwargs):
-        super(BrokerKafkaService, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     async def send_message(self, key, message):
         await self._producer.send(self._topic, message, key)

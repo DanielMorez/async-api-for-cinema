@@ -1,5 +1,7 @@
 import uvicorn
 import logging
+import adapters
+
 from adapters import broker
 
 from fastapi import FastAPI
@@ -30,15 +32,15 @@ app = FastAPI(
 
 @app.on_event("startup")
 async def startup():
-    broker.producer = KafkaProducerClient(
+    adapters.producer = KafkaProducerClient(
         f"{settings.broker.host}:{settings.broker.port}"
     )
-    await broker.producer.startup()
+    await adapters.producer.startup()
 
 
 @app.on_event("shutdown")
 async def shutdown():
-    await broker.producer.shutdown()
+    await adapters.producer.shutdown()
 
 
 app.include_router(film_views.router)
