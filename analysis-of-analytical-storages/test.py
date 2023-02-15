@@ -1,9 +1,11 @@
 from data.generate import create_fake_data, generate_data_from_file
 from db.clickhouse import ClickHouseStorage
 from db.vertica import VerticaStorage
+from db.mongodb import MongoDBStorage
 
 click_db = ClickHouseStorage()
 vertica_db = VerticaStorage()
+mongodb_db = MongoDBStorage()
 
 
 def print_time(sec, db_name=""):
@@ -18,23 +20,26 @@ def prepare_fake_data():
 def create():
     click_db.create()
     vertica_db.create()
+    mongodb_db.create()
 
 
 def drop():
     click_db.drop()
     vertica_db.drop()
+    mongodb_db.drop()
 
 
 def execute_query(execute_method, times, *args):
     t = 0
     for _ in range(times):
         t += execute_method(*args)
-    return t/times
+    return t / times
 
 
 def get_time_of_query(execute_method_name, times, query, data=None):
     click_execute_method = getattr(click_db, execute_method_name)
     vertica_execute_method = getattr(vertica_db, execute_method_name)
+    mongodb_execute_method = getattr(mongodb_db, execute_method_name)
 
     print(f"*** {query} ***")
 
@@ -49,6 +54,7 @@ def get_time_of_query(execute_method_name, times, query, data=None):
 
     print_time(execute_query(click_execute_method, times, *args), "CLICKHOUSE")
     print_time(execute_query(vertica_execute_method, times, *args), "VERTICA")
+    print_time(execute_query(mongodb_execute_method, times, *args), "MONGODB")
 
     print("")
 
@@ -77,6 +83,19 @@ def insert():
             generate_data_from_file(False),
         ),
         "VERTICA",
+    )
+
+    print_time(
+        execute_query(
+            mongodb_db.insert,
+            1,
+            """
+                INSERT INTO views (id, user_id, movie_id, viewed_frame, event_time) 
+                VALUES (%s,%s,%s,%s,%s)
+            """,
+            generate_data_from_file(False),
+        ),
+        "MONGODB",
     )
 
     print("")
