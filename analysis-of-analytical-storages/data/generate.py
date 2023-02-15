@@ -18,8 +18,9 @@ def generate_data_from_file(convert=True, batch_count=50000):
                     int(line[0]),
                     line[1],
                     line[2],
-                    int(line[3]),
-                    datetime.strptime(line[4], "%Y-%m-%d %H:%M:%S"),
+                    line[3],
+                    int(line[4]),
+                    datetime.strptime(line[5], "%Y-%m-%d %H:%M:%S"),
                 ]
                 if convert
                 else line
@@ -39,7 +40,8 @@ def generate_row() -> tuple:
     return (
         random.choice(user_ids),
         random.choice(movie_ids),
-        random.randint(1, 180),
+        random.choice([True, False]),
+        random.randint(0, 10),
         datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
     )
 
@@ -47,4 +49,4 @@ def generate_row() -> tuple:
 def create_fake_data():
     with open(CSV_FILE, mode="w") as f:
         for i in range(COUNT):
-            f.write("{},{},{},{},{}\n".format(i + 1, *generate_row()))
+            f.write("{},{},{},{},{},{}\n".format(i + 1, *generate_row()))
