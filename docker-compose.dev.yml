@@ -129,6 +129,11 @@ services:
     networks:
       - development_network
     restart: always
+    logging:
+      driver: gelf
+      options:
+        gelf-address: udp://logstash:${LOGS__LOGSTASH__PORT}
+        tag: nginx 
 
   ugc:
     container_name: ugc
@@ -212,6 +217,47 @@ services:
       - CLICKHOUSE_HTTP_PORT=${CLICKHOUSE__PORT}
       - CLICKHOUSE_TCP_PORT=${CLICKHOUSE_TCP_PORT}
       - ZOOKEEPER_PORT=${ZOOKEEPER_PORT}
+    networks:
+      - development_network
+
+  logs-logstash:
+    image: logstash:7.17.9
+    container_name: logstash
+    environment:
+      # ES_HOST: "es:${LOGS__ES__PORT}"
+      # xpack.monitoring.enabled: true
+      # xpack.monitoring.elasticsearch.hosts: '["http://logs_elasticsearch:${LOGS__ES__PORT}"]' 
+      XPACK_MONITORING_ENABLED: "false" 
+      pipeline.ecs_compatibility: disabled
+    ports:
+      - "${LOGS__LOGSTASH__PORT}:${LOGS__LOGSTASH__PORT}/udp"
+    volumes:
+      - ./logs/logstash.conf:/config/logstash.conf:ro
+    command: logstash -f /config/logstash.conf
+    networks:
+      - development_network
+
+  logs-es:
+    image: elasticsearch:7.17.9
+    container_name: es
+    environment:
+      discovery.type: single-node
+    ports:
+      - "${LOGS__ES__PORT}:9200"
+    volumes:
+      - /tmp/esdata:/tmp/elasticsearch/data
+    networks:
+      - development_network
+
+  logs-kibana:
+    image: kibana:7.17.9
+    container_name: kibana
+    ports:
+      - "${LOGS__KIBANA__PORT}:${LOGS__KIBANA__PORT}"
+    environment:
+      ELASTICSEARCH_HOSTS: '["http://es:9200"]'
+    depends_on:
+      - logs-es
     networks:
       - development_network
 
