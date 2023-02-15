@@ -13,3 +13,11 @@ services:
     hostname: vertica
     ports:
       - "5433:5433"
+
+  mongo:
+    image: mongo:5.0.7-focal
+    container_name: mongo_test
+    hostname: mongo_test
+    restart: always
+    ports:
+      - "27017:27017"
