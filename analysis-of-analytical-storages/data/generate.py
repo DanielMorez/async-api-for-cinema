@@ -41,17 +41,18 @@ def generate_row() -> tuple:
     return (
         random.choice(user_ids),
         random.choice(movie_ids),
-        random.choice([True, False]),
         random.randint(0, 10),
         random.randint(0, 180),
+        random.choice([True, False]),
         datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
     )
 
 
 def create_fake_data():
     with open(CSV_FILE, mode="w") as f:
+        f.write("Id,user_id,movie_id,stars,viewed_frame,likes,event_time\n")
         for i in range(COUNT):
-            f.write("{},{},{},{},{},{}\n".format(i + 1, *generate_row()))
+            f.write("{},{},{},{},{},{},{}\n".format(i + 1, *generate_row()))
 
 
 if __name__ == "__main__":
