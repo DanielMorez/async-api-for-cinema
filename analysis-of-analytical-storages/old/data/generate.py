@@ -52,7 +52,3 @@ def create_fake_data():
     with open(CSV_FILE, mode="w") as f:
         for i in range(COUNT):
             f.write("{},{},{},{},{},{}\n".format(i + 1, *generate_row()))
-
-
-if __name__ == "__main__":
-    create_fake_data()
