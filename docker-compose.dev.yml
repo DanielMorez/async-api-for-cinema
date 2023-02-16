@@ -13,9 +13,14 @@ services:
     networks:
       - development_network
     restart: always
-    depends_on:
-      elasticsearch:
-        condition: service_healthy
+    # depends_on:
+    #   elasticsearch:
+    #     condition: service_healthy
+    # logging:
+    #   driver: gelf
+    #   options:
+    #     gelf-address: udp://localhost:${LOGS__LOGSTASH__PORT}
+    #     tag: async-api 
 
   auth:
     build:
@@ -40,6 +45,11 @@ services:
       - "16686:16686"
     networks:
       - development_network
+    # logging:
+    #   driver: gelf
+    #   options:
+    #     gelf-address: udp://localhost:${LOGS__LOGSTASH__PORT}
+    #     tag: jaeger 
 
   elasticsearch:
     image: elasticsearch:8.5.1
@@ -58,6 +68,11 @@ services:
     networks:
       - development_network
     restart: always
+    # logging:
+    #   driver: gelf
+    #   options:
+    #     gelf-address: udp://localhost:${LOGS__LOGSTASH__PORT}
+    #     tag: async-api-elasticsearch
 
   redis:
     image: redis:7.0.5
@@ -67,6 +82,11 @@ services:
       - "${REDIS_PORT}:${REDIS_PORT}"
     networks:
       - development_network
+    # logging:
+    #   driver: gelf
+    #   options:
+    #     gelf-address: udp://localhost:${LOGS__LOGSTASH__PORT}
+    #     tag: redis 
 
   postgres:
     image: postgres:15.1
@@ -81,8 +101,15 @@ services:
     volumes:
       - .:/var/lib/postgresql/data
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    depends_on:
+      - logs-logstash
     networks:
       - development_network
+    # logging:
+    #   driver: gelf
+    #   options:
+    #     gelf-address: udp://localhost:${LOGS__LOGSTASH__PORT}
+    #     tag: postgres 
 
   etl:
     container_name: etl_async_api
@@ -92,11 +119,16 @@ services:
     volumes:
     - ./.env:/opt/app/.env
     restart: always
-    depends_on:
-      elasticsearch:
-        condition: service_healthy
+    # depends_on:
+    #   elasticsearch:
+    #     condition: service_healthy
     networks:
       - development_network
+    # logging:
+    #   driver: gelf
+    #   options:
+    #     gelf-address: udp://localhost:${LOGS__LOGSTASH__PORT}
+    #     tag: etl 
 
   admin_panel:
     container_name: admin_panel_async_api
@@ -113,6 +145,11 @@ services:
       - postgres
     networks:
       - development_network
+    # logging:
+    #   driver: gelf
+    #   options:
+    #     gelf-address: udp://localhost:${LOGS__LOGSTASH__PORT}
+    #     tag: admin-panel 
 
   nginx:
     image: nginx:1.23.2
@@ -132,7 +169,7 @@ services:
     logging:
       driver: gelf
       options:
-        gelf-address: udp://logstash:${LOGS__LOGSTASH__PORT}
+        gelf-address: udp://localhost:${LOGS__GELF__PORT}
         tag: nginx 
 
   ugc:
@@ -152,6 +189,11 @@ services:
     restart: always
     networks:
       - development_network
+    # logging:
+    #   driver: gelf
+    #   options:
+    #     gelf-address: udp://localhost:${LOGS__LOGSTASH__PORT}
+    #     tag: ugc 
 
   zookeeper:
     image: confluentinc/cp-zookeeper:7.3.0
@@ -165,6 +207,11 @@ services:
       - ALLOW_ANONYMOUS_LOGIN=yes
     networks:
       - development_network
+    # logging:
+    #   driver: gelf
+    #   options:
+    #     gelf-address: udp://localhost:${LOGS__LOGSTASH__PORT}
+    #     tag: zookeeper 
 
   broker:
     image: confluentinc/cp-kafka:7.3.0
@@ -187,6 +234,11 @@ services:
       - KAFKA_INTER_BROKER_LISTENER_NAME=OUTSIDE
     networks:
       - development_network
+    # logging:
+    #   driver: gelf
+    #   options:
+    #     gelf-address: udp://localhost:${LOGS__LOGSTASH__PORT}
+    #     tag: broker 
 
   broker-ui:
     image: obsidiandynamics/kafdrop:3.30.0
@@ -200,6 +252,11 @@ services:
       - SERVER_PORT=${BROKER_UI_PORT}
     networks:
       - development_network
+    # logging:
+    #   driver: gelf
+    #   options:
+    #     gelf-address: udp://localhost:${LOGS__LOGSTASH__PORT}
+    #     tag: broker-ui 
   
   clickhouse:
     image: yandex/clickhouse-server:21.3
@@ -219,18 +276,24 @@ services:
       - ZOOKEEPER_PORT=${ZOOKEEPER_PORT}
     networks:
       - development_network
+    # logging:
+    #   driver: gelf
+    #   options:
+    #     gelf-address: udp://localhost:${LOGS__LOGSTASH__PORT}
+    #     tag: clickhouse 
 
   logs-logstash:
     image: logstash:7.17.9
     container_name: logstash
     environment:
-      # ES_HOST: "es:${LOGS__ES__PORT}"
-      # xpack.monitoring.enabled: true
-      # xpack.monitoring.elasticsearch.hosts: '["http://logs_elasticsearch:${LOGS__ES__PORT}"]' 
+      ES_HOST: "es:9200"
+      GELF_PORT: "${LOGS__GELF__PORT}"
       XPACK_MONITORING_ENABLED: "false" 
       pipeline.ecs_compatibility: disabled
+    expose:
+      - "${LOGS__LOGSTASH__PORT}/udp"
     ports:
-      - "${LOGS__LOGSTASH__PORT}:${LOGS__LOGSTASH__PORT}/udp"
+      - "${LOGS__GELF__PORT}:${LOGS__GELF__PORT}/udp"
     volumes:
       - ./logs/logstash.conf:/config/logstash.conf:ro
     command: logstash -f /config/logstash.conf
@@ -253,7 +316,7 @@ services:
     image: kibana:7.17.9
     container_name: kibana
     ports:
-      - "${LOGS__KIBANA__PORT}:${LOGS__KIBANA__PORT}"
+      - "${LOGS__KIBANA__PORT}:5601"
     environment:
       ELASTICSEARCH_HOSTS: '["http://es:9200"]'
     depends_on:

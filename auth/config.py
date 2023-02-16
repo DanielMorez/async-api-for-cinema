@@ -29,6 +29,8 @@ class Settings(BaseSettings):
     GOOGLE_CLIENT_SECRET: str = Field("", env="GOOGLE_CLIENT_SECRET")
     GOOGLE_DISCOVERY_URL: str = Field("", env="GOOGLE_DISCOVERY_URL")
 
+    logstash_port: int = Field(5044, env="LOGSTASH_PORT")
+
     class Config:
         case_sensitive = False
         env_file = ".env"
