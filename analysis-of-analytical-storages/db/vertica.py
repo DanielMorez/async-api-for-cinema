@@ -9,6 +9,8 @@ class VerticaStorage(BaseStorage):
             id INTEGER NOT NULL,
             user_id VARCHAR(36) NOT NULL,
             movie_id VARCHAR(36) NOT NULL,
+            likes VARCHAR(36) NOT NULL,
+            stars INTEGER NOT NULL,
             viewed_frame INTEGER NOT NULL,
             event_time DATETIME NOT NULL
         );

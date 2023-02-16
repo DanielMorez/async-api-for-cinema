@@ -20,7 +20,8 @@ def generate_data_from_file(convert=True, batch_count=50000):
                     line[2],
                     line[3],
                     int(line[4]),
-                    datetime.strptime(line[5], "%Y-%m-%d %H:%M:%S"),
+                    int(line[5]),
+                    datetime.strptime(line[6], "%Y-%m-%d %H:%M:%S"),
                 ]
                 if convert
                 else line
@@ -42,6 +43,7 @@ def generate_row() -> tuple:
         random.choice(movie_ids),
         random.choice([True, False]),
         random.randint(0, 10),
+        random.randint(0, 180),
         datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
     )
 

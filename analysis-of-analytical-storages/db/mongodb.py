@@ -4,17 +4,9 @@ from db.base import BaseStorage
 
 
 class MongoDBStorage(BaseStorage):
-    CREATE_QUERY = """
-            CREATE TABLE  IF NOT EXISTS  views
-                (
-                    id UInt64,
-                    user_id String,
-                    movie_id String,
-                    viewed_frame UInt64,
-                    event_time DateTime
-                )
 
-        """
+    db = self._conn["test_db"]
+    collection = db["test_collection"]
 
     def __init__(self):
         self._conn = MongoClient("localhost", 27017)

@@ -10,6 +10,8 @@ class ClickHouseStorage(BaseStorage):
                     id UInt64,
                     user_id String,
                     movie_id String,
+                    likes boolean,
+                    stars smallint,
                     viewed_frame UInt64,
                     event_time DateTime
                 )
