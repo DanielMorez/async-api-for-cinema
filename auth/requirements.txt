@@ -25,5 +25,5 @@ opentelemetry-sdk==1.15.0
 opentelemetry-instrumentation-flask==0.36b0
 opentelemetry-exporter-jaeger==1.15.0
 
-# logstash_formatter==0.5.17
 python_logstash==0.4.8
+sentry-sdk[flask]==1.15.0

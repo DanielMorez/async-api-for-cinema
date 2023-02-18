@@ -1,10 +1,13 @@
+from contextvars import ContextVar
+from http import HTTPStatus
+
 import aiohttp
 
-from http import HTTPStatus
 from starlette.authentication import (
     AuthenticationBackend,
     AuthCredentials
 )
+from starlette.middleware.base import BaseHTTPMiddleware
 
 from core.config import settings
 from auth.models import User
@@ -24,3 +27,12 @@ class CustomAuthBackend(AuthenticationBackend):
                     return AuthCredentials(["authenticated"]), User(**data)
 
         return AuthCredentials(["not authenticated"]), None
+
+
+x_request_id: ContextVar[str] = ContextVar('x_request_id', default='')
+
+class RequestIdMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request, call_next):
+        request_id = request.headers.get('X-Request-Id')
+        x_request_id.set(request_id)
+        return await call_next(request)

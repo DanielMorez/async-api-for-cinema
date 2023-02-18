@@ -5,7 +5,7 @@ from pydantic import AnyUrl
 
 from utils.helpers.backoff import backoff
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger()
 
 
 @backoff()

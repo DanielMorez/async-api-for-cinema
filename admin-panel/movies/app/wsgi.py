@@ -1,16 +1,17 @@
-"""
-WSGI config for app project.
-
-It exposes the WSGI callable as a module-level variable named ``application``.
-
-For more information on this file, see
-https://docs.djangoproject.com/en/3.1/howto/deployment/wsgi/
-"""
-
 import os
 
 from django.core.wsgi import get_wsgi_application
 
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
+from sentry_sdk.integrations.wsgi import SentryWsgiMiddleware
+
+
+sentry_sdk.init(
+    integrations=[DjangoIntegration()],
+    traces_sample_rate=1.0
+)
+
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'app.settings')
 
-application = get_wsgi_application()
+application = SentryWsgiMiddleware(get_wsgi_application())

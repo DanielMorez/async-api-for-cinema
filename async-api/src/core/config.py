@@ -17,6 +17,7 @@ class Settings(BaseSettings):
     base_dir: str = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     cache_expire_in_seconds: int = Field(60 * 5)  # 5 minutes
     auth_dsn: AnyUrl = Field("0.0.0.0:5001")
+    logstash_port: int = Field(5044, env="LOGSTASH_PORT")
 
     class Config:
         case_sensitive = False

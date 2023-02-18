@@ -20,8 +20,6 @@ from utils.parsers.registration import register_data
 from utils.token import check_if_token_in_blacklist
 
 
-logger = logging.getLogger()
-
 
 @login_google.ns.route("")
 class LoginWithGoogle(Resource):
@@ -56,7 +54,6 @@ class Registration(Resource):
         """Register user"""
         data = register_parser.parse_args()
         payload, status = UserService.register(**data)
-        logger.info('Success registration')
         return payload, status
 
 

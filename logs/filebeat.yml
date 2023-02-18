@@ -1,0 +1,12 @@
+filebeat.inputs:
+  - type: filestream
+    enabled: true
+    paths:
+      - /var/log/nginx/*
+    ndjson:
+      target: ""
+      add_error_key: true
+
+output.logstash:
+  enabled: true
+  hosts: ["logstash:5044"]

@@ -4,7 +4,8 @@ import logging
 from functools import wraps
 from typing import Any
 
-logger = logging.getLogger(__name__)
+
+logger = logging.getLogger())
 
 
 def backoff(

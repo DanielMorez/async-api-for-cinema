@@ -7,6 +7,7 @@ from starlette.authentication import AuthenticationBackend, AuthCredentials
 from core.config import Settings
 from models.user import User
 
+
 setting = Settings()
 
 

@@ -12,7 +12,7 @@ from models.film import Film
 from models.person import Person
 from services.base_service import BaseService
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger()
 
 
 class PersonService(BaseService):

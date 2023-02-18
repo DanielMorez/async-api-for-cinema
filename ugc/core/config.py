@@ -19,12 +19,18 @@ class ClickHouseSettings(BaseSettings):
     password: str
 
 
+class LogstashSettings(BaseSettings):
+    host: str
+    port: int
+
+
 class Settings(BaseSettings):
     project_name: str = Field("UGC", env="UGC_NAME")
     port: int = Field(8001, env="UGC_PORT")
     broker: BrokerSettings
     auth_dsn: AnyUrl
     clickhouse: ClickHouseSettings
+    logstash: LogstashSettings
 
     class Config:
         #  Для локальной разработки вне docker

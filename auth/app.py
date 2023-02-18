@@ -4,9 +4,17 @@ import logstash
 
 from flask_jwt_extended import JWTManager
 from flask import request
+import sentry_sdk
+from sentry_sdk.integrations.flask import FlaskIntegration
 
 from config import settings
 from utils.app_factory import create_app
+
+
+sentry_sdk.init(
+    integrations=[FlaskIntegration()],
+    traces_sample_rate=1.0
+)
 
 
 class RequestIdFilter(logging.Filter):
