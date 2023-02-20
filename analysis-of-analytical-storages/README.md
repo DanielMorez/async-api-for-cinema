@@ -12,3 +12,4 @@ Elapsed: 0.08416175842285156 ms collection.find
 Clickhouse
 Elapsed: 40.90309143066406 ms.
 Elapsed: 7.729053497314453 ms.
+
