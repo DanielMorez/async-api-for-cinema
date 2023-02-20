@@ -4,3 +4,11 @@
 3) Запустить в jupyter notebook  mongo.ipynb
 4) Запустить в jupyter notebook  clickhouse.ipynb
 5) Записать полученные результаты по времени выполнения запросов в монго и кликхаусе в файл
+
+MONGO
+Elapsed: 2.794981002807617 collection.find_one()
+Elapsed: 0.08416175842285156 ms collection.find
+
+Clickhouse
+Elapsed: 40.90309143066406 ms.
+Elapsed: 7.729053497314453 ms.
