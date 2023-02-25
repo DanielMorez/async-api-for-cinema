@@ -68,10 +68,10 @@ def insert():
         "CLICKHOUSE",
     )
 
-    df = pd.read_csv("./test.csv", delimiter=",", encoding="utf-8", low_memory=False)
-    print_time(mongo_db.collection.insert_many(json.loads(df.to_json(orient='records'))))
-
-    print("")
+    start = time.time()
+    mongo_db.insert_many()
+    end = time.time()
+    print(f"Elapsed: {(end - start) * 1000} ms")
 
 
 def select():
