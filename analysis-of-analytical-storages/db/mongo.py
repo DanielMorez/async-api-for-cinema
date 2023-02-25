@@ -19,3 +19,7 @@ class MongoStorage(BaseStorage):
 
     def _execute_many(self, *args):
         pass
+
+    def drop(self):
+        db = self._conn["test_db"]
+        db.dropDatabase()

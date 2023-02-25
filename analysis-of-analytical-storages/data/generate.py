@@ -16,11 +16,11 @@ def generate_data_from_file(convert=True, batch_count=50000):
             row = (
                 [
                     int(line[0]),
-                    line[1],
-                    line[2],
-                    line[3],
+                    int(line[1]),
+                    int(line[2]),
+                    int(line[3]),
                     int(line[4]),
-                    int(line[5]),
+                    line[5],
                     datetime.strptime(line[6], "%Y-%m-%d %H:%M:%S"),
                 ]
                 if convert
@@ -50,7 +50,7 @@ def generate_row() -> tuple:
 
 def create_fake_data():
     with open(CSV_FILE, mode="w") as f:
-        f.write("Id,user_id,movie_id,stars,viewed_frame,likes,event_time\n")
+#        f.write("Id,user_id,movie_id,stars,viewed_frame,likes,event_time\n")
         for i in range(COUNT):
             f.write("{},{},{},{},{},{},{}\n".format(i + 1, *generate_row()))
 

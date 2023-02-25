@@ -1,5 +1,4 @@
 from clickhouse_driver import Client
-
 from db.base import BaseStorage
 
 
@@ -27,6 +26,9 @@ class ClickHouseStorage(BaseStorage):
 
     def create(self):
         self._execute(self.CREATE_QUERY)
+
+    def drop(self):
+        self._execute(self.DROP_QUERY)
 
     def _execute_many(self, *args):
         return self._execute(*args)

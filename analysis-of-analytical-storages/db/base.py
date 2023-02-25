@@ -29,7 +29,7 @@ class BaseStorage(ABC):
         pass
 
     def drop(self):
-        self._execute(self.DROP_QUERY)
+        pass
 
     @timeit
     def insert(self, query, data_generator):
