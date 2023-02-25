@@ -1,0 +1,63 @@
+name: app CI/CD
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        version: [3.9]
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python3.(9)
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.version }}
+      - name: Create reports dir
+        run: |
+          mkdir -p reports/mypy_reports/ugc
+          mkdir -p reports/flake8_reports/ugc
+      - name: Install MyPy & flake8
+        run: |
+          pip3 install lxml==4.9.1
+          pip3 install mypy==0.971
+          pip3 install wemake-python-styleguide==0.16.1
+          pip3 install flake8-html
+      - name: Run mypy
+        run: |
+          mypy ugc --ignore-missing-imports --html-report reports/mypy_reports/ugc
+      - name: Run flake8
+        run: |
+          flake8 ugc --ignore=WPS,B008 --show-source
+
+      - name: Upload a Build Artifact
+        uses: actions/upload-artifact@v3.1.0
+        with:
+          name: UGC CI report
+          path: reports/
+          if-no-files-found: warn
+          retention-days: 0
+
+  send_message:
+    runs-on: ubuntu-latest
+    if: ${{ always() }}
+    needs: [tests]
+    steps:
+    - name: send message
+      uses: appleboy/telegram-action@master
+      with:
+        to: ${{ secrets.TELEGRAM_TO }}
+        token: ${{ secrets.TELEGRAM_TOKEN }}
+        message: |
+          Repository: ${{ github.repository }}
+          ${{ github.actor }} created commit:
+          Commit message: ${{ github.event.commits[0].message }}
+          Tests result: ${{ needs.tests.result }}
+          
+          See changes: https://github.com/${{ github.repository }}/commit/${{github.sha}}
