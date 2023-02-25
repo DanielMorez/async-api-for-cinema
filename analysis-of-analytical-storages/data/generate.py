@@ -5,8 +5,8 @@ from datetime import datetime
 COUNT = 10000000
 CSV_FILE = "test.csv"
 
-user_ids = [str(x) for x in range(10000)]
-movie_ids = [str(x) for x in range(10000)]
+#user_ids = [str(x) for x in range(10000)]
+#movie_ids = [str(x) for x in range(10000)]
 
 
 def generate_data_from_file(convert=True, batch_count=50000):
@@ -20,7 +20,7 @@ def generate_data_from_file(convert=True, batch_count=50000):
                     int(line[2]),
                     int(line[3]),
                     int(line[4]),
-                    line[5],
+                    int(line[4]),
                     datetime.strptime(line[6], "%Y-%m-%d %H:%M:%S"),
                 ]
                 if convert
@@ -39,11 +39,11 @@ def generate_data_from_file(convert=True, batch_count=50000):
 
 def generate_row() -> tuple:
     return (
-        random.choice(user_ids),
-        random.choice(movie_ids),
+        random.randint(1, 10000),
+        random.randint(1, 10000),
         random.randint(0, 10),
         random.randint(0, 180),
-        random.choice([True, False]),
+        random.randint(0, 1),
         datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
     )
 
