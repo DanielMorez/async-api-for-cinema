@@ -3,6 +3,7 @@ import pandas as pd
 from db.base import BaseStorage
 import json
 
+
 class MongoStorage(BaseStorage):
 
     def __init__(self):

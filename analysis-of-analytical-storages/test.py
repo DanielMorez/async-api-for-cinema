@@ -1,6 +1,7 @@
 from data.generate import create_fake_data, generate_data_from_file
 from db.clickhouse import ClickHouseStorage
 from db.mongo import MongoStorage
+from pymongo import MongoClient
 import pandas as pd
 import time
 import json
@@ -78,27 +79,31 @@ def select():
     for query in [
         "SELECT COUNT(*) FROM views",
         "SELECT count(DISTINCT movie_id) FROM views",
-        "SELECT movies_id, count(distinct likes) FROM views GROUP by movies_id",
+        "SELECT movie_id, count(distinct likes) FROM views GROUP by movie_id",
         """
         SELECT 
-            movies_id, 
+            movie_id, 
             sum(stars),
             max(stars) 
         FROM views
-        GROUP by movies_id
+        GROUP by movie_id
         """,
     ]:
         get_time_of_query("select", 3, query)
 
-        start = time.time()
-        mongo_db.db.users.countDocuments()
-        end = time.time()
-        print(f"Elapsed: {(end - start) * 1000} ms")
+    _conn = MongoClient("localhost", 27017)
+    db = _conn["test_db"]
+    collection = db["test_collection"]
+    collection
+    start = time.time()
+    db.users.countDocuments()
+    end = time.time()
+    print(f"Elapsed: {(end - start) * 1000} ms")
 
-        start = time.time()
-        mongo_db.collection.find({"Id": "234000"})
-        end = time.time()
-        print(f"Elapsed: {(end - start) * 1000} ms")
+    start = time.time()
+    mongo_db.collection.find({"Id": "234000"})
+    end = time.time()
+    print(f"Elapsed: {(end - start) * 1000} ms")
 
 
 if __name__ == "__main__":
