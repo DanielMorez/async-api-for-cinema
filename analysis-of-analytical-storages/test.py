@@ -96,7 +96,7 @@ def select():
     collection = db["test_collection"]
     collection
     start = time.time()
-    db.users.countDocuments()
+    db.collection.count()
     end = time.time()
     print(f"Elapsed: {(end - start) * 1000} ms")
 
