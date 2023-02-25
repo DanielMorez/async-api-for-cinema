@@ -1,30 +1,32 @@
-from pymongo import MongoClient, collection
+from clickhouse_driver import Client
 
 from db.base import BaseStorage
 
 
-class MongoDBStorage(BaseStorage):
+class ClickHouseStorage(BaseStorage):
     CREATE_QUERY = """
             CREATE TABLE  IF NOT EXISTS  views
                 (
                     id UInt64,
                     user_id String,
                     movie_id String,
-                    likes boolean,
                     stars smallint,
                     viewed_frame UInt64,
+                    likes boolean,
                     event_time DateTime
                 )
+            ENGINE = MergeTree
+            ORDER BY id;
         """
 
     def __init__(self):
-        self._client = MongoClient("localhost", 27017)
-        self._db = self._client['mongo_db']
-        self.collection = self._db['mongo_collection']
-        collection
+        self._conn = Client(host="localhost")
 
     def _execute(self, *args):
         self._conn.execute(*args)
+
+    def create(self):
+        self._execute(self.CREATE_QUERY)
 
     def _execute_many(self, *args):
         return self._execute(*args)

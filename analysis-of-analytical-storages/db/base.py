@@ -26,7 +26,7 @@ class BaseStorage(ABC):
         pass
 
     def create(self):
-        self._execute(self.CREATE_QUERY)
+        pass
 
     def drop(self):
         self._execute(self.DROP_QUERY)
