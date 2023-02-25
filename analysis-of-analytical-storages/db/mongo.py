@@ -21,5 +21,5 @@ class MongoStorage(BaseStorage):
         pass
 
     def drop(self):
-        db = self._conn["test_db"]
-        db.dropDatabase()
+        self._conn = MongoClient("localhost", 27017)
+        self._conn.drop_database("test_db")

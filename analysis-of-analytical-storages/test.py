@@ -24,9 +24,9 @@ def create():
     mongo_db.create()
 
 
-#def drop():
-#    click_db.drop()
-#    mongo_db.drop()
+def drop():
+    click_db.drop()
+    mongo_db.drop()
 
 
 def execute_query(execute_method, times, *args):
@@ -103,7 +103,7 @@ def select():
 
 if __name__ == "__main__":
     create_fake_data()
-#    drop()
+    drop()
     create()
     insert()
     select()

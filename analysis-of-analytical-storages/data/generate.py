@@ -2,8 +2,9 @@ import csv
 import random
 from datetime import datetime
 
-COUNT = 10000000
+COUNT = 1000000
 CSV_FILE = "test.csv"
+
 
 #user_ids = [str(x) for x in range(10000)]
 #movie_ids = [str(x) for x in range(10000)]
@@ -20,7 +21,7 @@ def generate_data_from_file(convert=True, batch_count=50000):
                     int(line[2]),
                     int(line[3]),
                     int(line[4]),
-                    int(line[4]),
+                    int(line[5]),
                     datetime.strptime(line[6], "%Y-%m-%d %H:%M:%S"),
                 ]
                 if convert

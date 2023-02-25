@@ -6,12 +6,12 @@ class ClickHouseStorage(BaseStorage):
     CREATE_QUERY = """
             CREATE TABLE  IF NOT EXISTS  views
                 (
-                    id UInt64,
-                    user_id UInt64,
-                    movie_id UInt64,
-                    stars UInt64,
-                    viewed_frame UInt64,
-                    likes UInt64,
+                    id Int64,
+                    user_id Int64,
+                    movie_id Int64,
+                    stars Int64,
+                    viewed_frame Int64,
+                    likes Int64,
                     event_time DateTime
                 )
             ENGINE = MergeTree
