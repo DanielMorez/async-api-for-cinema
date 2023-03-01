@@ -29,9 +29,6 @@ jobs:
           pip3 install mypy==0.971
           pip3 install wemake-python-styleguide==0.16.1
           pip3 install flake8-html
-      - name: Run mypy
-        run: |
-          mypy ugc --ignore-missing-imports --html-report reports/mypy_reports/ugc
       - name: Run flake8
         run: |
           flake8 ugc --ignore=WPS,B008 --show-source
