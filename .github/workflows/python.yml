@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        version: ["3.10"]
+        version: ["3.8", "3.9", "3.10"]
 
     steps:
       - uses: actions/checkout@v2
@@ -32,7 +32,7 @@ jobs:
           pip3 install flake8-quotes
       - name: Run flake8
         run: |
-          flake8 ugc --ignore=WPS,B008 --show-source --inline-quotes 'double' --format=html --htmldir=flake-report
+          flake8 ugc --ignore=WPS,B008 --show-source --inline-quotes 'double' 
       - name: Run mypy
         run: |
           mypy ugc --ignore-missing-imports --html-report reports/mypy_reports/ugc
