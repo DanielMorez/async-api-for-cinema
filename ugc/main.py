@@ -42,8 +42,8 @@ async def shutdown():
     await adapters.producer.shutdown()
 
 
-app.include_router(film_views.router)
 
+app.include_router(film_views.router)
 
 
 if __name__ == "__main__":
