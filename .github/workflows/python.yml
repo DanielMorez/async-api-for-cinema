@@ -30,12 +30,12 @@ jobs:
           pip3 install wemake-python-styleguide==0.16.1
           pip3 install flake8-html
           pip3 install flake8-quotes
-      - name: Run mypy
-        run: |
-          mypy ugc --ignore-missing-imports --html-report reports/mypy_reports/ugc
       - name: Run flake8
         run: |
           flake8 ugc --ignore=WPS,B008 --show-source --inline-quotes 'double'
+      - name: Run mypy
+        run: |
+          mypy ugc --ignore-missing-imports --html-report reports/mypy_reports/ugc
 
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v3.1.0
