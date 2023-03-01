@@ -24,8 +24,7 @@ app = FastAPI(
     openapi_url="/api/ugc/openapi.json",
     default_response_class=ORJSONResponse,
     openapi_tags=tags_metadata,
-    middleware=[
-        Middleware(AuthenticationMiddleware, backend=CustomAuthBackend()),
+    middleware=[Middleware(AuthenticationMiddleware, backend=CustomAuthBackend()),
     ],
 )
 
@@ -44,6 +43,7 @@ async def shutdown():
 
 
 app.include_router(film_views.router)
+
 
 
 if __name__ == "__main__":
