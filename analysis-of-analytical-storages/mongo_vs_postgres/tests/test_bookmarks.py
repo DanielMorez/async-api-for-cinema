@@ -78,9 +78,10 @@ async def test_delete(clients: list[AsyncBaseStorage], amount: int = 50_000):
 async def main():
     await pg_storage.init_connection()
     await pg_storage.drop_db()
+    await mongo_storage.drop_db()
     await pg_storage.create_tables()
 
-    clients = [mongo_storage]
+    clients = [pg_storage, mongo_storage]
 
     await test_insert(clients, "../../data/bookmarks.csv")
     await test_find(clients)
