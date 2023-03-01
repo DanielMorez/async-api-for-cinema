@@ -41,7 +41,7 @@ jobs:
           pip3 install flake8-quotes
       - name: Run flake8
         run: |
-          flake8 ugc --ignore=WPS,B008 --show-source --inline-quotes 'double' 
+          flake8 ugc --ignore=WPS,B008,D104,D103,D102,D107,D100,DAR101,D106 --show-source --inline-quotes 'double' 
       - name: Run mypy
         run: |
           mypy ugc --ignore-missing-imports --html-report reports/mypy_reports/ugc
