@@ -23,6 +23,10 @@ class AsyncMongoStorage(AsyncBaseStorage):
     def __repr__(self):
         return "Mongo"
 
+    @property
+    def id_column(self) -> str:
+        return "_id"
+
     @timeit
     async def insert(self, table: str, params: dict) -> None:
         collection = self._db[table]

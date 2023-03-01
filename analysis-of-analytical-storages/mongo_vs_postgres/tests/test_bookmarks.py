@@ -4,6 +4,7 @@ from random import choice
 from data.common import read_csv
 from mongo_vs_postgres.config import settings
 from mongo_vs_postgres.base_storage import AsyncBaseStorage
+from mongo_vs_postgres.core.diagram import show_stats
 from mongo_vs_postgres.core.stats import CHECKPOINTS, STATS
 from mongo_vs_postgres.mongo.db import AsyncMongoStorage
 from mongo_vs_postgres.postgres.db import AsyncPostgresStorage
@@ -18,14 +19,18 @@ mongo_storage = AsyncMongoStorage(settings.MONGO_DSN, settings.MONGO_DB)
 
 current_stats = {
     "Postgres": {
-        "insert": {}
+        "insert": {},
+        "find": {},
+        "delete": {},
     },
     "Mongo": {
-        "insert": {}
+        "insert": {},
+        "find": {},
+        "delete": {},
     },
 }
 users: list[str] = list()  # Collection of user ids
-
+bookmarks_ids: list[str] = list()
 
 def get_avg(data: list[float]) -> float:
     if not data:
@@ -43,6 +48,7 @@ async def test_insert(
         counter = 0
         for rows in generator:
             for row in rows:
+                bookmarks_ids.append(row["_id"])
                 if isinstance(client, AsyncPostgresStorage):
                     row["id"] = row["_id"]
                     del row["_id"]
@@ -54,25 +60,38 @@ async def test_insert(
                     avg = get_avg(STATS[str(client)]["bookmarks_insert"])
                     current_stats[str(client)]["insert"][counter] = avg
                     STATS[str(client)]["bookmarks_insert"] = []
-                    logger.info(f"{counter} requests to {client} - time (in seconds) {avg}")
+                    logger.info(f"{counter} insert requests to {client} - time (in seconds) {avg}")
 
 
-async def test_find(clients: list[AsyncBaseStorage], amount: int = 100_000):
+async def test_find(clients: list[AsyncBaseStorage], amount: int = 10_000):
     logger.info("=== START OF LOOKING FOR BOOKMARKS ===")
     for client in clients:
+        counter = 0
         for _ in range(amount):
             params = {"user_id": choice(users)}
-            bookmarks = await client.find("bookmarks", )
-            logger.info(f"User `{params['user_id']}` has {len(bookmarks)} of bookmarks")
+            bookmarks = await client.find("bookmarks", params)
+            counter += 1
+            if counter in CHECKPOINTS:
+                avg = get_avg(STATS[str(client)]["bookmarks_find"])
+                current_stats[str(client)]["find"][counter] = avg
+                STATS[str(client)]["bookmarks_find"] = []
+                logger.info(f"{counter} find requests to {client} - time (in seconds) {avg}")
 
 
-async def test_delete(clients: list[AsyncBaseStorage], amount: int = 50_000):
+async def test_delete(clients: list[AsyncBaseStorage], amount: int = 10_000):
     logger.info("=== START OF DELETING BOOKMARKS ===")
     for client in clients:
+        counter = 0
         for _ in range(amount):
-            params = {"user_id": choice(users)}
+            params = {client.id_column: choice(bookmarks_ids)}
+            bookmarks_ids.pop(bookmarks_ids.index(params[client.id_column]))
             await client.delete("bookmarks", params)
-            logger.info(f"Bookmarks of user `{params['user_id']} are deleted`")
+            counter += 1
+            if counter in CHECKPOINTS:
+                avg = get_avg(STATS[str(client)]["bookmarks_delete"])
+                current_stats[str(client)]["delete"][counter] = avg
+                STATS[str(client)]["bookmarks_delete"] = []
+                logger.info(f"{counter} delete requests to {client} - time (in seconds) {avg}")
 
 
 async def main():
@@ -86,7 +105,8 @@ async def main():
     await test_insert(clients, "../../data/bookmarks.csv")
     await test_find(clients)
     await test_delete(clients)
-    a = 1
+    logger.info(current_stats)
+
 
 if __name__ == "__main__":
     import asyncio

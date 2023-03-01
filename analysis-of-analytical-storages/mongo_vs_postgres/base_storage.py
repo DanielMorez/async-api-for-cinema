@@ -2,6 +2,11 @@ from abc import ABC, abstractmethod
 
 
 class AsyncBaseStorage(ABC):
+    @property
+    @abstractmethod
+    def id_column(self) -> str:
+        pass
+
     @abstractmethod
     def __repr__(self):
         pass

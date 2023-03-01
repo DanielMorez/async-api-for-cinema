@@ -21,6 +21,10 @@ class AsyncPostgresStorage(AsyncBaseStorage):
     def __repr__(self):
         return "Postgres"
 
+    @property
+    def id_column(self) -> str:
+        return "id"
+
     async def init_connection(self):
         self._conn = await asyncpg.connect(self._dsn)
 
@@ -39,13 +43,13 @@ class AsyncPostgresStorage(AsyncBaseStorage):
 
     @timeit
     async def find(self, table: str, params: dict) -> list[dict]:
-        query = queries.SELECT_WHERE + convert_to_pg_condition(params)
+        query = queries.SELECT_WHERE.format(table=table) + convert_to_pg_condition(params)
         data = await self._conn.fetch(query)
         return data
 
     @timeit
     async def delete(self, table: str, params: dict) -> None:
-        query = queries.DELETE_WHERE + convert_to_pg_condition(params)
+        query = queries.DELETE_WHERE.format(table=table) + convert_to_pg_condition(params)
         await self._conn.execute(query)
 
     async def drop_db(self) -> None:

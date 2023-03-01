@@ -14,9 +14,11 @@ def random_bookmarks(users: list[str], films: list[str], amount: int) -> list[tu
     return [(str(uuid.uuid4()), choice(users), choice(films)) for _ in range(amount)]
 
 
-def create_test_bookmark_csv(file_name: str, row_amount: int, batch_count: int = 50_000) -> None:
+def create_test_bookmark_csv(file_name: str, row_amount: int, batch_count: int = 10_000) -> None:
     users = random_users(100_000)
     films = random_films(10_000)
+
+    batch_count = batch_count if batch_count > row_amount else row_amount
 
     with open(file_name, "w") as file:
         file.write("_id,user_id,film_id")
@@ -30,7 +32,7 @@ def create_test_bookmark_csv(file_name: str, row_amount: int, batch_count: int =
 if __name__ == "__main__":
     from os.path import isfile
 
-    COUNT = 100_000
+    COUNT = 1_000_000
     CSV_FILE = "bookmarks.csv"
 
     if not isfile(CSV_FILE):
