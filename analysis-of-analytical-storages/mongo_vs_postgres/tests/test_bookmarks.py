@@ -32,6 +32,7 @@ current_stats = {
 users: list[str] = list()  # Collection of user ids
 bookmarks_ids: list[str] = list()
 
+
 def get_avg(data: list[float]) -> float:
     if not data:
         return 0
@@ -48,7 +49,8 @@ async def test_insert(
         counter = 0
         for rows in generator:
             for row in rows:
-                bookmarks_ids.append(row["_id"])
+                if row["_id"] not in bookmarks_ids:
+                    bookmarks_ids.append(row["_id"])
                 if isinstance(client, AsyncPostgresStorage):
                     row["id"] = row["_id"]
                     del row["_id"]
