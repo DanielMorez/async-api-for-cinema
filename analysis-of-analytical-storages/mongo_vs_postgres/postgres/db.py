@@ -1,9 +1,15 @@
 import asyncpg
+import logging
+
 from pydantic import PostgresDsn
 
 from mongo_vs_postgres.postgres import queries
 from mongo_vs_postgres.core.decorators import timeit
 from mongo_vs_postgres.base_storage import AsyncBaseStorage
+
+logging.basicConfig()
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
 
 
 class AsyncPostgresStorage(AsyncBaseStorage):

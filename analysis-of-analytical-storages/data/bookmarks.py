@@ -31,7 +31,7 @@ if __name__ == "__main__":
     from os.path import isfile
 
     COUNT = 100_000
-    CSV_FILE = "bookmarks_.csv"
+    CSV_FILE = "bookmarks.csv"
 
     if not isfile(CSV_FILE):
         create_test_bookmark_csv(CSV_FILE, COUNT)

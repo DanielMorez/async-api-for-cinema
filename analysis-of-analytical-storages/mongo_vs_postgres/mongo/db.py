@@ -24,10 +24,9 @@ class AsyncMongoStorage(AsyncBaseStorage):
         return "Mongo"
 
     @timeit
-    async def insert(self, table: str, data_generator: Iterable[list[dict]]) -> None:
+    async def insert(self, table: str, params: dict) -> None:
         collection = self._db[table]
-        for docs in data_generator:
-            await collection.insert_many(docs)
+        await collection.insert_one(params)
 
     @timeit
     async def find(self, table: str, params: dict) -> list[dict]:
