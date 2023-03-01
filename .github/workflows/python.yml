@@ -14,6 +14,14 @@ jobs:
         version: ["3.8", "3.9", "3.10"]
 
     steps:
+      - name: Upload a Build Artifact
+        uses: actions/upload-artifact@v3.1.0
+        with:
+          name: UGC CI report
+          path: reports/
+          if-no-files-found: warn
+          retention-days: 0
+    
       - uses: actions/checkout@v2
       - name: Set up Python3.10
         uses: actions/setup-python@v2
@@ -37,13 +45,6 @@ jobs:
         run: |
           mypy ugc --ignore-missing-imports --html-report reports/mypy_reports/ugc
 
-      - name: Upload a Build Artifact
-        uses: actions/upload-artifact@v3.1.0
-        with:
-          name: UGC CI report
-          path: reports/
-          if-no-files-found: warn
-          retention-days: 0
 
   send_message:
     runs-on: ubuntu-latest
