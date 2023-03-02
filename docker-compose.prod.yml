@@ -53,7 +53,7 @@ services:
         tag: jaeger 
 
   elasticsearch:
-    image: elasticsearch:8.5.1
+    image: elasticsearch:8.6.2
     container_name: elasticsearch_async_api
     healthcheck:
       test: curl -s http://127.0.0.1:${ES_PORT} >/dev/null || exit 1
@@ -271,10 +271,10 @@ services:
         tag: zookeeper 
 
   logs-logstash:
-    image: logstash:7.17.9
+    image: logstash:8.6.2
     container_name: logstash
     environment:
-      ES_HOST: "es:9200"
+      ES_DSN: "${ES_HOST}:${ES_PORT}"
       GELF_PORT: "${LOGS__GELF__PORT}"
       LOGSTASH_PORT: "${LOGS__LOGSTASH__PORT}"
       XPACK_MONITORING_ENABLED: "false" 
@@ -289,32 +289,20 @@ services:
     networks:
       - production_network
 
-  logs-es:
-    image: elasticsearch:7.17.9
-    container_name: es
-    environment:
-      discovery.type: single-node
-    expose:
-      - "9200"
-    volumes:
-      - /tmp/esdata:/tmp/elasticsearch/data
-    networks:
-      - production_network
-
   logs-kibana:
-    image: kibana:7.17.9
+    image: kibana:8.6.2
     container_name: kibana
     ports:
-      - "${LOGS__KIBANA__PORT}:5601"
+      - "${LOGS__KIBANA__PORT}:${LOGS__KIBANA__PORT}"
     environment:
-      ELASTICSEARCH_HOSTS: '["http://es:9200"]'
+      ELASTICSEARCH_HOSTS: '["${ES_DSN}"]'
     depends_on:
       - logs-es
     networks:
       - production_network
 
   logs-filebeat:
-    image: elastic/filebeat:7.17.9
+    image: elastic/filebeat:8.6.2
     container_name: filebeat
     volumes:
       - /tmp/logs/nginx:/var/log/nginx:ro

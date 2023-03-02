@@ -290,7 +290,7 @@ services:
     image: kibana:8.6.2
     container_name: kibana
     ports:
-      - "${LOGS__KIBANA__PORT}:5601"
+      - "${LOGS__KIBANA__PORT}:${LOGS__KIBANA__PORT}"
     environment:
       ELASTICSEARCH_HOSTS: '["${ES_DSN}"]'
     depends_on:
