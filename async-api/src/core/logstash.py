@@ -1,10 +1,10 @@
 import logging
 from contextvars import ContextVar
-from core.logstash import LogstashSettings
+from core.config import LogstashSettings
 
 from logstash_async.formatter import LogstashFormatter
 from logstash_async.handler import AsynchronousLogstashHandler
-
+from pydantic import AnyUrl
 
 x_request_id: ContextVar[str] = ContextVar("x_request_id", default="")
 

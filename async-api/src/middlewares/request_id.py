@@ -2,7 +2,6 @@ from contextvars import ContextVar
 
 from starlette.middleware.base import BaseHTTPMiddleware
 
-
 x_request_id: ContextVar[str] = ContextVar('x_request_id', default='')
 
 

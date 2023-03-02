@@ -1,60 +1,37 @@
-from contextvars import ContextVar
 import logging
 
 import aioredis
-from elasticsearch import AsyncElasticsearch
-from fastapi.responses import ORJSONResponse
-from fastapi_cache import FastAPICache
-from fastapi_cache.backends.redis import RedisBackend
-from fastapi import FastAPI
-from logstash_async.handler import AsynchronousLogstashHandler
-from logstash_async.formatter import LogstashFormatter
 import sentry_sdk
-from sentry_sdk.integrations.fastapi import FastApiIntegration
-from starlette.middleware import Middleware
-from starlette.middleware.authentication import AuthenticationMiddleware
 import uvicorn as uvicorn
-
-
-sentry_sdk.init(
-    integrations=[FastApiIntegration()],
-    traces_sample_rate=1.0
-)
-
-
-from api.v1 import films, persons, genres
+from api.v1 import films, genres, persons
 from constants.documentations import description, tags_metadata
 from core.config import Settings
 from core.logger import LOGGING
-from db import elastic
-from db import redis
+from core.logstash import init_logstash
+from db import elastic, redis
+from elasticsearch import AsyncElasticsearch
+from fastapi import FastAPI
+from fastapi.responses import ORJSONResponse
+from fastapi_cache import FastAPICache
+from fastapi_cache.backends.redis import RedisBackend
 from helpers.cache_key_builder import key_builder
 from middlewares.authentication import CustomAuthBackend
 from middlewares.request_id import RequestIdMiddleware
-
-
-
+from sentry_sdk.integrations.fastapi import FastApiIntegration
+from starlette.middleware import Middleware
+from starlette.middleware.authentication import AuthenticationMiddleware
 
 settings = Settings()
-x_request_id: ContextVar[str] = ContextVar('x_request_id', default='')
 
+if settings.sentry_dsn:
+    sentry_sdk.init(
+        dsn=settings.sentry_dsn,
+        integrations=[FastApiIntegration()],
+        traces_sample_rate=1.0
+    )
 
-class RequestIdFilter(logging.Filter):
-    def filter(self, record):
-        record.request_id = x_request_id.get()
-        return True
-
-
-logstash_handler = AsynchronousLogstashHandler(
-    'logstash',
-    settings.logstash_port, 
-    None,
-    transport='logstash_async.transport.UdpTransport'
-)
-logstash_handler.formatter = LogstashFormatter(tags=['async-api'])
-logging.basicConfig(level=logging.INFO)
-logging.getLogger().addHandler(logstash_handler)
-logging.getLogger().addFilter(RequestIdFilter())
+if settings.logstash_enable:
+    init_logstash(settings.logstash)
 
 
 app = FastAPI(
