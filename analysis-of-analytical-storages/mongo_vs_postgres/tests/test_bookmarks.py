@@ -4,7 +4,7 @@ from random import choice
 from data.common import read_csv
 from mongo_vs_postgres.config import settings
 from mongo_vs_postgres.base_storage import AsyncBaseStorage
-from mongo_vs_postgres.core.diagram import show_stats
+
 from mongo_vs_postgres.core.stats import CHECKPOINTS, STATS
 from mongo_vs_postgres.mongo.db import AsyncMongoStorage
 from mongo_vs_postgres.postgres.db import AsyncPostgresStorage
@@ -98,13 +98,13 @@ async def test_delete(clients: list[AsyncBaseStorage], amount: int = 10_000):
 
 async def main():
     await pg_storage.init_connection()
-    await pg_storage.drop_db()
-    await mongo_storage.drop_db()
-    await pg_storage.create_tables()
-
+    # await pg_storage.drop_db()
+    # await mongo_storage.drop_db()
+    # await pg_storage.create_tables()
+    #
     clients = [pg_storage, mongo_storage]
-
-    await test_insert(clients, "../../data/bookmarks.csv")
+    #
+    # await test_insert(clients, "../../data/bookmarks.csv")
     await test_find(clients)
     await test_delete(clients)
     logger.info(current_stats)
