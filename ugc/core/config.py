@@ -1,8 +1,7 @@
 """Настройки"""
 import os
 
-from pydantic import BaseSettings, Field, AnyUrl
-
+from pydantic import AnyUrl, BaseSettings, Field
 
 ENV_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -31,6 +30,8 @@ class Settings(BaseSettings):
     auth_dsn: AnyUrl
     clickhouse: ClickHouseSettings
     logstash: LogstashSettings
+    logstash_enable: bool = Field(False)
+    sentry_dsn: AnyUrl = Field(None)
 
     class Config:
         #  Для локальной разработки вне docker

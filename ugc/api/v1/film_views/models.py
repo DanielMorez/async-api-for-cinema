@@ -1,9 +1,8 @@
 from uuid import UUID
 
+from core.utils import orjson_dumps
 from orjson import orjson
 from pydantic import BaseModel
-
-from core.utils import orjson_dumps
 
 
 class Frame(BaseModel):

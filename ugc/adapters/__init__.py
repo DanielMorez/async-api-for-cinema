@@ -1,4 +1,5 @@
-from adapters.broker import MessageBrokerProducerClient, MessageBrokerConsumerClient
+from adapters.broker import (MessageBrokerConsumerClient,
+                             MessageBrokerProducerClient)
 
 producer: MessageBrokerProducerClient = None
 consumer: MessageBrokerConsumerClient = None

@@ -1,10 +1,9 @@
 from uuid import UUID
 
+from core.utils import orjson_dumps
 from orjson import orjson
 from pydantic import BaseModel, Field
 from starlette.authentication import BaseUser
-
-from core.utils import orjson_dumps
 
 
 class User(BaseModel, BaseUser):
