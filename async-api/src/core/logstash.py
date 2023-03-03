@@ -4,7 +4,6 @@ from core.config import LogstashSettings
 
 from logstash_async.formatter import LogstashFormatter
 from logstash_async.handler import AsynchronousLogstashHandler
-from pydantic import AnyUrl
 
 x_request_id: ContextVar[str] = ContextVar("x_request_id", default="")
 
@@ -22,7 +21,7 @@ def init_logstash(logstash: LogstashSettings):
         None,
         transport="logstash_async.transport.UdpTransport",
     )
-    logstash_handler.formatter = LogstashFormatter(tags=["ugc"])
+    logstash_handler.formatter = LogstashFormatter(tags=["async-api"])
     logging.basicConfig(level=logging.INFO)
     logging.getLogger().addHandler(logstash_handler)
     logging.getLogger().addFilter(RequestIdFilter())
