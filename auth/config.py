@@ -1,12 +1,12 @@
 import os
 
 from oauthlib.oauth2 import WebApplicationClient
-from pydantic import BaseSettings, RedisDsn, PostgresDsn, Field
+from pydantic import BaseSettings, RedisDsn, PostgresDsn, Field, AnyUrl
 
 
 class Settings(BaseSettings):
-    redis_dsn: RedisDsn
-    pg_dsn: PostgresDsn
+    redis_dsn: RedisDsn = Field(None)
+    pg_dsn: PostgresDsn = Field(None)
     pg_schema: str = Field("auth", env="AUTH_PG_DEFAULT_SCHEMA")
     name: str = Field("auth")
     host: str = Field("0.0.0.0", env="AUTH_HOST")
@@ -28,6 +28,10 @@ class Settings(BaseSettings):
     GOOGLE_CLIENT_ID: str = Field("", env="GOOGLE_CLIENT_ID")
     GOOGLE_CLIENT_SECRET: str = Field("", env="GOOGLE_CLIENT_SECRET")
     GOOGLE_DISCOVERY_URL: str = Field("", env="GOOGLE_DISCOVERY_URL")
+
+    logstash_enable: bool = Field(False, env="LOGSTASH_ENABLE")
+    logstash_dsn: AnyUrl = Field("", env="LOGSTASH_DSN")
+    sentry_dsn: AnyUrl = Field(None, env="SENTRY_DSN")
 
     class Config:
         case_sensitive = False

@@ -1,6 +1,5 @@
-import logging
-
 from http import HTTPStatus
+import logging
 from uuid import UUID
 
 from flask_jwt_extended import (
@@ -18,7 +17,8 @@ from utils.before_requests.jaeger import trace
 from utils.pagination import paginate
 from utils.token import block_token
 
-logger = logging.getLogger(__name__)
+
+logger = logging.getLogger()
 
 
 def get_user_or_error(user_id: UUID) -> User:

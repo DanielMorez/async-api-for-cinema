@@ -1,5 +1,3 @@
-import logging
-
 from http import HTTPStatus
 from uuid import UUID
 
@@ -8,8 +6,6 @@ from flask import abort
 
 from models.role import Role
 from utils.models import get_or_create
-
-logger = logging.getLogger(__name__)
 
 
 def get_role_or_error(role_id: UUID):

@@ -1,15 +1,11 @@
 from abc import ABC, abstractmethod
 from functools import lru_cache
 
-from fastapi import Depends
-
 from adapters import get_consumer, get_producer
-from adapters.broker import (
-    MessageBrokerProducerClient,
-    MessageBrokerConsumerClient,
-)
-
+from adapters.broker import (MessageBrokerConsumerClient,
+                             MessageBrokerProducerClient)
 from core.config import settings
+from fastapi import Depends
 
 
 class BaseBrokerService(ABC):

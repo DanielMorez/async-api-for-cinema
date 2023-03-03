@@ -1,14 +1,14 @@
 import uuid
 
+from api.v1.film_views.models import Frame
 from fastapi import APIRouter, Depends, Request
 from fastapi.security import HTTPBearer
 from fastapi_contrib.auth.permissions import IsAuthenticated
 from fastapi_contrib.permissions import PermissionsDependency
 from fastapi_utils.cbv import cbv
-
-from api.v1.film_views.models import Frame
-from auth.models import User
 from services.broker import BaseBrokerService, get_broker_service
+
+from auth.models import User
 
 router = APIRouter(
     prefix="/film-views",

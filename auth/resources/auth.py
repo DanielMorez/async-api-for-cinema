@@ -1,4 +1,5 @@
 from http import HTTPStatus
+import logging
 
 from flask import redirect
 from flask_jwt_extended import get_jwt, get_jwt_identity, jwt_required
@@ -17,6 +18,7 @@ from utils.parsers.auth import access_token_required, refresh_token_required
 from utils.parsers.login import credentials
 from utils.parsers.registration import register_data
 from utils.token import check_if_token_in_blacklist
+
 
 
 @login_google.ns.route("")

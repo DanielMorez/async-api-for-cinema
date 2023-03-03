@@ -1,25 +1,38 @@
 import logging
 
 import aioredis
+import sentry_sdk
 import uvicorn as uvicorn
-from elasticsearch import AsyncElasticsearch
-from fastapi.responses import ORJSONResponse
-from fastapi_cache import FastAPICache
-from fastapi_cache.backends.redis import RedisBackend
-from fastapi import FastAPI
-from starlette.middleware import Middleware
-from starlette.middleware.authentication import AuthenticationMiddleware
-
-from api.v1 import films, persons, genres
+from api.v1 import films, genres, persons
 from constants.documentations import description, tags_metadata
 from core.config import Settings
 from core.logger import LOGGING
-from db import elastic
-from db import redis
+from core.logstash import init_logstash
+from db import elastic, redis
+from elasticsearch import AsyncElasticsearch
+from fastapi import FastAPI
+from fastapi.responses import ORJSONResponse
+from fastapi_cache import FastAPICache
+from fastapi_cache.backends.redis import RedisBackend
 from helpers.cache_key_builder import key_builder
 from middlewares.authentication import CustomAuthBackend
+from middlewares.request_id import RequestIdMiddleware
+from sentry_sdk.integrations.fastapi import FastApiIntegration
+from starlette.middleware import Middleware
+from starlette.middleware.authentication import AuthenticationMiddleware
 
 settings = Settings()
+
+if settings.sentry_dsn:
+    sentry_sdk.init(
+        dsn=settings.sentry_dsn,
+        integrations=[FastApiIntegration()],
+        traces_sample_rate=1.0
+    )
+
+if settings.logstash_enable:
+    init_logstash(settings.logstash)
+
 
 app = FastAPI(
     title=settings.project_name,
@@ -28,7 +41,13 @@ app = FastAPI(
     openapi_url="/api/openapi.json",
     default_response_class=ORJSONResponse,
     openapi_tags=tags_metadata,
-    middleware=[Middleware(AuthenticationMiddleware, backend=CustomAuthBackend())]
+    middleware=[
+        Middleware(RequestIdMiddleware),
+        Middleware(
+            AuthenticationMiddleware,
+            backend=CustomAuthBackend()
+        )
+    ]
 )
 
 

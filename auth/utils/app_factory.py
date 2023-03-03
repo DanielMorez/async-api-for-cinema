@@ -3,6 +3,7 @@ from flask import Flask
 from config import Settings
 from db import init_db, db, init_migrate
 from utils.before_requests.jaeger import configure_tracer, init_jaeger
+from utils.logger import init_sentry, init_logstash
 from utils.routing import register_endpoints
 from utils.limiter import init_limiter
 
@@ -31,5 +32,11 @@ def create_app(settings: Settings) -> Flask:
     if settings.request_id_enable:
         configure_tracer(settings.jaeger_host, settings.jaeger_port)
         init_jaeger(app)
+
+    if settings.sentry_dsn:
+        init_sentry(settings.sentry_dsn)
+
+    if settings.logstash_enable:
+        init_logstash(settings.logstash_dsn)
 
     return app

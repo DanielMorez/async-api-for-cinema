@@ -8,3 +8,6 @@ gunicorn==20.1.0
 fastapi-utils==0.2.1
 fastapi-contrib==0.2.11
 clickhouse-driver==0.2.5
+
+sentry-sdk[fastapi]==1.15.0
+python-logstash-async==2.5.0

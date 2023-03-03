@@ -10,6 +10,8 @@ services:
       - ./.env:/opt/app/src/.env
     expose:
       - "${ASYNC_API_PORT}"
+    environment:
+      SENTRY_DSN: ${SENTRY_DSN}
     networks:
       - production_network
     restart: always
@@ -26,6 +28,8 @@ services:
       - ./.env:/opt/app/.env
     expose:
       - "${AUTH_PORT}"
+    environment:
+      SENTRY_DSN: ${SENTRY_DSN}
     networks:
       - production_network
     depends_on:
@@ -42,9 +46,14 @@ services:
       - "16686:16686"
     networks:
       - production_network
+    logging:
+      driver: gelf
+      options:
+        gelf-address: udp://localhost:${LOGS__GELF__PORT}
+        tag: jaeger 
 
   elasticsearch:
-    image: elasticsearch:8.5.1
+    image: elasticsearch:8.6.2
     container_name: elasticsearch_async_api
     healthcheck:
       test: curl -s http://127.0.0.1:${ES_PORT} >/dev/null || exit 1
@@ -60,6 +69,11 @@ services:
     networks:
       - production_network
     restart: always
+    logging:
+      driver: gelf
+      options:
+        gelf-address: udp://localhost:${LOGS__GELF__PORT}
+        tag: async-api-elasticsearch
 
   redis:
     image: redis:7.0.5
@@ -69,6 +83,11 @@ services:
       - "${REDIS_PORT}"
     networks:
       - production_network
+    logging:
+      driver: gelf
+      options:
+        gelf-address: udp://localhost:${LOGS__GELF__PORT}
+        tag: redis 
 
   postgres:
     image: postgres:15.1
@@ -85,6 +104,11 @@ services:
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - production_network
+    logging:
+      driver: gelf
+      options:
+        gelf-address: udp://localhost:${LOGS__GELF__PORT}
+        tag: redis 
 
   etl:
     container_name: etl_async_api
@@ -99,6 +123,11 @@ services:
         condition: service_healthy
     networks:
       - production_network
+    logging:
+      driver: gelf
+      options:
+        gelf-address: udp://localhost:${LOGS__GELF__PORT}
+        tag: redis 
 
   admin_panel:
     container_name: admin_panel_async_api
@@ -111,6 +140,8 @@ services:
     volumes:
       - ./.env:/opt/app/.env
       - ./admin-panel/movies/static:/opt/app/static
+    environment:
+      SENTRY_DSN: ${SENTRY_DSN}
     depends_on:
       - postgres
     networks:
@@ -123,6 +154,7 @@ services:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
       - ./configs:/etc/nginx/conf.d:ro
       - ./admin-panel/movies/static:/static
+      - /tmp/logs/nginx/:/var/log/nginx/
     depends_on:
       - admin_panel
       - async_api
@@ -141,6 +173,8 @@ services:
       - "${UGC_PORT}"
     volumes:
       - ./.env:/opt/app/.env
+    environment:
+      SENTRY_DSN: ${SENTRY_DSN}
     depends_on:
       - auth
       - zookeeper
@@ -162,6 +196,11 @@ services:
       - ALLOW_ANONYMOUS_LOGIN=yes
     networks:
       - production_network
+    logging:
+      driver: gelf
+      options:
+        gelf-address: udp://localhost:${LOGS__GELF__PORT}
+        tag: zookeeper 
 
   broker:
     image: confluentinc/cp-kafka:7.3.0
@@ -183,6 +222,11 @@ services:
       - KAFKA_INTER_BROKER_LISTENER_NAME=INSIDE
     networks:
       - production_network
+    logging:
+      driver: gelf
+      options:
+        gelf-address: udp://localhost:${LOGS__GELF__PORT}
+        tag: zookeeper 
 
   broker-ui:
     image: obsidiandynamics/kafdrop:3.30.0
@@ -196,23 +240,77 @@ services:
       - SERVER_PORT=${BROKER_UI_PORT}
     networks:
       - production_network
+    logging:
+      driver: gelf
+      options:
+        gelf-address: udp://localhost:${LOGS__GELF__PORT}
+        tag: zookeeper 
 
   clickhouse:
     image: yandex/clickhouse-server:21.3
     container_name: clickhouse
     expose:
-      - "${CLICKHOUSE_HTTP_PORT}"
+      - "${CLICKHOUSE__PORT}"
       - "${CLICKHOUSE_TCP_PORT}"
     volumes:
       - ./ugc/db/clickhouse/config:/etc/clickhouse-server
     depends_on:
       - zookeeper
     environment:
-      - ADMIN_PASSWORD=${CLICKHOUSE_PASSWORD}
+      - ADMIN_PASSWORD=${CLICKHOUSE__PASSWORD}
       - CLICKHOUSE_LOGGER_LEVEL=debug
-      - CLICKHOUSE_HTTP_PORT=${CLICKHOUSE_HTTP_PORT}
+      - CLICKHOUSE_HTTP_PORT=${CLICKHOUSE__PORT}
       - CLICKHOUSE_TCP_PORT=${CLICKHOUSE_TCP_PORT}
       - ZOOKEEPER_PORT=${ZOOKEEPER_PORT}
+    networks:
+      - production_network
+    logging:
+      driver: gelf
+      options:
+        gelf-address: udp://localhost:${LOGS__GELF__PORT}
+        tag: zookeeper 
+
+  logs-logstash:
+    image: logstash:8.6.2
+    container_name: logstash
+    environment:
+      ES_DSN: "${ES_HOST}:${ES_PORT}"
+      GELF_PORT: "${LOGS__GELF__PORT}"
+      LOGSTASH_PORT: "${LOGS__LOGSTASH__PORT}"
+      XPACK_MONITORING_ENABLED: "false" 
+      pipeline.ecs_compatibility: disabled
+    expose:
+      - "${LOGS__LOGSTASH__PORT}/udp"
+    ports:
+      - "${LOGS__GELF__PORT}:${LOGS__GELF__PORT}/udp"
+    volumes:
+      - ./logs/logstash.conf:/config/logstash.conf:ro
+    command: logstash -f /config/logstash.conf
+    networks:
+      - production_network
+
+  logs-kibana:
+    image: kibana:8.6.2
+    container_name: kibana
+    ports:
+      - "${LOGS__KIBANA__PORT}:${LOGS__KIBANA__PORT}"
+    environment:
+      ELASTICSEARCH_HOSTS: '["${ES_DSN}"]'
+    depends_on:
+      - logs-es
+    networks:
+      - production_network
+
+  logs-filebeat:
+    image: elastic/filebeat:8.6.2
+    container_name: filebeat
+    volumes:
+      - /tmp/logs/nginx:/var/log/nginx:ro
+      - ./logs/filebeat.yml:/usr/share/filebeat/filebeat.yml
+    depends_on:
+      - nginx
+    links:
+      - logs-logstash 
     networks:
       - production_network
 

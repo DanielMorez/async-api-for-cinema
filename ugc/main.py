@@ -1,21 +1,32 @@
-import uvicorn
 import logging
+
 import adapters
-
-from adapters import broker
-
+import sentry_sdk
+import uvicorn
+from adapters.broker import KafkaProducerClient
+from api.v1 import film_views
+from core.config import settings
+from core.logger import LOGGING
+from core.logstash import init_logstash
 from fastapi import FastAPI
 from fastapi.responses import ORJSONResponse
+from openapi.tags import description, tags_metadata
+from sentry_sdk.integrations.fastapi import FastApiIntegration
 from starlette.middleware import Middleware
 from starlette.middleware.authentication import AuthenticationMiddleware
 
-from adapters.broker import KafkaProducerClient
-from api.v1 import film_views
-
-from core.logger import LOGGING
-from core.config import settings
 from auth.middlewares import CustomAuthBackend
-from openapi.tags import tags_metadata, description
+
+if settings.sentry_dsn:
+    sentry_sdk.init(
+        dsn=settings.sentry_dsn,
+        integrations=[FastApiIntegration()],
+        traces_sample_rate=1.0
+    )
+
+if settings.logstash_enable:
+    init_logstash(settings.logstash)
+
 
 app = FastAPI(
     title=settings.project_name,

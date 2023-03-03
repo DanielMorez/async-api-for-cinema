@@ -10,7 +10,7 @@ from db.storage_base import AsyncSearchStorage
 from models.genre import Genre
 from services.base_service import BaseService
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger()
 
 
 class GenreService(BaseService):
