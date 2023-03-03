@@ -27,7 +27,6 @@ if settings.sentry_dsn:
 if settings.logstash_enable:
     init_logstash(settings.logstash)
 
-
 app = FastAPI(
     title=settings.project_name,
     description=description,
@@ -35,7 +34,8 @@ app = FastAPI(
     openapi_url="/api/ugc/openapi.json",
     default_response_class=ORJSONResponse,
     openapi_tags=tags_metadata,
-    middleware=[Middleware(AuthenticationMiddleware, backend=CustomAuthBackend()),
+    middleware=[
+        Middleware(AuthenticationMiddleware, backend=CustomAuthBackend()),
     ],
 )
 
@@ -51,7 +51,6 @@ async def startup():
 @app.on_event("shutdown")
 async def shutdown():
     await adapters.producer.shutdown()
-
 
 
 app.include_router(film_views.router)

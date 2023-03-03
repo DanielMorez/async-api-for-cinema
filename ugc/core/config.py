@@ -29,8 +29,8 @@ class Settings(BaseSettings):
     broker: BrokerSettings
     auth_dsn: AnyUrl
     clickhouse: ClickHouseSettings
+    logstash_enable: bool
     logstash: LogstashSettings
-    logstash_enable: bool = Field(False)
     sentry_dsn: AnyUrl = Field(None)
 
     class Config:

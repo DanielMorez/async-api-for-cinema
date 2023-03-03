@@ -10,6 +10,11 @@ from core.logger import LOGGING
 logging_config.dictConfig(LOGGING)
 
 
+class LogstashSettings(BaseSettings):
+    host: str
+    port: int
+
+
 class Settings(BaseSettings):
     project_name: str
     redis_dsn: RedisDsn
@@ -17,9 +22,12 @@ class Settings(BaseSettings):
     base_dir: str = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     cache_expire_in_seconds: int = Field(60 * 5)  # 5 minutes
     auth_dsn: AnyUrl = Field("0.0.0.0:5001")
-    logstash_port: int = Field(5044, env="LOGSTASH_PORT")
+    logstash: LogstashSettings
+    logstash_enable: bool = Field(False)
+    sentry_dsn: AnyUrl = Field(None)
 
     class Config:
         case_sensitive = False
         env_file = ".env"
         env_file_encoding = "utf-8"
+        env_nested_delimiter = "__"

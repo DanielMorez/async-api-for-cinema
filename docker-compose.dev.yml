@@ -274,10 +274,10 @@ services:
     environment:
       ES_DSN: "${ES_HOST}:${ES_PORT}"
       GELF_PORT: "${LOGS__GELF__PORT}"
-      LOGSTASH_PORT: "${LOGS__LOGSTASH__PORT}"
+      LOGSTASH_PORT: "${LOGSTASH__PORT}"
       XPACK_MONITORING_ENABLED: "false"
     expose:
-      - "${LOGS__LOGSTASH__PORT}/udp"
+      - "${LOGSTASH__PORT}/udp"
     ports:
       - "${LOGS__GELF__PORT}:${LOGS__GELF__PORT}/udp"
     volumes:
