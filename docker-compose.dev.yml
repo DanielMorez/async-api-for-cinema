@@ -311,6 +311,19 @@ services:
     networks:
       - development_network
 
+  mongo:
+    image: mongo:6.0.4
+    container_name: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+    ports:
+      - "9123:9123"
+      - "${MONGO_PORT}:${MONGO_PORT}"
+    networks:
+      - development_network
+
 networks:
   development_network:
     name: development_network

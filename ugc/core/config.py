@@ -1,7 +1,7 @@
 """Настройки"""
 import os
 
-from pydantic import AnyUrl, BaseSettings, Field
+from pydantic import AnyUrl, BaseSettings, Field, MongoDsn
 
 ENV_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -32,6 +32,7 @@ class Settings(BaseSettings):
     logstash_enable: bool
     logstash: LogstashSettings
     sentry_dsn: AnyUrl = Field(None)
+    mongo_dsn: MongoDsn
 
     class Config:
         #  Для локальной разработки вне docker

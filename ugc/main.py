@@ -1,10 +1,15 @@
 import logging
 
+from motor.motor_asyncio import AsyncIOMotorClient
+
 import adapters
 import sentry_sdk
 import uvicorn
 from adapters.broker import KafkaProducerClient
-from api.v1 import film_views
+from db import mongo
+from api.v1 import film_views, bookmarks
+from api.v1.rating.views import router as rating_routes
+from api.v1.reviews.views import router as reviews_routes
 from core.config import settings
 from core.logger import LOGGING
 from core.logstash import init_logstash
@@ -42,6 +47,10 @@ app = FastAPI(
 
 @app.on_event("startup")
 async def startup():
+    mongo.mongo = AsyncIOMotorClient(
+        settings.mongo_dsn,
+        uuidRepresentation='standard'
+    )
     adapters.producer = KafkaProducerClient(
         f"{settings.broker.host}:{settings.broker.port}"
     )
@@ -50,17 +59,19 @@ async def startup():
 
 @app.on_event("shutdown")
 async def shutdown():
+    await mongo.mongo.close()
     await adapters.producer.shutdown()
 
-
 app.include_router(film_views.router)
-
+app.include_router(bookmarks.router)
+app.include_router(rating_routes)
+app.include_router(reviews_routes)
 
 if __name__ == "__main__":
     uvicorn.run(
         "main:app",
         host="0.0.0.0",
-        port=settings.port,
+        port=8002,
         log_config=LOGGING,
         log_level=logging.DEBUG,
     )
