@@ -1,7 +1,0 @@
-clickhouse-driver==0.2.5
-pymongo==4.3.3
-matplotlib
-numpy
-asyncpg
-motor==3.1.1
-aiocache
