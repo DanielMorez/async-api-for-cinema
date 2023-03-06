@@ -1,0 +1,1004 @@
+{
+  "users": [
+    {
+      "id": "f6b04881-c4e8-432e-9a32-ef21fc642b90",
+      "first_name": "Sophie",
+      "last_name": "Kelly",
+      "email": "sophie.kelly@example.com",
+      "promo_agree": false,
+      "category": "active",
+      "films_month_count": 7,
+      "favourite_genre": "\u0434\u043e\u043a\u0443\u043c\u0435\u043d\u0442\u0430\u043b\u044c\u043d\u044b\u0439"
+    },
+    {
+      "id": "02ba8560-d3c4-41c0-b3ef-daba1598459e",
+      "first_name": "Morris",
+      "last_name": "Sullivan",
+      "email": "morris.sullivan@example.com",
+      "promo_agree": true,
+      "category": "active",
+      "films_month_count": 1,
+      "favourite_genre": "\u0430\u043d\u0438\u043c\u0435"
+    },
+    {
+      "id": "e81d11b5-2ed7-48c7-bf39-afa5e0e46e72",
+      "first_name": "Lauren",
+      "last_name": "Rhodes",
+      "email": "lauren.rhodes@example.com",
+      "promo_agree": true,
+      "category": "active",
+      "films_month_count": 0,
+      "favourite_genre": "\u0431\u0438\u043e\u0433\u0440\u0430\u0444\u0438\u0447\u0435\u0441\u043a\u0438\u0439"
+    },
+    {
+      "id": "bd047e64-704f-4087-9c8c-0c2d57fa53fd",
+      "first_name": "Sandra",
+      "last_name": "Jensen",
+      "email": "sandra.jensen@example.com",
+      "promo_agree": false,
+      "category": "active",
+      "films_month_count": 4,
+      "favourite_genre": "\u0434\u043e\u043a\u0443\u043c\u0435\u043d\u0442\u0430\u043b\u044c\u043d\u044b\u0439"
+    },
+    {
+      "id": "7279cc5a-2601-4059-bcbc-9e3e6aa63767",
+      "first_name": "Margie",
+      "last_name": "Burton",
+      "email": "margie.burton@example.com",
+      "promo_agree": true,
+      "category": "active",
+      "films_month_count": 7,
+      "favourite_genre": "\u0431\u043e\u0435\u0432\u0438\u043a"
+    },
+    {
+      "id": "894cd492-a3bc-424c-895f-1f2772074304",
+      "first_name": "Brianna",
+      "last_name": "Black",
+      "email": "brianna.black@example.com",
+      "promo_agree": true,
+      "category": "active",
+      "films_month_count": 3,
+      "favourite_genre": "\u0431\u0438\u043e\u0433\u0440\u0430\u0444\u0438\u0447\u0435\u0441\u043a\u0438\u0439"
+    },
+    {
+      "id": "6c88ad4d-a9f7-440f-ba22-45d00c41a072",
+      "first_name": "Stephanie",
+      "last_name": "Prescott",
+      "email": "stephanie.prescott@example.com",
+      "promo_agree": false,
+      "category": "active",
+      "films_month_count": 3,
+      "favourite_genre": "\u0431\u043e\u0435\u0432\u0438\u043a"
+    },
+    {
+      "id": "8509b63e-aceb-431f-9008-665ffff772d0",
+      "first_name": "Chester",
+      "last_name": "Garza",
+      "email": "chester.garza@example.com",
+      "promo_agree": false,
+      "category": "active",
+      "films_month_count": 3,
+      "favourite_genre": "\u0434\u043e\u043a\u0443\u043c\u0435\u043d\u0442\u0430\u043b\u044c\u043d\u044b\u0439"
+    },
+    {
+      "id": "581defac-e938-44f5-971a-00db5c4031df",
+      "first_name": "Sergio",
+      "last_name": "Oliver",
+      "email": "sergio.oliver@example.com",
+      "promo_agree": true,
+      "category": "active",
+      "films_month_count": 4,
+      "favourite_genre": "\u0434\u0435\u0442\u0435\u043a\u0442\u0438\u0432"
+    },
+    {
+      "id": "80fd41eb-9a85-4995-a127-9c12c7a2493f",
+      "first_name": "Peter",
+      "last_name": "Lambert",
+      "email": "peter.lambert@example.com",
+      "promo_agree": true,
+      "category": "active",
+      "films_month_count": 0,
+      "favourite_genre": "\u0434\u043e\u043a\u0443\u043c\u0435\u043d\u0442\u0430\u043b\u044c\u043d\u044b\u0439"
+    },
+    {
+      "id": "8fb43a79-2513-4f0c-a0c3-94801d9e5ac9",
+      "first_name": "Bob",
+      "last_name": "Owens",
+      "email": "bob.owens@example.com",
+      "promo_agree": false,
+      "category": "inactive",
+      "films_month_count": 10,
+      "favourite_genre": "\u0434\u0435\u0442\u0441\u043a\u0438\u0439"
+    },
+    {
+      "id": "868c3180-3de9-4d49-84af-0663082cf1c8",
+      "first_name": "Arthur",
+      "last_name": "Fowler",
+      "email": "arthur.fowler@example.com",
+      "promo_agree": false,
+      "category": "active",
+      "films_month_count": 2,
+      "favourite_genre": "\u0432\u043e\u0435\u043d\u043d\u044b\u0439"
+    },
+    {
+      "id": "39275483-d542-400a-bb7c-6aefa15fbee6",
+      "first_name": "Jason",
+      "last_name": "Meyer",
+      "email": "jason.meyer@example.com",
+      "promo_agree": true,
+      "category": "active",
+      "films_month_count": 4,
+      "favourite_genre": "\u0431\u043e\u0435\u0432\u0438\u043a"
+    },
+    {
+      "id": "ecbe998f-3781-46d6-976b-75089703270e",
+      "first_name": "Carl",
+      "last_name": "Beck",
+      "email": "carl.beck@example.com",
+      "promo_agree": true,
+      "category": "active",
+      "films_month_count": 5,
+      "favourite_genre": "\u0434\u0435\u0442\u0441\u043a\u0438\u0439"
+    },
+    {
+      "id": "e439bd5d-8f8d-4ad7-88c5-6b465bb86714",
+      "first_name": "Harper",
+      "last_name": "Schmidt",
+      "email": "harper.schmidt@example.com",
+      "promo_agree": false,
+      "category": "active",
+      "films_month_count": 12,
+      "favourite_genre": "\u0434\u043e\u043a\u0443\u043c\u0435\u043d\u0442\u0430\u043b\u044c\u043d\u044b\u0439"
+    },
+    {
+      "id": "6b12d1ac-ae43-426c-9222-f83abece3c83",
+      "first_name": "Ivan",
+      "last_name": "Oliver",
+      "email": "ivan.oliver@example.com",
+      "promo_agree": false,
+      "category": "active",
+      "films_month_count": 0,
+      "favourite_genre": "\u0434\u043e\u043a\u0443\u043c\u0435\u043d\u0442\u0430\u043b\u044c\u043d\u044b\u0439"
+    },
+    {
+      "id": "47277b8e-ba67-4e7d-81e3-c3f047768d26",
+      "first_name": "Arianna",
+      "last_name": "Ryan",
+      "email": "arianna.ryan@example.com",
+      "promo_agree": true,
+      "category": "active",
+      "films_month_count": 8,
+      "favourite_genre": "\u0432\u043e\u0435\u043d\u043d\u044b\u0439"
+    },
+    {
+      "id": "11cde601-89eb-4bac-a12c-890608b7f39b",
+      "first_name": "Robert",
+      "last_name": "Cox",
+      "email": "robert.cox@example.com",
+      "promo_agree": true,
+      "category": "active",
+      "films_month_count": 1,
+      "favourite_genre": "\u0434\u0435\u0442\u0441\u043a\u0438\u0439"
+    },
+    {
+      "id": "0bca6f04-f0f4-4058-a649-e5fac9cb87f3",
+      "first_name": "Carmen",
+      "last_name": "Jenkins",
+      "email": "carmen.jenkins@example.com",
+      "promo_agree": false,
+      "category": "active",
+      "films_month_count": 2,
+      "favourite_genre": "\u0432\u043e\u0435\u043d\u043d\u044b\u0439"
+    },
+    {
+      "id": "4ff81054-3dec-4efa-a05a-58ef21f0e8c2",
+      "first_name": "Ella",
+      "last_name": "Bailey",
+      "email": "ella.bailey@example.com",
+      "promo_agree": true,
+      "category": "active",
+      "films_month_count": 3,
+      "favourite_genre": "\u0431\u043e\u0435\u0432\u0438\u043a"
+    },
+    {
+      "id": "fa3907d7-38f5-47ea-b58d-97378191eb67",
+      "first_name": "Wallace",
+      "last_name": "Payne",
+      "email": "wallace.payne@example.com",
+      "promo_agree": false,
+      "category": "active",
+      "films_month_count": 14,
+      "favourite_genre": "\u0430\u043d\u0438\u043c\u0435"
+    },
+    {
+      "id": "142a0b7a-d713-4182-81ed-4ef08ea186a0",
+      "first_name": "Lee",
+      "last_name": "Young",
+      "email": "lee.young@example.com",
+      "promo_agree": true,
+      "category": "active",
+      "films_month_count": 13,
+      "favourite_genre": "\u0434\u0435\u0442\u0435\u043a\u0442\u0438\u0432"
+    },
+    {
+      "id": "ce816e86-f107-4cf2-9400-adbf83f1f711",
+      "first_name": "Clarence",
+      "last_name": "Hunter",
+      "email": "clarence.hunter@example.com",
+      "promo_agree": true,
+      "category": "active",
+      "films_month_count": 3,
+      "favourite_genre": "\u0432\u0435\u0441\u0442\u0435\u0440\u043d"
+    },
+    {
+      "id": "562649b2-6b57-4f00-81cf-b5af1f7f71a8",
+      "first_name": "Melinda",
+      "last_name": "Porter",
+      "email": "melinda.porter@example.com",
+      "promo_agree": true,
+      "category": "active",
+      "films_month_count": 11,
+      "favourite_genre": "\u0434\u043e\u043a\u0443\u043c\u0435\u043d\u0442\u0430\u043b\u044c\u043d\u044b\u0439"
+    },
+    {
+      "id": "63c2f2d0-07dd-43c4-9948-1b2b97f8dc5c",
+      "first_name": "Martin",
+      "last_name": "Freeman",
+      "email": "martin.freeman@example.com",
+      "promo_agree": false,
+      "category": "active",
+      "films_month_count": 4,
+      "favourite_genre": "\u0431\u043e\u0435\u0432\u0438\u043a"
+    },
+    {
+      "id": "355d7bae-4b26-4a50-9892-aef97303bbe3",
+      "first_name": "Tim",
+      "last_name": "Shelton",
+      "email": "tim.shelton@example.com",
+      "promo_agree": true,
+      "category": "inactive",
+      "films_month_count": 9,
+      "favourite_genre": "\u0431\u043e\u0435\u0432\u0438\u043a"
+    },
+    {
+      "id": "4fc22605-a9c6-48a9-80ea-f3ce6cdfb11d",
+      "first_name": "Tracy",
+      "last_name": "Matthews",
+      "email": "tracy.matthews@example.com",
+      "promo_agree": true,
+      "category": "active",
+      "films_month_count": 14,
+      "favourite_genre": "\u0431\u043e\u0435\u0432\u0438\u043a"
+    },
+    {
+      "id": "e1781467-d7ce-452d-bcd3-2797a332c54f",
+      "first_name": "Byron",
+      "last_name": "Edwards",
+      "email": "byron.edwards@example.com",
+      "promo_agree": true,
+      "category": "inactive",
+      "films_month_count": 9,
+      "favourite_genre": "\u0432\u0435\u0441\u0442\u0435\u0440\u043d"
+    },
+    {
+      "id": "71b82a2b-38d8-4be5-a2e9-cd6a659346b3",
+      "first_name": "Cassandra",
+      "last_name": "Mccoy",
+      "email": "cassandra.mccoy@example.com",
+      "promo_agree": false,
+      "category": "active",
+      "films_month_count": 4,
+      "favourite_genre": "\u0432\u043e\u0435\u043d\u043d\u044b\u0439"
+    },
+    {
+      "id": "230b942f-d2e7-492c-b7db-2489038f8390",
+      "first_name": "Louise",
+      "last_name": "Rodriguez",
+      "email": "louise.rodriguez@example.com",
+      "promo_agree": false,
+      "category": "active",
+      "films_month_count": 3,
+      "favourite_genre": "\u0434\u0435\u0442\u0441\u043a\u0438\u0439"
+    },
+    {
+      "id": "82a19e6b-8309-4e72-b161-4d258e0a0637",
+      "first_name": "Wyatt",
+      "last_name": "Hamilton",
+      "email": "wyatt.hamilton@example.com",
+      "promo_agree": true,
+      "category": "active",
+      "films_month_count": 11,
+      "favourite_genre": "\u0430\u043d\u0438\u043c\u0435"
+    },
+    {
+      "id": "c3ff34a7-a209-4302-bdf3-ce77b79d2b76",
+      "first_name": "Enrique",
+      "last_name": "Welch",
+      "email": "enrique.welch@example.com",
+      "promo_agree": true,
+      "category": "active",
+      "films_month_count": 5,
+      "favourite_genre": "\u0432\u043e\u0435\u043d\u043d\u044b\u0439"
+    },
+    {
+      "id": "6ab9a609-3d68-42d6-8b23-2fb5df932051",
+      "first_name": "Marion",
+      "last_name": "Hart",
+      "email": "marion.hart@example.com",
+      "promo_agree": true,
+      "category": "active",
+      "films_month_count": 3,
+      "favourite_genre": "\u0434\u0435\u0442\u0435\u043a\u0442\u0438\u0432"
+    },
+    {
+      "id": "f402a707-5c7e-4ca5-8357-139a9502267e",
+      "first_name": "Brayden",
+      "last_name": "Lynch",
+      "email": "brayden.lynch@example.com",
+      "promo_agree": false,
+      "category": "inactive",
+      "films_month_count": 7,
+      "favourite_genre": "\u0432\u0435\u0441\u0442\u0435\u0440\u043d"
+    },
+    {
+      "id": "1c5ab818-c7d8-431a-b1bb-a835815d8819",
+      "first_name": "William",
+      "last_name": "Fox",
+      "email": "william.fox@example.com",
+      "promo_agree": true,
+      "category": "active",
+      "films_month_count": 13,
+      "favourite_genre": "\u0434\u0435\u0442\u0441\u043a\u0438\u0439"
+    },
+    {
+      "id": "bbe7f9ef-c700-4900-93e3-df1312017342",
+      "first_name": "Peggy",
+      "last_name": "Parker",
+      "email": "peggy.parker@example.com",
+      "promo_agree": false,
+      "category": "active",
+      "films_month_count": 12,
+      "favourite_genre": "\u0430\u043d\u0438\u043c\u0435"
+    },
+    {
+      "id": "856932cb-3dfb-4f2f-bc5c-5d2d2674a572",
+      "first_name": "Felicia",
+      "last_name": "Harvey",
+      "email": "felicia.harvey@example.com",
+      "promo_agree": false,
+      "category": "active",
+      "films_month_count": 10,
+      "favourite_genre": "\u0432\u0435\u0441\u0442\u0435\u0440\u043d"
+    },
+    {
+      "id": "be3a0252-9cc5-4cea-b878-b0cb3d54aabe",
+      "first_name": "Becky",
+      "last_name": "Patterson",
+      "email": "becky.patterson@example.com",
+      "promo_agree": true,
+      "category": "active",
+      "films_month_count": 9,
+      "favourite_genre": "\u0434\u043e\u043a\u0443\u043c\u0435\u043d\u0442\u0430\u043b\u044c\u043d\u044b\u0439"
+    },
+    {
+      "id": "12fa6deb-b948-4006-91e9-3d4a32fe7d77",
+      "first_name": "Jonathan",
+      "last_name": "Walker",
+      "email": "jonathan.walker@example.com",
+      "promo_agree": false,
+      "category": "active",
+      "films_month_count": 13,
+      "favourite_genre": "\u0434\u043e\u043a\u0443\u043c\u0435\u043d\u0442\u0430\u043b\u044c\u043d\u044b\u0439"
+    },
+    {
+      "id": "ed18b56b-f947-4000-86e6-fc81c886d831",
+      "first_name": "Oscar",
+      "last_name": "Davidson",
+      "email": "oscar.davidson@example.com",
+      "promo_agree": false,
+      "category": "active",
+      "films_month_count": 0,
+      "favourite_genre": "\u0430\u043d\u0438\u043c\u0435"
+    },
+    {
+      "id": "99d7d3f5-1373-4160-ab12-092d3a1932eb",
+      "first_name": "Allen",
+      "last_name": "Meyer",
+      "email": "allen.meyer@example.com",
+      "promo_agree": true,
+      "category": "active",
+      "films_month_count": 11,
+      "favourite_genre": "\u0431\u0438\u043e\u0433\u0440\u0430\u0444\u0438\u0447\u0435\u0441\u043a\u0438\u0439"
+    },
+    {
+      "id": "df97cd33-8dba-41ce-8028-d0fd1c87bafb",
+      "first_name": "Virgil",
+      "last_name": "Davis",
+      "email": "virgil.davis@example.com",
+      "promo_agree": true,
+      "category": "active",
+      "films_month_count": 1,
+      "favourite_genre": "\u0431\u043e\u0435\u0432\u0438\u043a"
+    },
+    {
+      "id": "520f27e4-de05-4be9-b0aa-56ed4a3e48fa",
+      "first_name": "Tamara",
+      "last_name": "Gray",
+      "email": "tamara.gray@example.com",
+      "promo_agree": true,
+      "category": "active",
+      "films_month_count": 13,
+      "favourite_genre": "\u0430\u043d\u0438\u043c\u0435"
+    },
+    {
+      "id": "f4ae134e-3ff5-468e-b08b-7409ba4beec7",
+      "first_name": "Frances",
+      "last_name": "Walters",
+      "email": "frances.walters@example.com",
+      "promo_agree": true,
+      "category": "inactive",
+      "films_month_count": 8,
+      "favourite_genre": "\u0431\u0438\u043e\u0433\u0440\u0430\u0444\u0438\u0447\u0435\u0441\u043a\u0438\u0439"
+    },
+    {
+      "id": "cd36380d-63dd-4e2a-86e4-11a87597739b",
+      "first_name": "Gail",
+      "last_name": "Stanley",
+      "email": "gail.stanley@example.com",
+      "promo_agree": false,
+      "category": "active",
+      "films_month_count": 9,
+      "favourite_genre": "\u0432\u043e\u0435\u043d\u043d\u044b\u0439"
+    },
+    {
+      "id": "afa76384-340e-4bb3-906a-2d8c5ababc5b",
+      "first_name": "Leona",
+      "last_name": "Evans",
+      "email": "leona.evans@example.com",
+      "promo_agree": false,
+      "category": "active",
+      "films_month_count": 9,
+      "favourite_genre": "\u0434\u0435\u0442\u0441\u043a\u0438\u0439"
+    },
+    {
+      "id": "aa1e7065-a44e-41d8-8557-0d6b60519a40",
+      "first_name": "Alfredo",
+      "last_name": "Franklin",
+      "email": "alfredo.franklin@example.com",
+      "promo_agree": true,
+      "category": "active",
+      "films_month_count": 11,
+      "favourite_genre": "\u0430\u043d\u0438\u043c\u0435"
+    },
+    {
+      "id": "c9ee1530-aa65-4621-91c6-4916db8f7c8c",
+      "first_name": "Ruben",
+      "last_name": "Richardson",
+      "email": "ruben.richardson@example.com",
+      "promo_agree": false,
+      "category": "active",
+      "films_month_count": 9,
+      "favourite_genre": "\u0432\u0435\u0441\u0442\u0435\u0440\u043d"
+    },
+    {
+      "id": "18e84b22-2a58-4040-a78a-2153c0a53de6",
+      "first_name": "Tamara",
+      "last_name": "Williams",
+      "email": "tamara.williams@example.com",
+      "promo_agree": false,
+      "category": "active",
+      "films_month_count": 9,
+      "favourite_genre": "\u0432\u043e\u0435\u043d\u043d\u044b\u0439"
+    },
+    {
+      "id": "358dde25-e923-4ccd-ab2c-6a10b0fcce56",
+      "first_name": "Freddie",
+      "last_name": "Barnett",
+      "email": "freddie.barnett@example.com",
+      "promo_agree": false,
+      "category": "active",
+      "films_month_count": 12,
+      "favourite_genre": "\u0432\u0435\u0441\u0442\u0435\u0440\u043d"
+    },
+    {
+      "id": "58de2ab2-1381-47ba-bfc9-602b73afb3dd",
+      "first_name": "Frank",
+      "last_name": "Fowler",
+      "email": "frank.fowler@example.com",
+      "promo_agree": true,
+      "category": "active",
+      "films_month_count": 0,
+      "favourite_genre": "\u0434\u0435\u0442\u0435\u043a\u0442\u0438\u0432"
+    },
+    {
+      "id": "51717873-3414-4fc8-a842-e35019cb9f13",
+      "first_name": "Ella",
+      "last_name": "Perez",
+      "email": "ella.perez@example.com",
+      "promo_agree": false,
+      "category": "active",
+      "films_month_count": 5,
+      "favourite_genre": "\u0434\u0435\u0442\u0441\u043a\u0438\u0439"
+    },
+    {
+      "id": "17b948dc-f18b-499f-991b-a385ef3cbb3b",
+      "first_name": "Annette",
+      "last_name": "Peterson",
+      "email": "annette.peterson@example.com",
+      "promo_agree": false,
+      "category": "active",
+      "films_month_count": 12,
+      "favourite_genre": "\u0434\u0435\u0442\u0441\u043a\u0438\u0439"
+    },
+    {
+      "id": "9d7a5195-d6ef-42a1-aebf-d2b3aca7332e",
+      "first_name": "Roberto",
+      "last_name": "Simmmons",
+      "email": "roberto.simmmons@example.com",
+      "promo_agree": false,
+      "category": "active",
+      "films_month_count": 10,
+      "favourite_genre": "\u0432\u043e\u0435\u043d\u043d\u044b\u0439"
+    },
+    {
+      "id": "913c8708-8eee-479c-a096-75de86640f17",
+      "first_name": "Ruby",
+      "last_name": "Owens",
+      "email": "ruby.owens@example.com",
+      "promo_agree": false,
+      "category": "active",
+      "films_month_count": 7,
+      "favourite_genre": "\u0431\u043e\u0435\u0432\u0438\u043a"
+    },
+    {
+      "id": "510be738-de3f-4f11-ad26-d4766fe0482e",
+      "first_name": "Cassandra",
+      "last_name": "Hart",
+      "email": "cassandra.hart@example.com",
+      "promo_agree": false,
+      "category": "active",
+      "films_month_count": 8,
+      "favourite_genre": "\u0434\u043e\u043a\u0443\u043c\u0435\u043d\u0442\u0430\u043b\u044c\u043d\u044b\u0439"
+    },
+    {
+      "id": "a09ad191-fb60-4f64-8e6b-82c1e4a63a99",
+      "first_name": "Alfred",
+      "last_name": "Fernandez",
+      "email": "alfred.fernandez@example.com",
+      "promo_agree": true,
+      "category": "active",
+      "films_month_count": 3,
+      "favourite_genre": "\u0431\u043e\u0435\u0432\u0438\u043a"
+    },
+    {
+      "id": "31b004a1-05fe-4b44-9e80-0013da6d0e2c",
+      "first_name": "Dawn",
+      "last_name": "Carroll",
+      "email": "dawn.carroll@example.com",
+      "promo_agree": true,
+      "category": "inactive",
+      "films_month_count": 5,
+      "favourite_genre": "\u0431\u043e\u0435\u0432\u0438\u043a"
+    },
+    {
+      "id": "874539f2-3bcc-4955-be2c-1cff9b2b6e31",
+      "first_name": "Dave",
+      "last_name": "Kelley",
+      "email": "dave.kelley@example.com",
+      "promo_agree": false,
+      "category": "active",
+      "films_month_count": 11,
+      "favourite_genre": "\u0434\u0435\u0442\u0441\u043a\u0438\u0439"
+    },
+    {
+      "id": "91a827ed-2d7d-4f3c-b19b-0fbd34231f8d",
+      "first_name": "Sue",
+      "last_name": "Stevens",
+      "email": "sue.stevens@example.com",
+      "promo_agree": true,
+      "category": "active",
+      "films_month_count": 11,
+      "favourite_genre": "\u0434\u0435\u0442\u0441\u043a\u0438\u0439"
+    },
+    {
+      "id": "dc1e6ac7-1d8a-4816-8ac2-57e5a266f8d5",
+      "first_name": "Elmer",
+      "last_name": "Cole",
+      "email": "elmer.cole@example.com",
+      "promo_agree": false,
+      "category": "active",
+      "films_month_count": 14,
+      "favourite_genre": "\u0431\u0438\u043e\u0433\u0440\u0430\u0444\u0438\u0447\u0435\u0441\u043a\u0438\u0439"
+    },
+    {
+      "id": "791abc18-6455-40ad-9142-9cd336d15372",
+      "first_name": "Gail",
+      "last_name": "Neal",
+      "email": "gail.neal@example.com",
+      "promo_agree": true,
+      "category": "active",
+      "films_month_count": 1,
+      "favourite_genre": "\u0432\u0435\u0441\u0442\u0435\u0440\u043d"
+    },
+    {
+      "id": "1f050c35-10c1-476b-9f09-ea6317cc94cd",
+      "first_name": "Tonya",
+      "last_name": "Mitchell",
+      "email": "tonya.mitchell@example.com",
+      "promo_agree": true,
+      "category": "active",
+      "films_month_count": 7,
+      "favourite_genre": "\u0431\u043e\u0435\u0432\u0438\u043a"
+    },
+    {
+      "id": "c6db3df4-f04f-4924-a2d5-2091b52c0c9b",
+      "first_name": "Kurt",
+      "last_name": "Black",
+      "email": "kurt.black@example.com",
+      "promo_agree": true,
+      "category": "active",
+      "films_month_count": 4,
+      "favourite_genre": "\u0434\u0435\u0442\u0435\u043a\u0442\u0438\u0432"
+    },
+    {
+      "id": "540ef534-ff75-4665-8995-5b875eb7e464",
+      "first_name": "Scott",
+      "last_name": "Stone",
+      "email": "scott.stone@example.com",
+      "promo_agree": true,
+      "category": "active",
+      "films_month_count": 3,
+      "favourite_genre": "\u0431\u0438\u043e\u0433\u0440\u0430\u0444\u0438\u0447\u0435\u0441\u043a\u0438\u0439"
+    },
+    {
+      "id": "ac72c323-7e2e-418a-8267-e9eda3fa4d4c",
+      "first_name": "Ernest",
+      "last_name": "Kelly",
+      "email": "ernest.kelly@example.com",
+      "promo_agree": true,
+      "category": "active",
+      "films_month_count": 2,
+      "favourite_genre": "\u0434\u043e\u043a\u0443\u043c\u0435\u043d\u0442\u0430\u043b\u044c\u043d\u044b\u0439"
+    },
+    {
+      "id": "60c47605-92c1-4821-bbc2-850e2c99944e",
+      "first_name": "Dustin",
+      "last_name": "White",
+      "email": "dustin.white@example.com",
+      "promo_agree": false,
+      "category": "active",
+      "films_month_count": 0,
+      "favourite_genre": "\u0432\u0435\u0441\u0442\u0435\u0440\u043d"
+    },
+    {
+      "id": "67c8a752-9ad7-4bdd-a5b0-fcb225ad3816",
+      "first_name": "Dwayne",
+      "last_name": "Dixon",
+      "email": "dwayne.dixon@example.com",
+      "promo_agree": true,
+      "category": "inactive",
+      "films_month_count": 7,
+      "favourite_genre": "\u0434\u043e\u043a\u0443\u043c\u0435\u043d\u0442\u0430\u043b\u044c\u043d\u044b\u0439"
+    },
+    {
+      "id": "f38309af-cd7c-48d1-9521-a81074cfd90e",
+      "first_name": "Ruben",
+      "last_name": "Mason",
+      "email": "ruben.mason@example.com",
+      "promo_agree": true,
+      "category": "active",
+      "films_month_count": 14,
+      "favourite_genre": "\u0431\u043e\u0435\u0432\u0438\u043a"
+    },
+    {
+      "id": "b1b665db-32e7-4894-9037-a962e2fa22d4",
+      "first_name": "Fernando",
+      "last_name": "Butler",
+      "email": "fernando.butler@example.com",
+      "promo_agree": false,
+      "category": "active",
+      "films_month_count": 2,
+      "favourite_genre": "\u0434\u0435\u0442\u0435\u043a\u0442\u0438\u0432"
+    },
+    {
+      "id": "1e04ba39-92f2-4ebc-8221-36352df3fea6",
+      "first_name": "Christopher",
+      "last_name": "Carroll",
+      "email": "christopher.carroll@example.com",
+      "promo_agree": true,
+      "category": "active",
+      "films_month_count": 8,
+      "favourite_genre": "\u0434\u0435\u0442\u0435\u043a\u0442\u0438\u0432"
+    },
+    {
+      "id": "19f801b3-eaa8-4547-ad24-b4630c91c795",
+      "first_name": "Nelson",
+      "last_name": "Peters",
+      "email": "nelson.peters@example.com",
+      "promo_agree": true,
+      "category": "inactive",
+      "films_month_count": 4,
+      "favourite_genre": "\u0430\u043d\u0438\u043c\u0435"
+    },
+    {
+      "id": "cfca6381-10be-4175-a970-0fe6d5083bc7",
+      "first_name": "Cameron",
+      "last_name": "Moore",
+      "email": "cameron.moore@example.com",
+      "promo_agree": true,
+      "category": "active",
+      "films_month_count": 1,
+      "favourite_genre": "\u0432\u043e\u0435\u043d\u043d\u044b\u0439"
+    },
+    {
+      "id": "4f029e8a-0abc-44b1-b3d2-4f09f8b0c72a",
+      "first_name": "Howard",
+      "last_name": "Oliver",
+      "email": "howard.oliver@example.com",
+      "promo_agree": false,
+      "category": "active",
+      "films_month_count": 7,
+      "favourite_genre": "\u0434\u0435\u0442\u0441\u043a\u0438\u0439"
+    },
+    {
+      "id": "0c4df8dd-ad7d-45d7-8c8a-2a2e66722e84",
+      "first_name": "Vanessa",
+      "last_name": "Peck",
+      "email": "vanessa.peck@example.com",
+      "promo_agree": false,
+      "category": "active",
+      "films_month_count": 11,
+      "favourite_genre": "\u0434\u0435\u0442\u0435\u043a\u0442\u0438\u0432"
+    },
+    {
+      "id": "8b84ea0f-c30d-40e0-a59e-37c95c679891",
+      "first_name": "Sherri",
+      "last_name": "Kelley",
+      "email": "sherri.kelley@example.com",
+      "promo_agree": false,
+      "category": "active",
+      "films_month_count": 6,
+      "favourite_genre": "\u0431\u0438\u043e\u0433\u0440\u0430\u0444\u0438\u0447\u0435\u0441\u043a\u0438\u0439"
+    },
+    {
+      "id": "d8930b47-eb87-4683-930c-738388ab58bf",
+      "first_name": "Chloe",
+      "last_name": "Jordan",
+      "email": "chloe.jordan@example.com",
+      "promo_agree": false,
+      "category": "active",
+      "films_month_count": 8,
+      "favourite_genre": "\u0434\u0435\u0442\u0441\u043a\u0438\u0439"
+    },
+    {
+      "id": "477b3c60-11f4-4899-8377-995e56633074",
+      "first_name": "Candice",
+      "last_name": "Lynch",
+      "email": "candice.lynch@example.com",
+      "promo_agree": true,
+      "category": "active",
+      "films_month_count": 0,
+      "favourite_genre": "\u0432\u043e\u0435\u043d\u043d\u044b\u0439"
+    },
+    {
+      "id": "247e288f-807b-4e29-866f-8c895892eb3f",
+      "first_name": "Meghan",
+      "last_name": "Alvarez",
+      "email": "meghan.alvarez@example.com",
+      "promo_agree": true,
+      "category": "active",
+      "films_month_count": 8,
+      "favourite_genre": "\u0434\u043e\u043a\u0443\u043c\u0435\u043d\u0442\u0430\u043b\u044c\u043d\u044b\u0439"
+    },
+    {
+      "id": "f5b8cca5-abb6-4af4-b1ba-ad6a9e0b3bd0",
+      "first_name": "Deanna",
+      "last_name": "Mccoy",
+      "email": "deanna.mccoy@example.com",
+      "promo_agree": true,
+      "category": "active",
+      "films_month_count": 2,
+      "favourite_genre": "\u0430\u043d\u0438\u043c\u0435"
+    },
+    {
+      "id": "0ec1e9d0-bd39-48d3-9949-8d1cf7bae565",
+      "first_name": "Howard",
+      "last_name": "Spencer",
+      "email": "howard.spencer@example.com",
+      "promo_agree": true,
+      "category": "active",
+      "films_month_count": 2,
+      "favourite_genre": "\u0434\u0435\u0442\u0435\u043a\u0442\u0438\u0432"
+    },
+    {
+      "id": "d938cee1-67f7-4db1-a80f-ad71ed306fd6",
+      "first_name": "Frank",
+      "last_name": "Sutton",
+      "email": "frank.sutton@example.com",
+      "promo_agree": true,
+      "category": "active",
+      "films_month_count": 6,
+      "favourite_genre": "\u0434\u0435\u0442\u0441\u043a\u0438\u0439"
+    },
+    {
+      "id": "8faf46a9-6dfc-49da-a984-b0a2c67e374f",
+      "first_name": "Dana",
+      "last_name": "Wilson",
+      "email": "dana.wilson@example.com",
+      "promo_agree": false,
+      "category": "active",
+      "films_month_count": 14,
+      "favourite_genre": "\u0434\u0435\u0442\u0441\u043a\u0438\u0439"
+    },
+    {
+      "id": "68e36a4f-be36-403c-bbe2-c0da3b4a1bed",
+      "first_name": "Gail",
+      "last_name": "Gordon",
+      "email": "gail.gordon@example.com",
+      "promo_agree": true,
+      "category": "active",
+      "films_month_count": 11,
+      "favourite_genre": "\u0434\u0435\u0442\u0435\u043a\u0442\u0438\u0432"
+    },
+    {
+      "id": "1aa34f24-c963-417b-83be-62a39b62c9ee",
+      "first_name": "Marion",
+      "last_name": "Gordon",
+      "email": "marion.gordon@example.com",
+      "promo_agree": true,
+      "category": "active",
+      "films_month_count": 0,
+      "favourite_genre": "\u0430\u043d\u0438\u043c\u0435"
+    },
+    {
+      "id": "077305eb-9ec9-4051-b239-4b441bee9f1e",
+      "first_name": "Patrick",
+      "last_name": "Reed",
+      "email": "patrick.reed@example.com",
+      "promo_agree": true,
+      "category": "active",
+      "films_month_count": 8,
+      "favourite_genre": "\u0434\u043e\u043a\u0443\u043c\u0435\u043d\u0442\u0430\u043b\u044c\u043d\u044b\u0439"
+    },
+    {
+      "id": "bb5018be-edb7-44e7-a09f-cd8e3fdbd037",
+      "first_name": "Brandie",
+      "last_name": "Watts",
+      "email": "brandie.watts@example.com",
+      "promo_agree": true,
+      "category": "active",
+      "films_month_count": 12,
+      "favourite_genre": "\u0432\u0435\u0441\u0442\u0435\u0440\u043d"
+    },
+    {
+      "id": "285958b5-0435-4d30-80d4-73f687601fe9",
+      "first_name": "Alberto",
+      "last_name": "Coleman",
+      "email": "alberto.coleman@example.com",
+      "promo_agree": false,
+      "category": "active",
+      "films_month_count": 6,
+      "favourite_genre": "\u0432\u0435\u0441\u0442\u0435\u0440\u043d"
+    },
+    {
+      "id": "81fab0ef-ff6e-4b0f-a246-4d10f0c150d5",
+      "first_name": "John",
+      "last_name": "Armstrong",
+      "email": "john.armstrong@example.com",
+      "promo_agree": true,
+      "category": "active",
+      "films_month_count": 0,
+      "favourite_genre": "\u0434\u0435\u0442\u0435\u043a\u0442\u0438\u0432"
+    },
+    {
+      "id": "0d22bb3b-c85a-49ac-9d49-27a02d2daeb3",
+      "first_name": "Darren",
+      "last_name": "Frazier",
+      "email": "darren.frazier@example.com",
+      "promo_agree": false,
+      "category": "active",
+      "films_month_count": 12,
+      "favourite_genre": "\u0431\u0438\u043e\u0433\u0440\u0430\u0444\u0438\u0447\u0435\u0441\u043a\u0438\u0439"
+    },
+    {
+      "id": "30a86f02-e98d-4f52-9b5d-e04d05e291a7",
+      "first_name": "Guy",
+      "last_name": "Terry",
+      "email": "guy.terry@example.com",
+      "promo_agree": true,
+      "category": "active",
+      "films_month_count": 11,
+      "favourite_genre": "\u0431\u043e\u0435\u0432\u0438\u043a"
+    },
+    {
+      "id": "fd7365c2-23f1-4976-b53b-c766b3c61067",
+      "first_name": "Wyatt",
+      "last_name": "Perry",
+      "email": "wyatt.perry@example.com",
+      "promo_agree": false,
+      "category": "inactive",
+      "films_month_count": 14,
+      "favourite_genre": "\u0434\u0435\u0442\u0435\u043a\u0442\u0438\u0432"
+    },
+    {
+      "id": "066198b0-5761-4418-957a-2223ab2a1b9c",
+      "first_name": "Elijah",
+      "last_name": "Morales",
+      "email": "elijah.morales@example.com",
+      "promo_agree": true,
+      "category": "active",
+      "films_month_count": 10,
+      "favourite_genre": "\u0430\u043d\u0438\u043c\u0435"
+    },
+    {
+      "id": "2408779a-1cbc-490b-8ce5-39c19b16ffe8",
+      "first_name": "Shane",
+      "last_name": "Miles",
+      "email": "shane.miles@example.com",
+      "promo_agree": true,
+      "category": "inactive",
+      "films_month_count": 11,
+      "favourite_genre": "\u0434\u043e\u043a\u0443\u043c\u0435\u043d\u0442\u0430\u043b\u044c\u043d\u044b\u0439"
+    },
+    {
+      "id": "2d62009e-b5cb-49f3-b42d-8b2d54cd14eb",
+      "first_name": "Alexa",
+      "last_name": "Watson",
+      "email": "alexa.watson@example.com",
+      "promo_agree": false,
+      "category": "active",
+      "films_month_count": 0,
+      "favourite_genre": "\u0431\u043e\u0435\u0432\u0438\u043a"
+    },
+    {
+      "id": "987d84ee-3fcc-40c4-bcd6-be131f5c43f8",
+      "first_name": "Riley",
+      "last_name": "Steward",
+      "email": "riley.steward@example.com",
+      "promo_agree": true,
+      "category": "active",
+      "films_month_count": 12,
+      "favourite_genre": "\u0434\u0435\u0442\u0441\u043a\u0438\u0439"
+    },
+    {
+      "id": "3fb42f5b-2a10-4c2e-865b-05d474b3f341",
+      "first_name": "Naomi",
+      "last_name": "Gonzales",
+      "email": "naomi.gonzales@example.com",
+      "promo_agree": true,
+      "category": "active",
+      "films_month_count": 4,
+      "favourite_genre": "\u0430\u043d\u0438\u043c\u0435"
+    },
+    {
+      "id": "fd9272da-d883-466d-a5c4-6701443da196",
+      "first_name": "Michele",
+      "last_name": "Flores",
+      "email": "michele.flores@example.com",
+      "promo_agree": true,
+      "category": "active",
+      "films_month_count": 13,
+      "favourite_genre": "\u0434\u0435\u0442\u0441\u043a\u0438\u0439"
+    },
+    {
+      "id": "28656ada-51af-4f58-ac7a-238ae73238d7",
+      "first_name": "Gabriel",
+      "last_name": "Shaw",
+      "email": "gabriel.shaw@example.com",
+      "promo_agree": false,
+      "category": "active",
+      "films_month_count": 10,
+      "favourite_genre": "\u0430\u043d\u0438\u043c\u0435"
+    },
+    {
+      "id": "9a5209cb-e65b-49d8-8fef-907e52e08b35",
+      "first_name": "Carmen",
+      "last_name": "West",
+      "email": "carmen.west@example.com",
+      "promo_agree": true,
+      "category": "active",
+      "films_month_count": 2,
+      "favourite_genre": "\u0434\u0435\u0442\u0435\u043a\u0442\u0438\u0432"
+    }
+  ]
+}

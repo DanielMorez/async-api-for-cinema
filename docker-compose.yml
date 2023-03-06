@@ -1,0 +1,102 @@
+version: "3.5"
+services:
+
+  admin_panel:
+    container_name: fake_netflix_notification_admin
+    build:
+      context: .
+      dockerfile: dockerfiles/admin/Dockerfile
+    env_file:
+      - .env
+    volumes:
+      - fake_netflix_notification_static:/app/static
+      - fake_netflix_notification_media:/app/media
+
+  api:
+    container_name: fake_netflix_notification_api
+    build:
+      context: .
+      dockerfile: dockerfiles/api/Dockerfile
+    ports:
+      - 8001:8000
+
+  user_service:
+    container_name: fake_netflix_user_service
+    build:
+      context: .
+      dockerfile: dockerfiles/user_service/Dockerfile
+    ports:
+      - 8002:8002
+
+  fake_user_registration_service:
+    container_name: fake_user_registration_service
+    build:
+      context: .
+      dockerfile: dockerfiles/user_service/Dockerfile
+    restart:
+      always
+    env_file:
+      - .env
+    command:
+      python auth_faker.py
+
+  scheduler:
+    container_name: fake_netflix_scheduler
+    build:
+      context: .
+      dockerfile: dockerfiles/scheduler/Dockerfile
+    restart:
+      always
+    env_file:
+      - .env
+    depends_on:
+      - user_service
+      - postgres
+      - api
+
+  worker:
+    container_name: fake_netflix_worker
+    build:
+      context: .
+      dockerfile: dockerfiles/worker/Dockerfile
+    restart:
+      always
+    env_file:
+      - .env
+    depends_on:
+      - user_service
+      - postgres
+
+  postgres:
+    image: postgres:13-alpine
+    env_file:
+      - .env
+    volumes:
+      - postgres_notification_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: fake_netflix_notification_rabbitmq
+    env_file:
+      - .env
+    ports:
+      - 5672:5672
+      - 15672:15672
+
+  nginx:
+    container_name: fake_netflix_notification_nginx
+    image: nginx:latest
+    ports:
+      - 8000:80
+    volumes:
+      - ./dockerfiles/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./dockerfiles/nginx/conf.d:/etc/nginx/conf.d
+      - fake_netflix_notification_static:/usr/share/nginx/www/static
+      - fake_netflix_notification_media:/usr/share/nginx/www/media
+
+volumes:
+  postgres_notification_data:
+  fake_netflix_notification_static:
+  fake_netflix_notification_media:

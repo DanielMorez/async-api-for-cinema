@@ -1,0 +1,13 @@
+backoff
+django
+pika
+psycopg2-binary
+python-dotenv
+pydantic
+backoff
+Jinja2
+wemake-python-styleguide
+flake8-html
+mypy
+lxml
+isort

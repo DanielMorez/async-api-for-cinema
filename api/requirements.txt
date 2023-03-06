@@ -1,0 +1,6 @@
+backoff
+fastapi
+pika
+python-dotenv
+pydantic
+uvicorn

@@ -1,0 +1,5 @@
+backoff
+django==3.2.12
+psycopg2-binary
+python-dotenv
+gunicorn

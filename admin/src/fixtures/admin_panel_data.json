@@ -1,0 +1,79 @@
+[
+  {
+    "model": "admin_panel.template",
+    "pk": 1,
+    "fields": {
+      "title": "Приветствие нового пользователя",
+      "code": "common",
+      "template": "Здравствуйте, {{ first_name }}!\r\n\r\nМы рады, что вы присоединились к числу зрителей Practix. Теперь у вас есть доступ к тысячам фильмов и сериалов на любой вкус. Главное запомнить ваш логин и пароль.",
+      "subject": "Welcome to Practix",
+      "transport": "email",
+      "created_at": "2022-02-01T14:07:36.525Z",
+      "updated_at": "2022-02-01T14:38:32.452Z"
+    }
+  },
+  {
+    "model": "admin_panel.template",
+    "pk": 2,
+    "fields": {
+      "title": "Еженедельная подборка фильмов",
+      "code": "common",
+      "template": "Здравствуйте, {{ first_name }}!\r\n\r\nВечер пятницы, а это значит что пора отдохнуть от рабочей недели. Закажите пиццу и подумайте какой фильм вам бы хотелось посмотреть. И уж если с пиццей мы вам не сможем облегчить муки выбора, то вполне справимся с фильмом.\r\n\r\nЛовите персональную подборку\r\n\r\n1. Довод\r\n2. Бегущий по лезвию 2049\r\n3. Апгрейд\r\n4. Электрические сны",
+      "subject": "Пятничная подборка фильмов",
+      "transport": "email",
+      "created_at": "2022-02-01T14:10:05.199Z",
+      "updated_at": "2022-02-01T14:38:43.573Z"
+    }
+  },
+  {
+    "model": "admin_panel.template",
+    "pk": 3,
+    "fields": {
+      "title": "Ежемесячная персональная статистика",
+      "code": "monthly_personal_statistic",
+      "template": "Здравствуйте, {{ first_name }}!\r\n\r\nЗа этот месяц вышло 13 новых фильмов и 8 сериалов. И все они есть в нашем онлайн-кинотеатре! Но что же вы больше всего смотрели в прошлом месяце?\r\n\r\nВ этом месяце вы посмотрели {{ films_month_count }} фильмов а ваш любимый жанр {{ favourite_genre }}.\r\n\r\nПоздравляем, ваше звание - Эркюль Пуаро!\r\n\r\nЛюбой позавидует вашей проницательности. Главное чтобы не пришлось расследовать убийство в поезде на самом деле.",
+      "subject": "Practix Newsletter",
+      "transport": "email",
+      "created_at": "2022-02-01T14:16:30.163Z",
+      "updated_at": "2022-02-01T14:38:40.041Z"
+    }
+  },
+  {
+    "model": "admin_panel.mailingtask",
+    "pk": 1,
+    "fields": {
+      "status": "done",
+      "is_promo": true,
+      "priority": "low",
+      "template": 2,
+      "context": {
+        "user_categories": [
+          "active"
+        ]
+      },
+      "scheduled_datetime": "2022-02-01T09:17:08Z",
+      "execution_datetime": "2022-02-01T14:29:49.427Z",
+      "created_at": "2022-02-01T14:18:36.073Z",
+      "updated_at": "2022-02-01T14:28:39.683Z"
+    }
+  },
+  {
+    "model": "admin_panel.mailingtask",
+    "pk": 2,
+    "fields": {
+      "status": "done",
+      "is_promo": true,
+      "priority": "low",
+      "template": 3,
+      "context": {
+        "user_categories": [
+          "active"
+        ]
+      },
+      "scheduled_datetime": "2022-02-01T14:27:00Z",
+      "execution_datetime": "2022-02-01T14:47:03.277Z",
+      "created_at": "2022-02-01T14:19:20.717Z",
+      "updated_at": "2022-02-01T14:28:34.340Z"
+    }
+  }
+]
