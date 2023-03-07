@@ -31,6 +31,7 @@ class Settings(BaseSettings):
     clickhouse: ClickHouseSettings
     logstash_enable: bool
     logstash: LogstashSettings
+    sentry_enable: bool
     sentry_dsn: AnyUrl = Field(None)
     mongo_dsn: MongoDsn
 
