@@ -1,5 +1,6 @@
 from uuid import UUID
 
+from http import HTTPStatus
 from bson import ObjectId
 from fastapi import HTTPException
 from motor.motor_asyncio import AsyncIOMotorClient
@@ -37,7 +38,7 @@ class MongoService(BaseService):
         rate = await collections.find_one({"film_id": film_id, "user_id": user_id})
         if rate:
             if rate["stars"] == stars:
-                raise HTTPException(status_code=400, detail="User already rated the film")
+                raise HTTPException(status_code=HTTPStatus.BAD_REQUEST, detail="User already rated the film")
             new_rate = 0
             previous_stars = rate["stars"]
             rate_id = rate.pop("_id")
@@ -68,7 +69,7 @@ class MongoService(BaseService):
         collections = self._db["user_film_rating"]
         user_rating_film: UserFilmRating = await collections.find_one({"film_id": film_id})
         if not user_rating_film:
-            raise HTTPException(status_code=400, detail="The film has not yet received user ratings")
+            raise HTTPException(status_code=HTTPStatus.BAD_REQUEST, detail="The film has not yet received user ratings")
         return user_rating_film
 
     async def add_review(self, film_id: UUID, user_id: UUID, text: str) -> str:
@@ -81,7 +82,7 @@ class MongoService(BaseService):
     async def remove_review(self, review_id: str, user_id: UUID) -> None:
         collections = self._db["reviews"]
         if not collections.find_one({"_id": review_id, "user_id": user_id}):
-            raise HTTPException(status_code=400, detail="The review does not exist")
+            raise HTTPException(status_code=HTTPStatus.BAD_REQUEST, detail="The review does not exist")
 
         await collections.delete_one({"_id": review_id})
 
