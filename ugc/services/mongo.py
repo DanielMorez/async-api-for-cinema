@@ -18,12 +18,8 @@ class MongoService(BaseService):
     async def add_bookmark(self, user_id: UUID, film_id: UUID) -> dict:
         collections = self._db["bookmarks"]
         bookmark = Bookmark(user_id=user_id, film_id=film_id).dict()
-        doc = collections.find_one(bookmark)
-        if doc:
-            raise HTTPException(status_code=400, detail="User already added the film to bookmarks")
-        bookmark["_id"] = bookmark["id"]
         del bookmark["id"]
-        await collections.insert_one(bookmark)
+        response = await collections.replace_one(bookmark, bookmark, upsert=True)
         return bookmark
 
     async def remove_bookmark(self, user_id: UUID, bookmark_id: UUID) -> None:
