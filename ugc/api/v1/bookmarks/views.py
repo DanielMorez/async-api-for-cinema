@@ -1,6 +1,6 @@
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, Request
+from fastapi import APIRouter, Depends, Request, Body
 from fastapi.security import HTTPBearer
 from fastapi_utils.cbv import cbv
 from fastapi_contrib.auth.permissions import IsAuthenticated
@@ -26,13 +26,13 @@ class BookmarkAPIView:
     service: MongoService = Depends(get_service)
 
     @router.post(
-        "/{film_id}",
+        "/",
         description="Add movie to user bookmarks",
         tags=["movie bookmarks"],
         response_model=Bookmark
     )
     async def create_bookmark(
-        self, request: Request, film_id: UUID
+        self, request: Request, film_id: UUID = Body()
     ) -> dict:
         user: User = request.user
         response = await self.service.add_bookmark(user.id, film_id)
@@ -50,10 +50,10 @@ class BookmarkAPIView:
         return response
 
     @router.delete(
-        "/{bookmark_id}",
+        "/",
         description="Delete user bookmarks",
         tags=["movie bookmarks"]
     )
-    async def remove_bookmark(self, request: Request, bookmark_id: UUID) -> None:
+    async def remove_bookmark(self, request: Request, bookmark_id: UUID = Body()) -> None:
         user: User = request.user
         await self.service.remove_bookmark(user_id=user.id, bookmark_id=bookmark_id)
