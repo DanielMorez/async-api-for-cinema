@@ -49,8 +49,8 @@ class ReviewsAPIView:
         "/{film_id}",
         description="Delete film reviews"
     )
-    async def delete_film_review(self, film_id: UUID) -> None:
-        response = await self.service.remove_review(film_id)
+    async def delete_film_review(self, request: Request, review_id: str) -> None:
+        response = await self.service.remove_review(review_id, request.user.id)
         return response
 
     @router.post(
