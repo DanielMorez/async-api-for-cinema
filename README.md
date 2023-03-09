@@ -70,7 +70,7 @@ docker-compose exec admin_panel python manage.py loaddata fixtures/admin_panel_d
 ## Подергать через Notification API
 Заходим в swagger - http://127.0.0.1:8001/docs#
 
-Посылаем ивенты
+Посылаем ивент
 
 Имитация работы воркера:
 ```json
