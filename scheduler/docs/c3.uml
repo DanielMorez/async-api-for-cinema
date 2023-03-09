@@ -6,7 +6,7 @@ package "Extract" #lightblue{
 [Component - загрузка заданий]
 }
 package "Transform" #lightblue{
-"Component - раскрыть катег. разбить"
+[Component - раскрыть катег. разбить]
 }
 package "Upload" #lightblue{
 [Component - отправить дальше]
