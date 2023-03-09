@@ -1,0 +1,31 @@
+@startuml
+database "База с заданиями"
+
+package "Scheduler" {
+package "Extract" #lightblue{
+[Component - загрузка заданий]
+}
+package "Transform" #lightblue{
+"Component - раскрыть катег. разбить"
+}
+package "Upload" #lightblue{
+[Component - отправить дальше]
+}
+}
+
+package "API" #lightgreen{
+[Software system]
+}
+package "UserService" #lightgreen{
+[Software system ]
+}
+
+'------------Связи ---------------
+[База с заданиями] --> [Extract]
+[Extract] --> [Transform]
+[Transform] --> [Upload]
+[Upload] --> [API]
+[Transform] --> [UserService]
+
+skinparam DatabaseBackgroundColor Aqua
+@enduml

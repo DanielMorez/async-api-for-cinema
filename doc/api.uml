@@ -1,0 +1,54 @@
+@startuml
+"Notificatiom Manager"
+"Users"
+package "Notification Service" {
+package "Admin panel" #lightblue{
+[Software system - делают темплайт и рассылки]
+}
+package "Postgres" #lightblue{
+database "Postgres-шаблоны и контекст сообщений"
+}
+package "Worker" #lightblue{
+[Software system]
+}
+package "Scheduler" #lightblue{
+[Software system - читает таски с Postgres]
+}
+package "Notification API" #lightblue{
+[Software system - принимает запросы переклдадывает в очередь]
+}
+package "RabbitMQ low" #lightblue{
+[RabbitMQ]
+}
+}
+package "Movie API,UGC API" #lightgreen{
+[Software system - поставщик перс.информации]
+}
+package "Sending provider" #lightgreen{
+[SMS - sms рассылки]
+[Email - почтовые рассылки]
+}
+package "User service" #lightgreen{
+[Software system - дает пользоват.информацию]
+}
+package "Auth, UGC, etc" #lightgreen{
+[Software system - генерирует события]
+}
+'------------Связи ---------------
+[Notificatiom Manager] --> [Admin panel]
+[Admin panel] --> [Postgres]
+[Worker] --> [Postgres]
+[Worker] --> [Movie API,UGC API]
+[Worker] --> [User service]
+[Worker] --> [Email - почтовые рассылки]
+[Worker] --> [SMS - sms рассылки]
+[Scheduler] --> [Postgres]
+[Scheduler] --> [Notification API]
+[Auth, UGC, etc] --> [Notification API] : События
+[Scheduler] --> [User service]
+[Notification API] --> [RabbitMQ low]
+[RabbitMQ low] --> [Worker]
+[SMS - sms рассылки] --> [Users]
+[Email - почтовые рассылки] --> [Users]
+skinparam DatabaseBackgroundColor Aqua
+@enduml
