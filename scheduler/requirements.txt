@@ -1,0 +1,5 @@
+pydantic
+sqlalchemy
+psycopg2-binary
+jinja2
+backoff

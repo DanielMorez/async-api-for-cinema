@@ -1,0 +1,67 @@
+version: "3.5"
+services:
+  nginx:
+    container_name: cinema_notification_nginx
+    image: nginx:latest
+    ports:
+      - 8000:80
+    networks:
+      - cinema_network
+    volumes:
+      - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./docker/nginx/conf.d:/etc/nginx/conf.d
+      - cinema_nginx_notification_static:/usr/share/nginx/www/static
+      - cinema_nginx_notification_media:/usr/share/nginx/www/media
+
+  pgadmin:
+      image: dpage/pgadmin4
+      ports:
+          - 9080:80
+      environment:
+          - PGADMIN_DEFAULT_EMAIL=myemail@gmail.com
+          - PGADMIN_DEFAULT_PASSWORD=pass
+
+  admin:
+    container_name: cinema_notification_admin
+    build:
+      context: .
+      dockerfile: docker/admin/Dockerfile
+    env_file:
+      - docker/admin/list.env
+    networks:
+      - cinema_network
+    volumes:
+      - cinema_nginx_notification_static:/app/static
+      - cinema_nginx_notification_media:/app/media
+
+
+
+  scheduler:
+    build:
+      context: .
+      dockerfile: docker/scheduler/Dockerfile
+    env_file:
+      - docker/scheduler/list.env
+    networks:
+      - cinema_network
+
+
+  postgres:
+    container_name: cinema_notification_postgres
+    env_file:
+      - docker/postgresql/list.env
+    networks:
+      - cinema_network
+    image: postgres:latest
+    volumes:
+      - postgres_notification_data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+
+volumes:
+  postgres_notification_data:
+  cinema_nginx_notification_static:
+  cinema_nginx_notification_media:
+
+networks:
+  cinema_network:

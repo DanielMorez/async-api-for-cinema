@@ -1,0 +1,7 @@
+django
+psycopg2-binary
+django-admin-json-editor
+gunicorn
+black
+wemake-python-styleguide
+isort
