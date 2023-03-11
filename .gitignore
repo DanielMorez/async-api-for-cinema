@@ -1,12 +1,6 @@
-/.idea
-*__pycache__*
-
-# ignore sub venv
-venv/
-
+.idea/
+.vscode/
+storage-research/
 /.env
-
-# postgres
-/init_db/
-/pgdata/
-/admin-panel/movies/static/
+.py[co]
+__pycache__/
