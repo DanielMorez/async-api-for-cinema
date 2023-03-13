@@ -353,12 +353,15 @@ services:
     networks:
       - development_network
 
-  notification-admin-panel:
-    container_name: notification-admin-panel
+  notification-admin:
+    container_name: notification-admin
     build:
-      context: notification/admin-panel
+      context: notification/admin
       dockerfile: Dockerfile
     restart: always
+    volumes:
+      - ./.env:/opt/app/.env
+      - ./notification/admin/static:/opt/app/static
     ports:
       - "${NOTIFICATION_ADMIN_PORT}:${NOTIFICATION_ADMIN_PORT}"
     depends_on:
@@ -374,7 +377,7 @@ services:
     restart: always
     depends_on:
       - postgres
-      - notification-admin-panel
+      - notification-admin
       - notification-api
     networks:
       - development_network

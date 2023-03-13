@@ -13,6 +13,7 @@ superuser in admin:
 
 staticfiles:
 	docker exec -ti admin_panel_async_api python manage.py collectstatic
+	docker exec -ti notification-admin python manage.py collectstatic
 
 reload nginx:
 	docker exec -ti nginx_async_api nginx -s reload
