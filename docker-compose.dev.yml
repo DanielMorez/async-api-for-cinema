@@ -325,12 +325,16 @@ services:
       - development_network
 
   rabbitmq:
-    image: rabbitmq:3.9
+    image: rabbitmq:3.9-management
     container_name: rabbitmq
     restart: always
     ports:
-      - "5672:5672"
-      - "${RABBITMQ_PORT}:${RABBITMQ_PORT}"
+      - "${RABBITMQ__PORT}:${RABBITMQ__PORT}"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ__USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ__PASSWORD}
+      RABBITMQ_DEFAULT_VHOST: /
     networks:
       - development_network
 
@@ -340,6 +344,8 @@ services:
       context: notification/api
       dockerfile: Dockerfile
     restart: always
+    volumes:
+      - ./.env:/opt/app/.env
     ports:
       - "${NOTIFICATION_API_PORT}:${NOTIFICATION_API_PORT}"
     depends_on:
@@ -388,5 +394,6 @@ services:
 
 networks:
   development_network:
+    driver: bridge
     name: development_network
     external: false

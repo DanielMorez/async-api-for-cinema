@@ -12,4 +12,4 @@ RUN pip install --upgrade pip \
 
 COPY . .
 
-ENTRYPOINT ["python", "main.py"]
+ENTRYPOINT ["gunicorn", "--bind", "0.0.0.0:8002", "-k", "uvicorn.workers.UvicornWorker", "main:app"]
