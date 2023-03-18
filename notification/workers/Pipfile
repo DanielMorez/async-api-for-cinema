@@ -1,0 +1,20 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+pika = "*"
+pydantic = "*"
+sqlalchemy = "*"
+alembic = "*"
+psycopg2-binary = "*"
+httpx = "*"
+
+[dev-packages]
+black = "==21.6b0"
+wemake-python-styleguide = "*"
+isort = "*"
+
+[requires]
+python_version = "3.9"
