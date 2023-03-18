@@ -8,6 +8,7 @@ from psycopg2.extras import RealDictCursor
 from auth.client import AuthClient
 from config import settings
 from consumer.rabbitmq import RabbitMQConsumerClient
+from helpers.email import send_common_email
 from storage.postgres import PostgresClient
 from storage.service import PostgresService
 
@@ -21,9 +22,8 @@ def callback_factory(service: PostgresService, auth_client: AuthClient) -> Calla
         # get personal data - email and name
         users = auth_client.get_personal_data_by_ids(message["user_ids"])
         if template.type == "email":
-            a = 1
-        # TODO: render template with jinja2
-        # TODO: if template == email: send email
+            user_emails = [user.email for user in users]
+            send_common_email(user_emails, template)
     return callback
 
 

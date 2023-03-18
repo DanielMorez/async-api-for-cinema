@@ -13,5 +13,5 @@ class AuthClient:
     def get_personal_data_by_ids(self, user_ids: list[str]) -> list[User]:
         response = post(self._dsn + "/api/v1/user/user-data", json={"user_ids": user_ids})
         if response.ok:
-            return loads(response.content)
+            return [User(**user) for user in loads(response.content)]
         return []
