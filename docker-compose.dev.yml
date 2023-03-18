@@ -45,7 +45,7 @@ services:
       driver: gelf
       options:
         gelf-address: udp://localhost:${LOGS__GELF__PORT}
-        tag: jaeger 
+        tag: jaeger
 
   elasticsearch:
     image: elasticsearch:8.6.2
@@ -97,8 +97,6 @@ services:
     volumes:
       - .:/var/lib/postgresql/data
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
-    depends_on:
-      - logs-logstash
     networks:
       - development_network
     logging:
@@ -124,7 +122,7 @@ services:
       driver: gelf
       options:
         gelf-address: udp://localhost:${LOGS__GELF__PORT}
-        tag: etl 
+        tag: etl
 
   admin_panel:
     container_name: admin_panel_async_api
@@ -150,7 +148,8 @@ services:
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
       - ./configs:/etc/nginx/conf.d:ro
-      - ./admin-panel/movies/static:/static
+#      - ./admin-panel/movies/static:/static
+      - ./notification/admin/static:/static
       - /tmp/logs/nginx/:/var/log/nginx/
     depends_on:
       - admin_panel
@@ -197,7 +196,7 @@ services:
       driver: gelf
       options:
         gelf-address: udp://localhost:${LOGS__GELF__PORT}
-        tag: zookeeper 
+        tag: zookeeper
 
   broker:
     image: confluentinc/cp-kafka:7.3.0
@@ -224,7 +223,7 @@ services:
       driver: gelf
       options:
         gelf-address: udp://localhost:${LOGS__GELF__PORT}
-        tag: broker 
+        tag: broker
 
   broker-ui:
     image: obsidiandynamics/kafdrop:3.30.0
@@ -242,8 +241,8 @@ services:
       driver: gelf
       options:
         gelf-address: udp://localhost:${LOGS__GELF__PORT}
-        tag: broker-ui 
-  
+        tag: broker-ui
+
   clickhouse:
     image: yandex/clickhouse-server:21.3
     container_name: clickhouse
@@ -266,7 +265,7 @@ services:
       driver: gelf
       options:
         gelf-address: udp://localhost:${LOGS__GELF__PORT}
-        tag: clickhouse 
+        tag: clickhouse
 
   logs-logstash:
     image: logstash:8.6.2
@@ -307,7 +306,7 @@ services:
     depends_on:
       - nginx
     links:
-      - logs-logstash 
+      - logs-logstash
     networks:
       - development_network
 
