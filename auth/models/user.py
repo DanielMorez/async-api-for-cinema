@@ -89,6 +89,25 @@ class User(db.Model, ModelMixin):
     def find_by_email(cls, email: str) -> "User":
         return cls.query.filter_by(email=email).first()
 
+    @classmethod
+    def _find_verified_email_user_ids(cls):
+        return cls.query.filter(cls.email != None)
+
+    @classmethod
+    def find_verified_email_user_ids(cls, limit: int = 100) -> list["User"]:
+        qs = cls._find_verified_email_user_ids().limit(limit).all()
+        return qs
+
+    @classmethod
+    def find_subscribers_id(cls, limit: int = 100) -> list["User"]:
+        qs = cls._find_verified_email_user_ids().limit(limit).all()
+        return qs
+
+    @classmethod
+    def users_by_ids(cls, user_ids: list[UUID]) -> list["User"]:
+        qs = cls.query.filter(cls.id.in_(user_ids)).all()
+        return qs
+
     @property
     def as_dict(self):
         data = super().as_dict

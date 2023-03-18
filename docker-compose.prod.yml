@@ -327,6 +327,69 @@ services:
     networks:
       - production_network
 
+  rabbitmq:
+    image: rabbitmq:3.9
+    container_name: rabbitmq
+    restart: always
+    expose:
+      - "${RABBITMQ_PORT}"
+    ports:
+      - "5672:5672"
+    networks:
+      - development_network
+
+  notification-api:
+    container_name: notification-api
+    build:
+      context: notification/api
+      dockerfile: Dockerfile
+    restart: always
+    expose:
+      - "${NOTIFICATION_API_PORT}"
+    depends_on:
+      - rabbitmq
+    networks:
+      - production_network
+
+  notification-admin-panel:
+    container_name: notification-admin-panel
+    build:
+      context: notification/admin-panel
+      dockerfile: Dockerfile
+    restart: always
+    expose:
+      - "${NOTIFICATION_ADMIN_PORT}"
+    depends_on:
+      - postgres
+    networks:
+      - production_network
+
+  notification-scheduler:
+    container_name: notification-scheduler
+    build:
+      context: notification/scheduler
+      dockerfile: Dockerfile
+    restart: always
+    depends_on:
+      - postgres
+      - notification-admin-panel
+      - notification-api
+    networks:
+      - production_network
+
+  notification-worker:
+    container_name: notification-worker
+    build:
+      context: notification/worker
+      dockerfile: Dockerfile
+    restart: always
+    depends_on:
+      - redis
+      - rabbitmq
+      - auth
+    networks:
+      - production_network
+
 networks:
   production_network:
     name: production_network
