@@ -1,7 +1,0 @@
-fastapi==0.88
-fastapi-utils==0.2.1
-pydantic[dotenv]==1.10.2
-uvicorn==0.20.0
-gunicorn==20.1.0
-aio-pika==9.0.4
-orjson==3.8.2

@@ -20,6 +20,7 @@ from utils.parsers.registration import register_data
 from utils.token import check_if_token_in_blacklist
 
 
+
 @login_google.ns.route("")
 class LoginWithGoogle(Resource):
     @login_google.ns.marshal_with(google_auth)

@@ -2,7 +2,7 @@ from flask import Blueprint
 from flask_restful import Api
 from flask_restx import Api as OpenAPI
 
-from resources import auth, profile, login_history, role, user_role, user_ids, user_data
+from resources import auth, profile, login_history, role, user_role
 
 auth_bp = Blueprint("auth", __name__, url_prefix="/api/v1/user")
 auth_api = Api(auth_bp)
@@ -29,9 +29,6 @@ auth_api.add_resource(login_history.LoginHistories, "/login-histories")
 auth_api.add_resource(role.RoleResource, "/roles")
 auth_api.add_resource(user_role.UserRoleResource, "/user-role")
 
-auth_api.add_resource(user_ids.UserIds, "/user-ids")
-auth_api.add_resource(user_data.UserPersonalData, "/user-data")
-
 # openapi
 swagger.add_namespace(auth.registration.ns, "/register")
 swagger.add_namespace(auth.login.ns, "/login")
@@ -44,6 +41,3 @@ swagger.add_namespace(login_history.ns, "/login-histories")
 
 swagger.add_namespace(role.ns, "/roles")
 swagger.add_namespace(user_role.ns, "/user-role")
-
-swagger.add_namespace(user_ids.ns, "/user-ids")
-swagger.add_namespace(user_data.ns, "/user-data")

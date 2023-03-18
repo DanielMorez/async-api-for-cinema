@@ -10,4 +10,3 @@ venv/
 /init_db/
 /pgdata/
 /admin-panel/movies/static/
-/notification/admin/static/
