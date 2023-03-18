@@ -17,8 +17,8 @@ class Settings(BaseSettings):
     class Config:
         env_file_encoding = "utf-8"
         env_file = (
+            os.path.join(ENV_DIR, ".env"),  # Если запускаем весь проект
             os.path.join(ENV_DIR, ".env.dev"),
-            # os.path.join(ENV_DIR, ".env"),  # Если запускаем весь проект
         )
 
 

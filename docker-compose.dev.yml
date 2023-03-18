@@ -375,6 +375,8 @@ services:
       context: notification/scheduler
       dockerfile: Dockerfile
     restart: always
+    volumes:
+      - ./.env:/opt/app/.env
     depends_on:
       - postgres
       - notification-admin
@@ -387,6 +389,8 @@ services:
     build:
       context: notification/worker
       dockerfile: Dockerfile
+    volumes:
+      - ./.env:/opt/app/.env
     restart: always
     depends_on:
       - redis

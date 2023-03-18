@@ -32,8 +32,8 @@ class Settings(BaseSettings):
 
     class Config:
         env_file = (
-            os.path.join(ENV_DIR, ".env.dev"),
             os.path.join(ENV_DIR, ".env"),  # Если запускаем весь проект
+            os.path.join(ENV_DIR, ".env.dev"),
         )
         env_nested_delimiter = "__"
 
