@@ -151,7 +151,6 @@ services:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
       - ./configs:/etc/nginx/conf.d:ro
       - ./admin-panel/movies/static:/static
-      - ./notification/admin/static:/static
       - /tmp/logs/nginx/:/var/log/nginx/
     depends_on:
       - admin_panel

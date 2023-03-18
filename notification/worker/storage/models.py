@@ -7,3 +7,4 @@ class Template(BaseModel):
     subject: str
     content: str
     type: str
+    is_personal: bool
