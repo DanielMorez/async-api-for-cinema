@@ -9,6 +9,7 @@ from notifications.constants import (
 
 
 class Template(models.Model):
+    id = models.UUIDField(primary_key=True)
     title = models.CharField(max_length=255)
     subject = models.CharField(max_length=255)
     content = models.TextField()
@@ -23,6 +24,7 @@ class Template(models.Model):
 
 
 class Task(models.Model):
+    id = models.UUIDField(primary_key=True)
     title = models.CharField(max_length=50)
     status = models.CharField(max_length=20, choices=TASK_STATUS, default="pending")
     template = models.ForeignKey(Template, on_delete=models.SET_NULL, null=True)

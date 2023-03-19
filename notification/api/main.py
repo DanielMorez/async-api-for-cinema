@@ -6,7 +6,7 @@ from fastapi.responses import ORJSONResponse
 
 import adapters
 from adapters.rabbitmq_producer import RabbitMQProducerClient
-from api import views
+from api.v1 import views
 from config import settings
 from cores.logger import LOGGING
 

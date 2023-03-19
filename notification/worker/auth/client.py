@@ -1,5 +1,4 @@
 from json import loads
-from uuid import UUID
 from requests import post
 from pydantic import AnyUrl
 

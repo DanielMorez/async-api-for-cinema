@@ -4,7 +4,7 @@ from uuid import UUID
 from fastapi import APIRouter, Depends, Body
 from fastapi_utils.cbv import cbv
 
-from api.models import Notification
+from api.v1.models import Notification
 from services.rabbitmq import BrokerRabbitMQService
 from services.service import get_broker_service
 
