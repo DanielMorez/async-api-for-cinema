@@ -1,3 +1,4 @@
+from http import HTTPStatus
 from pydantic import AnyUrl
 from requests import post
 from models.task import Notification
@@ -9,4 +10,4 @@ class Publisher:
 
     def send_notifications(self, data: Notification) -> bool:
         response = post(self._dsn + "/notifications/send", json=data.dict())
-        return response.status_code == 201
+        return response.status_code == HTTPStatus.OK
