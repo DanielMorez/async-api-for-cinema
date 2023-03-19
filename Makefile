@@ -13,7 +13,6 @@ superuser in admin:
 
 staticfiles:
 	docker exec -ti admin_panel_async_api python manage.py collectstatic
-	docker exec -ti notification-admin python manage.py collectstatic
 
 reload nginx:
 	docker exec -ti nginx_async_api nginx -s reload
@@ -29,7 +28,3 @@ nginx:
 
 ugc depends on:
 	docker-compose -f docker-compose.dev.yml up -d postgres redis auth zookeeper broker broker-ui clickhouse
-
-notification:
-	docker-compose -f docker-compose.dev.yml up --build -d postgres redis auth notification-admin \
-	notification-scheduler notification-api notification-worker
