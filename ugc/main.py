@@ -6,6 +6,7 @@ import adapters
 import sentry_sdk
 import uvicorn
 from adapters.broker import KafkaProducerClient
+from core.sentry import traces_sampler
 from db import mongo
 from api.v1 import film_views, bookmarks
 from api.v1.rating.views import router as rating_routes
@@ -22,11 +23,11 @@ from starlette.middleware.authentication import AuthenticationMiddleware
 
 from auth.middlewares import CustomAuthBackend
 
-if settings.sentry_dsn:
+if settings.sentry_enable:
     sentry_sdk.init(
         dsn=settings.sentry_dsn,
         integrations=[FastApiIntegration()],
-        traces_sample_rate=1.0
+        traces_sampler=traces_sampler,
     )
 
 if settings.logstash_enable:
@@ -71,7 +72,7 @@ if __name__ == "__main__":
     uvicorn.run(
         "main:app",
         host="0.0.0.0",
-        port=settings.port,
+        port=8002,
         log_config=LOGGING,
         log_level=logging.DEBUG,
     )
