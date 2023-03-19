@@ -10,7 +10,7 @@ from cores.serializers import orjson_dumps
 
 class Notification(BaseModel):
     type: str = Body(regex="(send_immediately|regular_mailing)")
-    template_id: int = Body(default=1)  # Set default template ID
+    template_id: UUID = Body(None)  # Set default template ID
     user_ids: list[UUID]
     context: dict[str, Any]  # There are can be any text
 
