@@ -1,0 +1,11 @@
+Django==4.1.7
+django-cors-headers==3.13.0
+djangorestframework==3.14.0
+psycopg2==2.9.4
+celery==5.2.7
+django-celery-results==2.5.0
+python-dotenv==0.21.0
+django-split-settings==1.1.0
+uwsgi==2.0.21
+python_logstash==0.4.8
+sentry-sdk[django]==1.15.0
