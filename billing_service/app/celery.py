@@ -14,11 +14,10 @@ app.autodiscover_tasks()
 
 
 app.conf.beat_schedule = {
-    'check-subscriptions': {
-        'task': 'billing.tasks.auto_payment',
-        'schedule': 1  # change to 3 times per a day
+    "check-subscriptions": {
+        "task": "billing.tasks.auto_payment",
+        "schedule": 1,  # change to 3 times per a day
     },
 }
 
 app.conf.timezone = "Europe/Moscow"
-

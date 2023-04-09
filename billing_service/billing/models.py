@@ -24,31 +24,18 @@ class ProviderType(models.TextChoices):
 
 
 class Tariff(UUIDModel):
-    title = models.CharField(
-        max_length=255
-    )
-    cost = models.DecimalField(
-        max_digits=6,
-        decimal_places=2
-    )
+    title = models.CharField(max_length=255)
+    cost = models.DecimalField(max_digits=6, decimal_places=2)
     period_type = models.CharField(
-        max_length=10,
-        choices=PeriodType.choices,
-        default=PeriodType.MONTH
+        max_length=10, choices=PeriodType.choices, default=PeriodType.MONTH
     )
     description = models.TextField()
     is_active = models.BooleanField(default=True)
     trial_period = models.BooleanField(default=False)
     trial_period_type = models.CharField(
-        max_length=10,
-        choices=PeriodType.choices,
-        blank=True,
-        null=True
+        max_length=10, choices=PeriodType.choices, blank=True, null=True
     )
-    next_tariff_id = models.UUIDField(
-        blank=True,
-        null=True
-    )
+    next_tariff_id = models.UUIDField(blank=True, null=True)
 
     def __str__(self):
         return self.title
@@ -63,9 +50,7 @@ class PaymentMethod(UUIDModel):
     mask = models.CharField(max_length=4)
     payment_method_id = models.UUIDField()
     provider = models.CharField(
-        max_length=10,
-        choices=ProviderType.choices,
-        default=ProviderType.UKASSA
+        max_length=10, choices=ProviderType.choices, default=ProviderType.UKASSA
     )
 
     def __str__(self):
@@ -77,10 +62,7 @@ class Subscription(UUIDModel):
     is_active = models.BooleanField(default=True)
     is_waiting = models.BooleanField(default=False)
     tariff = models.ForeignKey(
-        to=Tariff,
-        related_name="subscriptions",
-        on_delete=models.SET_NULL,
-        null=True
+        to=Tariff, related_name="subscriptions", on_delete=models.SET_NULL, null=True
     )
     user = models.ForeignKey(
         to=settings.AUTH_USER_MODEL,
@@ -91,7 +73,7 @@ class Subscription(UUIDModel):
         to=PaymentMethod,
         related_name="subscriptions",
         on_delete=models.SET_NULL,
-        null=True
+        null=True,
     )
 
 

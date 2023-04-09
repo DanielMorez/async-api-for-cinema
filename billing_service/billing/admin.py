@@ -19,4 +19,7 @@ class PaymentMethodAdmin(admin.ModelAdmin):
 
 @admin.register(models.Bill)
 class BillAdmin(admin.ModelAdmin):
-    list_display = ("id", "created_at",)
+    list_display = (
+        "id",
+        "created_at",
+    )
