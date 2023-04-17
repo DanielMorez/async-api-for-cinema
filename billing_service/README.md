@@ -16,7 +16,7 @@
 
 1. Получить список тарифов
 ```http request
-GET - /billing/tariffs 
+GET /api/v1/billing/tariffs 
 ```
 
 Возможный ответ
@@ -53,7 +53,7 @@ GET - /billing/tariffs
 
 2. Добавить способ оплаты
 ```http request
-POST - /billing/payment-method
+POST /api/v1/billing/payment-method
 ```
 
 Вернет ссылку на ЮКассу, по которой необходимо перейти и заполнить данные карты
@@ -67,7 +67,7 @@ POST - /billing/payment-method
 
 3. Подтверждение способа оплаты. 
 ```http request
-GET - /billing/approve-payment-method/<idempotency_key>
+GET /api/v1/billing/approve-payment-method/<idempotency_key>
 ```
 Если платеж прошел, то бекенд сохраняет идентификатор способа оплаты и возвращает деньги пользователю.
 В дальнейшем полученный способ оплаты можно использовать в автоплатежах. 
@@ -80,7 +80,7 @@ GET - /billing/approve-payment-method/<idempotency_key>
 4. Оформить подписку
 
 ```http request
-POST - /billing/subscription
+POST /api/v1/billing/subscription
 ```
 
 Тело запроса
@@ -102,7 +102,7 @@ POST - /billing/subscription
 
 5. Подтверждение оплаты
 ```http request
-GET - /billing/approve-payment/<idempotency_key>
+GET /api/v1/billing/approve-payment/<idempotency_key>
 ```
 
 После успешного подтверждения платежа, создатся объект подписки `Subscription` и пользователю 
@@ -110,7 +110,7 @@ GET - /billing/approve-payment/<idempotency_key>
 
 6. Отменить подписку
 ```http request
-PUT - /billing/cancel-subscription
+PUT /api/v1/billing/cancel-subscription
 ```
 
 Если у пользователя пробный период, то после отмены, у пользоваетля отзывается роль `Subscriber` и в статусе объекта 
@@ -124,7 +124,7 @@ PUT - /billing/cancel-subscription
 
 7. Получить информацию о подписке
 ```http request
-GET - /billing/subscription
+GET /api/v1/billing/subscription
 ```
 
 ```json
@@ -158,7 +158,7 @@ GET - /billing/subscription
 
 8. Получить список привязанных способов оплаты
 ```http request
-GET - /billing/payment-method
+GET /api/v1/billing/payment-method
 ```
 
 Пример ответа
@@ -201,7 +201,7 @@ GET - /billing/payment-method
 
 9. Поменять способ оплаты у подписки
 ```http request
-PUT - /billing/change-payment-method
+PUT /api/v1/billing/change-payment-method
 ```
 
 Тело запроса
@@ -211,7 +211,7 @@ PUT - /billing/change-payment-method
 
 10. Отвязать карту
 ```http request
-DELETE - /billing/payment-method/<payment_method_id>
+DELETE /api/v1/billing/payment-method/<payment_method_id>
 ```
 
 ## 🏎 Автоплатежи
