@@ -15,6 +15,7 @@ user = ns.model(
         "first_name": fields.String(),
         "last_name": fields.String(),
         "email": fields.String(),
+        "roles": fields.List(fields.String())
     },
 )
 
