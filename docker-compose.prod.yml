@@ -390,6 +390,39 @@ services:
     networks:
       - production_network
 
+  billing:
+    container_name: billing
+    build:
+      context: billing_service
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    restart: always
+    environment:
+      SENTRY_DSN: ${SENTRY_DSN}
+    volumes:
+      - ./.env:/opt/app/.env
+      - ./billing_service/static:/opt/app/static
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - production_network
+
+  worker:
+    container_name: billing
+    build:
+      context: billing_service
+      dockerfile: Dockerfile
+    entrypoint: celery
+    command: -A celery_app.celery worker --loglevel=info
+    depends_on:
+      - postgres
+      - redis
+      - billing
+    networks:
+      - production_network
+
 networks:
   production_network:
     name: production_network
