@@ -129,10 +129,13 @@ CORS_ALLOWED_ORIGINS = ["http://127.0.0.1:8080", "http://localhost:8080"]
 include("components/rest.py")
 
 # LOGGING
-include("components/logger.py")
+# include("components/logger.py")
 
 # CELERY
 include("components/celery.py")
 
 # AUTH
 include("components/auth.py")
+
+# PAYMENT PROVIDER
+include("components/yookassa.py")

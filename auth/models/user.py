@@ -114,6 +114,7 @@ class User(db.Model, ModelMixin):
         del data["password"]
         del data["is_superuser"]
         del data["active"]
+        data["roles"] = [role.name for role in self.roles]
         return data
 
     def __repr__(self):

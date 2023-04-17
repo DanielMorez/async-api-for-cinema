@@ -9,3 +9,5 @@ django-split-settings==1.1.0
 uwsgi==2.0.21
 python_logstash==0.4.8
 sentry-sdk[django]==1.15.0
+yookassa==2.3.5
+redis==4.5.4

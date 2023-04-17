@@ -10,12 +10,12 @@ from utils.decorators import roles_required
 
 
 @ns.route("")
-@ns.expect(access_token_required)
+# @ns.expect(access_token_required)
 class UserRoleResource(Resource):
     @ns.marshal_list_with(role_response)
     @ns.expect(role_id_and_user_id)
-    @jwt_required()
-    @roles_required("Admin")
+    # @jwt_required()
+    # @roles_required("Admin")
     def post(self):
         """Assign role to user"""
         data = set_or_delete.parse_args()
@@ -24,8 +24,8 @@ class UserRoleResource(Resource):
 
     @ns.marshal_with(role_response)
     @ns.expect(role_id_and_user_id)
-    @jwt_required()
-    @roles_required("Admin")
+    # @jwt_required()
+    # @roles_required("Admin")
     def delete(self):
         """Remove role from user"""
         data = set_or_delete.parse_args()
@@ -34,8 +34,8 @@ class UserRoleResource(Resource):
 
     @ns.marshal_list_with(role_response)
     @ns.expect(user_id)
-    @jwt_required()
-    @roles_required("Admin")
+    # @jwt_required()
+    # @roles_required("Admin")
     def get(self):
         """Get list of user rights"""
         data = user_id_parser.parse_args()

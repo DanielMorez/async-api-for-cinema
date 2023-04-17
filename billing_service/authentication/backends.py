@@ -1,11 +1,9 @@
 import requests
 
 from django.conf import settings
-from http import HTTPStatus
-
 from django.contrib.auth import get_user_model
 from rest_framework.authentication import BaseAuthentication
-from rest_framework.exceptions import APIException
+from rest_framework import status
 
 
 class JWTAuthentication(BaseAuthentication):
@@ -22,8 +20,13 @@ class JWTAuthentication(BaseAuthentication):
             settings.AUTH_DSN + "/api/v1/user/profile",
             headers={"Authorization": auth_headers},
         )
-        if response.status_code == HTTPStatus.OK:
+        if response.status_code == status.HTTP_200_OK:
             data = response.json()
+            if not User.objects.filter(id=data["id"]).exists():
+                # We don't collect any personal data (also login), so using only id
+                user = User(id=data["id"], username=data["id"])
+                user.set_unusable_password()
+                user.save()
             user = User(
                 id=data["id"],
                 username=data["login"],
@@ -33,5 +36,3 @@ class JWTAuthentication(BaseAuthentication):
                 roles=data.get("roles", []),
             )
             return user, None
-
-        raise APIException("Invalid token", HTTPStatus.FORBIDDEN)
