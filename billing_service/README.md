@@ -12,6 +12,8 @@
 
 ###Сервис имеет 10 методов
 
+❗️В заголовках запроса используйте `access_token` для аутентификации (`Authorization: Bearer access_token`), который можно получить по ссылке `http://localhost/api/v1/user` ❗️
+
 1. Получить список тарифов
 ```http request
 GET - /billing/tariffs 
