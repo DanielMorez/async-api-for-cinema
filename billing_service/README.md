@@ -244,4 +244,4 @@ DELETE /api/v1/billing/payment-method/<payment_method_id>
 - `make dev docker`
 - `make prod docker`
 
-Если запускаете первый раз, то не забудьте накатить миграции командой `init migrations`
+Если запускаете первый раз, то не забудьте накатить миграции командой `make init migrations`
