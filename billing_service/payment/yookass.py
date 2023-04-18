@@ -24,7 +24,7 @@ class YooKassa(BasePayment):
                 "amount": {"value": f"{amount:.2f}", "currency": "RUB"},
                 "confirmation": {
                     "type": "redirect",
-                    "return_url": f"{settings.HOST}/billing/approve-payment-method/{idempotency_key}",
+                    "return_url": f"{settings.HOST}/api/v1/billing/approve-payment-method/{idempotency_key}",
                 },
                 "save_payment_method": True,
                 "metadata": {
@@ -87,7 +87,7 @@ class YooKassa(BasePayment):
             },
             "confirmation": {
                 "type": "redirect",
-                "return_url": f"{settings.HOST}/billing/approve-payment/{idempotency_key}",
+                "return_url": f"{settings.HOST}/api/v1/billing/approve-payment/{idempotency_key}",
             },
         }, idempotency_key)
         if payment.cancellation_details:
