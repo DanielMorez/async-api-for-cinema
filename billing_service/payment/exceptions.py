@@ -12,6 +12,11 @@ class PaymentCanceled(APIException):
     default_detail = "Payment is canceled"
 
 
+class PaymentIsNotSucceeded(APIException):
+    status_code = status.HTTP_400_BAD_REQUEST
+    default_detail = "Payment is not succeeded"
+
+
 class PaymentNotSaved(APIException):
     status_code = status.HTTP_400_BAD_REQUEST
     default_detail = "Payment method not saved"

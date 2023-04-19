@@ -1,17 +1,24 @@
 import uuid
 
+from enum import StrEnum
 from django.conf import settings
 from django.core.cache import cache
 from django.utils import timezone
 from yookassa import Configuration, Payment, Refund
 from yookassa.domain.exceptions import bad_request_error
-
-from billing.models import PaymentMethod, Bill, Subscription
+from billing.models import PaymentMethod, Bill, Subscription, SubscriptionType
 from payment.base import BasePayment
 from payment import exceptions
 
 Configuration.account_id = settings.SHOP_ID
 Configuration.secret_key = settings.PAYMENT_SECRET_KEY
+
+
+class PaymentStatus(StrEnum):
+    SUCCEEDED = "succeeded"
+    WAITING = "waiting_for_capture"
+    CANCELED = "canceled"
+    PENDING = "pending"
 
 
 class YooKassa(BasePayment):
@@ -24,7 +31,7 @@ class YooKassa(BasePayment):
                 "amount": {"value": f"{amount:.2f}", "currency": "RUB"},
                 "confirmation": {
                     "type": "redirect",
-                    "return_url": f"{settings.HOST}/billing/approve-payment-method/{idempotency_key}",
+                    "return_url": f"{settings.HOST}/api/v1/billing/approve-payment-method/{idempotency_key}",
                 },
                 "save_payment_method": True,
                 "metadata": {
@@ -41,33 +48,38 @@ class YooKassa(BasePayment):
 
     @staticmethod
     def check_payment_method(idempotency_key: str) -> str:
-        if payment_id := cache.get(idempotency_key):
-            payment = Payment.find_one(payment_id)
-            if payment.status == "waiting_for_capture":
-                Payment.cancel(payment_id, idempotency_key)
-                cache.delete(idempotency_key)
-                if payment.payment_method.saved:
-                    if user_id := payment.metadata.get("user_id"):
-                        card = payment.payment_method.card
-                        payment_method = PaymentMethod(
-                            user_id=user_id,
-                            card_type=card.card_type,
-                            expire=f"{card.expiry_month}/{card.expiry_year}",
-                            last4=card.last4,
-                            first6=card.first6,
-                            payment_method_id=payment.payment_method.id,
-                            provider="yookassa",
-                        )
-                        payment_method.save()
-                        return payment_method.id
-                    else:
-                        raise exceptions.PaymentNotSaved
-                else:
-                    raise exceptions.PaymentNotSaved
-            elif payment.status == "canceled":
-                cache.delete(idempotency_key)
-                raise exceptions.PaymentCanceled
-        raise exceptions.PaymentNotAvailable
+        payment_id = cache.get(idempotency_key)
+        if not payment_id:
+            raise exceptions.PaymentNotAvailable
+
+        payment = Payment.find_one(payment_id)
+
+        if payment.status != PaymentStatus.WAITING:
+            raise exceptions.PaymentIsNotSucceeded
+
+        Payment.cancel(payment_id, idempotency_key)
+        cache.delete(idempotency_key)
+
+        if not payment.payment_method.saved:
+            raise exceptions.PaymentNotSaved
+
+        user_id = payment.metadata.get("user_id")
+
+        if not user_id:
+            raise exceptions.PaymentNotSaved
+
+        card = payment.payment_method.card
+        payment_method = PaymentMethod(
+            user_id=user_id,
+            card_type=card.card_type,
+            expire=f"{card.expiry_month}/{card.expiry_year}",
+            last4=card.last4,
+            first6=card.first6,
+            payment_method_id=payment.payment_method.id,
+            provider="yookassa",
+        )
+        payment_method.save()
+        return payment_method.id
 
     @staticmethod
     def auto_payment(subscription: Subscription) -> str:
@@ -87,7 +99,7 @@ class YooKassa(BasePayment):
             },
             "confirmation": {
                 "type": "redirect",
-                "return_url": f"{settings.HOST}/billing/approve-payment/{idempotency_key}",
+                "return_url": f"{settings.HOST}/api/v1/billing/approve-payment/{idempotency_key}",
             },
         }, idempotency_key)
         if payment.cancellation_details:
@@ -101,7 +113,7 @@ class YooKassa(BasePayment):
             )
             subscription.payment_method.delete()
             raise exceptions.PaymentDisable
-        if payment.status == "pending":
+        if payment.status == PaymentStatus.PENDING:
             cache.set(idempotency_key, payment.id, timeout=settings.PAYMENT_ALIVE)
             return payment.confirmation.confirmation_url
 
@@ -116,35 +128,38 @@ class YooKassa(BasePayment):
 
     @staticmethod
     def check_payment(idempotency_key: str) -> dict:
-        if payment_id := cache.get(idempotency_key):
-            payment = Payment.find_one(payment_id)
-            if payment.status == "succeeded":
-                payment_method = PaymentMethod.objects.get(payment_method_id=payment.payment_method.id)
-                if sub := Subscription.objects.filter(
-                        id=payment.metadata["subscription_id"]
-                ).first():
-                    sub.status = "active"
-                    sub.renew()
-                else:
-                    sub = Subscription.objects.create(
-                        id=payment.metadata["subscription_id"],
-                        user_id=payment.metadata["user_id"],
-                        payment_method=payment_method,
-                        tariff_id=payment.metadata["tariff_id"]
-                    )
-                Bill.objects.create(
-                    subscription_id=payment.metadata["subscription_id"],
-                    payment_method=payment_method,
-                    idempotency_key=idempotency_key,
-                    payment_id=payment_id,
-                    value=sub.tariff.cost
-                )
-                cache.delete(idempotency_key)
-                return payment
-            elif payment.status == "canceled":
-                cache.delete(idempotency_key)
-                raise exceptions.PaymentCanceled
-        raise exceptions.PaymentNotAvailable
+        payment_id = cache.get(idempotency_key)
+        if not payment_id:
+            raise exceptions.PaymentNotAvailable
+
+        payment = Payment.find_one(payment_id)
+        if payment.status != PaymentStatus.SUCCEEDED:
+            raise exceptions.PaymentIsNotSucceeded
+
+        payment_method = PaymentMethod.objects.get(
+            payment_method_id=payment.payment_method.id
+        )
+        if sub := Subscription.objects.filter(
+                id=payment.metadata["subscription_id"]
+        ).first():
+            sub.status = SubscriptionType.ACTIVE
+            sub.renew()
+        else:
+            sub = Subscription.objects.create(
+                id=payment.metadata["subscription_id"],
+                user_id=payment.metadata["user_id"],
+                payment_method=payment_method,
+                tariff_id=payment.metadata["tariff_id"]
+            )
+        Bill.objects.create(
+            subscription_id=payment.metadata["subscription_id"],
+            payment_method=payment_method,
+            idempotency_key=idempotency_key,
+            payment_id=payment_id,
+            value=sub.tariff.cost
+        )
+        cache.delete(idempotency_key)
+        return payment
 
     @staticmethod
     def cancel_payment(bill: Bill) -> None:
@@ -156,7 +171,7 @@ class YooKassa(BasePayment):
                 },
                 "payment_id": str(bill.payment_id)
             })
-            if payment.status != "succeeded":
+            if payment.status != PaymentStatus.SUCCEEDED:
                 raise exceptions.RefundDisable
         except bad_request_error.BadRequestError as error:
             error = error.args[0]

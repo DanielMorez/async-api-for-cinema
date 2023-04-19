@@ -16,11 +16,11 @@ app.autodiscover_tasks()
 app.conf.beat_schedule = {
     "check-subscriptions": {
         "task": "billing.tasks.auto_payment",
-        "schedule": crontab(minute=0, hour="*/1"),  # change to 1 times per a minute to test
+        "schedule": 1, # crontab(minute=0, hour="*/1"),  # change to 1 times per a minute to test
     },
     "check-subscriptions-without-auto-payment": {
         "task": "billing.tasks.remove_subscribe_role",
-        "schedule": crontab(minute=0, hour="*/1"),  # change to 1 times per a minute to test
+        "schedule": 1, # crontab(minute=0, hour="*/1"),  # change to 1 times per a minute to test
     },
 }
 
