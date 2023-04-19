@@ -12,7 +12,7 @@ from billing.api.serializers import (
     PaymentMethodSerializer,
     SubscriptionSerializer,
 )
-from billing.models import Tariff, PaymentMethod, Subscription, Bill
+from billing.models import Tariff, PaymentMethod, Subscription, Bill, SubscriptionType, BillType
 
 
 class PaymentMixin:
@@ -34,7 +34,7 @@ class PaymentMethodAPIView(
 
     def post(self, request, *args, **kwargs):
         url = self.payment_provider.create_payment_url(
-            2, "Привязка банковской карты", request.user.id
+            settings.MIN_PAYMENT, "Привязка банковской карты", request.user.id
         )
         return response.Response({"confirmation_url": url})
 
@@ -66,6 +66,7 @@ class SubscriptionAPIView(generics.CreateAPIView, generics.RetrieveAPIView, Paym
 
         if tariff.trial_period:
             if not self.queryset.filter(user_id=self.request.user.id):
+                self.auth_client.assign_subscriber_role(self.request.user.id)
                 return serializer.save(pk=subscription.id, user_id=self.request.user.id)
 
         self.confirmation_url = self.payment_provider.auto_payment(
@@ -84,7 +85,11 @@ class SubscriptionAPIView(generics.CreateAPIView, generics.RetrieveAPIView, Paym
         return generics.get_object_or_404(
             self.queryset,
             user_id=self.request.user.id,
-            status__in=("active", "waiting", "no_auto_payment")
+            status__in=(
+                SubscriptionType.ACTIVE,
+                SubscriptionType.WAITING_FOR_PAYMENT,
+                SubscriptionType.WITHOUT_AUTO
+            )
         )
 
 
@@ -108,28 +113,43 @@ class CancelSubscriptionAPIView(generics.GenericAPIView, PaymentMixin):
     def put(self, request, *args, **kwargs):
         subscription = self.queryset.filter(
             user_id=request.user.id,
-            status__in=("active", "waiting")
+            status__in=(
+                SubscriptionType.ACTIVE,
+                SubscriptionType.WAITING_FOR_PAYMENT
+            )
         ).first()
 
         if not subscription:
             return response.Response(
-                "User does not have active subscription", status=status.HTTP_400_BAD_REQUEST
+                "User does not have active subscription",
+                status=status.HTTP_400_BAD_REQUEST
             )
 
-        if subscription.status == "active":
-            bill: Bill = subscription.bills.filter(status="waiting").order_by("-created_at").first()
-            if bill:
-                delta = timezone.now() - subscription.created_at
-                if delta.days <= 2:
-                    self.payment_provider.cancel_payment(bill)
-                    subscription.status = "canceled"
-                    subscription.save()
-                    bill.status = "canceled"
-                    bill.save()
-                    self.auth_client.remove_subscriber_role(self.request.user.id)
-                    return response.Response({"refund": True})
+        if subscription.status == SubscriptionType.WAITING_FOR_PAYMENT:
+            subscription.status = SubscriptionType.CANCELED
+            subscription.save()
+            return response.Response({"refund": False})
 
-        subscription.status = "no_auto_payment"
+        bill: Bill = subscription.bills.filter(
+            status=SubscriptionType.WAITING_FOR_PAYMENT
+        ).order_by("-created_at").first()
+
+        if not bill:
+            subscription.status = SubscriptionType.CANCELED
+            subscription.save()
+            self.auth_client.remove_subscriber_role(self.request.user.id)
+            return response.Response({"refund": False})
+
+        delta = timezone.now() - subscription.created_at
+        if delta.days <= settings.REFUND_AVAILABLE:
+            self.payment_provider.cancel_payment(bill)
+            subscription.status = SubscriptionType.CANCELED
+            subscription.save()
+            bill.status = BillType.CANCELED
+            bill.save()
+            self.auth_client.remove_subscriber_role(self.request.user.id)
+            return response.Response({"refund": True})
+
+        subscription.status = SubscriptionType.WITHOUT_AUTO
         subscription.save()
         return response.Response({"refund": False})
-
