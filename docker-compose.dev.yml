@@ -418,13 +418,14 @@ services:
     networks:
       - development_network
 
-  worker:
-    container_name: billing
+  billing-worker:
+    container_name: billing-worker
     build:
       context: billing_service
       dockerfile: Dockerfile
-    entrypoint: celery
-    command: -A celery_app.celery worker --loglevel=info
+    entrypoint: celery -A app.celery worker -B
+    volumes:
+      - ./.env:/opt/app/.env
     depends_on:
       - postgres
       - redis
