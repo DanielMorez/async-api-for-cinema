@@ -23,9 +23,9 @@ def auto_payment():
     )
     for subscription in subscriptions:
         if not subscription.tariff.is_active:
-            if subscription.tariff.next_tariff:
+            if subscription.tariff.next_tariff_id:
                 tariff = Tariff.objects.filter(
-                    id=subscription.tariff.next_tariff
+                    id=subscription.tariff.next_tariff_id
                 ).first()
                 if tariff:
                     subscription.tariff = tariff

@@ -12,3 +12,4 @@ sentry-sdk[django]==1.15.0
 yookassa==2.3.5
 redis==4.5.4
 python-dateutil==2.8.2
+django_extensions

@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     "django_celery_results",
     "authentication",
     "billing",
+    "django_extensions",
 ]
 
 MIDDLEWARE = [
@@ -139,3 +140,8 @@ include("components/auth.py")
 
 # PAYMENT PROVIDER
 include("components/yookassa.py")
+
+GRAPH_MODELS = {
+    'all_applications': True,
+    'group_models': True
+}

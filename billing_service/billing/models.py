@@ -135,5 +135,5 @@ class Bill(UUIDModel):
     status = models.CharField(
         max_length=20,
         choices=BillType.choices,
-        default=BillType.WAITING
+        default=BillType.SUCCEEDED
     )

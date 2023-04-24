@@ -38,6 +38,10 @@ class PaymentMethodAPIView(
         )
         return response.Response({"confirmation_url": url})
 
+    def filter_queryset(self, queryset):
+        qs = super().filter_queryset(queryset)
+        return qs.filter(user_id=self.request.user.id)
+
 
 class ApprovePaymentMethodAPIView(generics.GenericAPIView, PaymentMixin):
     permission_classes = [permissions.AllowAny]  # Change on IsAuthenticated
@@ -131,7 +135,7 @@ class CancelSubscriptionAPIView(generics.GenericAPIView, PaymentMixin):
             return response.Response({"refund": False})
 
         bill: Bill = subscription.bills.filter(
-            status=SubscriptionType.WAITING_FOR_PAYMENT
+            status=BillType.SUCCEEDED
         ).order_by("-created_at").first()
 
         if not bill:
